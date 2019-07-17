@@ -28,20 +28,16 @@ target 'shape' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  target 'shapeTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+  
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'Firebase/DynamicLinks'
+  pod 'Firebase/Firestore'
+  
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
 
   use_native_modules!
-end
-
-target 'shape-tvOS' do
-  # Pods for shape-tvOS
-
-  target 'shape-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
 end

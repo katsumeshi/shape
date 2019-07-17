@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1068703927331-2ee061qtm4a8v7227j1vh4ad19kh05fh.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1068703927331-2ee061qtm4a8v7227j1vh4ad19kh05fh</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAzEcB1gfH3eZepEB_lp_iR30K8JUa2qRA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1068703927331</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.yukimatsushita.shape</string>
+	<key>PROJECT_ID</key>
+	<string>healther-24332</string>
+	<key>STORAGE_BUCKET</key>
+	<string>healther-24332.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1068703927331:ios:938c83155f666073</string>
+	<key>DATABASE_URL</key>
+	<string>https://healther-24332.firebaseio.com</string>
+</dict>
+</plist>
