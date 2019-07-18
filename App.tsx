@@ -66,7 +66,7 @@ const theme = {
 };
 
 export default class App extends React.Component {
-  public render() {
+  render() {
     return (
       <Provider store={store}>
         <ThemeProvider theme={theme}>
