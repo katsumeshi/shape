@@ -35,9 +35,10 @@ target 'shape' do
   pod 'Firebase/DynamicLinks'
   pod 'Firebase/Firestore'
   
-
+  pod 'RNGoogleSignin', :path => '../node_modules/react-native-google-signin'
+  pod 'GoogleSignIn', '~> 4.4.0'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
-
+  
   use_native_modules!
+
 end

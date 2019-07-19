@@ -1,26 +1,13 @@
 import moment from "moment";
 import React from "react";
-import {
-  ActionSheetIOS,
-  ActivityIndicator,
-  Dimensions,
-  SectionList,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActionSheetIOS, ActivityIndicator, Dimensions, SectionList, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Header, Icon, ListItem, Text } from "react-native-elements";
 import firebase from "react-native-firebase";
 import Mailer from "react-native-mail";
 import styled from "styled-components/native";
 const { height, width } = Dimensions.get("window");
 import Swipeout from "react-native-swipeout";
-import {
-  VictoryAxis,
-  VictoryChart,
-  VictoryLine,
-  VictoryTheme,
-} from "victory-native";
+import { VictoryAxis, VictoryChart, VictoryLine, VictoryTheme } from "victory-native";
 import { Button } from "../components/common";
 import { BLACK, THEME_COLOR } from "../constants";
 
@@ -29,15 +16,21 @@ import { connect } from "react-redux";
 import { firestoreConnect, withFirestore } from "react-redux-firebase";
 import { compose, withHandlers } from "recompose";
 
+let graph;
+let list;
+let sectionHeight;
+let issectionList;
+let isGraphScroll;
+
 const styles = StyleSheet.create({
   container: {
     height: 200,
     width,
-    backgroundColor: "#F5FCFF",
+    backgroundColor: "#F5FCFF"
   },
   chart: {
-    flex: 1,
-  },
+    flex: 1
+  }
 });
 
 const handleEmail = () => {
@@ -45,67 +38,56 @@ const handleEmail = () => {
     {
       subject: "お問い合わせ・改善要望",
       recipients: ["katsumeshi@gmail.com"],
-      body: "",
+      body: ""
     },
     (error, event) => {
       console.log(error);
       console.log(event);
-    },
+    }
   );
 };
 
-const Chart = (props) => {
+const Chart = props => {
   const len = props.health.length;
   const chartWidth = Math.max(width, len * 50);
   return (
     <>
       <ScrollView
-        ref={(ref) => {
-          this.graph = ref;
+        ref={ref => {
           props.graphRef(ref);
         }}
-        onScroll={(e) => {
-          let ratio =
-            len - Math.floor((e.nativeEvent.contentOffset.x + 380) / 50);
+        onScroll={e => {
+          let ratio = len - Math.floor((e.nativeEvent.contentOffset.x + 380) / 50);
           if (ratio < 0) {
             ratio = 0;
           }
-          if (this.isGraphScroll) {
+          if (isGraphScroll) {
             props.scrollListToLocation(ratio);
           }
         }}
-        onScrollBeginDrag={() => (this.isGraphScroll = true)}
-        onScrollEndDrag={() => (this.isGraphScroll = false)}
-        onMomentumScrollBegin={() => (this.isGraphScroll = true)}
-        onMomentumScrollEnd={() => (this.isGraphScroll = false)}
-        onContentSizeChange={() => this.graph.scrollToEnd({ animated: false })}
+        onScrollBeginDrag={() => (isGraphScroll = true)}
+        onScrollEndDrag={() => (isGraphScroll = false)}
+        onMomentumScrollBegin={() => (isGraphScroll = true)}
+        onMomentumScrollEnd={() => (isGraphScroll = false)}
+        onContentSizeChange={() => graph.scrollToEnd({ animated: false })}
         style={{ height: 500 }}
         contentContainerStyle={{ width: chartWidth }}
         alwaysBounceVertical={false}
         alwaysBounceHorizontal={true}
       >
         <View pointerEvents="none">
-          <VictoryChart
-            padding={{ top: 20, left: 50, bottom: 40, right: 10 }}
-            theme={VictoryTheme.material}
-            height={250}
-            width={chartWidth}
-          >
+          <VictoryChart padding={{ top: 20, left: 50, bottom: 40, right: 10 }} theme={VictoryTheme.material} height={250} width={chartWidth}>
             <VictoryLine
               style={{
                 data: { stroke: THEME_COLOR },
-                parent: { border: "1px solid #ccc" },
+                parent: { border: "1px solid #ccc" }
               }}
-              data={[...props.health].reverse().map((r) => ({
-                x: `${moment(r.date.toDate()).month() + 1}/${moment(
-                  r.date.toDate(),
-                ).date()}`,
-                y: r.weight,
+              data={[...props.health].reverse().map(r => ({
+                x: `${moment(r.date.toDate()).month() + 1}/${moment(r.date.toDate()).date()}`,
+                y: r.weight
               }))}
             />
-            <VictoryAxis
-              tickValues={props.health.map((r) => moment(r.date.toDate()).date())}
-            />
+            <VictoryAxis tickValues={props.health.map(r => moment(r.date.toDate()).date())} />
           </VictoryChart>
         </View>
       </ScrollView>
@@ -115,7 +97,7 @@ const Chart = (props) => {
           height: 250,
           position: "absolute",
           top: 70,
-          width: 50,
+          width: 50
         }}
       >
         <VictoryAxis
@@ -125,7 +107,7 @@ const Chart = (props) => {
           tickValues={(() => {
             let max = 0;
             let min = 999;
-            props.health.forEach((r) => {
+            props.health.forEach(r => {
               if (r.weight < min) {
                 min = r.weight;
               }
@@ -147,60 +129,58 @@ const Chart = (props) => {
     </>
   );
 };
-
-const Content = (props) => (
+const Content = props => (
   <>
     <View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
     <Chart
       {...props}
-      graphRef={(ref) => {
-        this.graph = ref;
+      graphRef={ref => {
+        graph = ref;
       }}
-      scrollListToLocation={(ratio) =>
-        this.list.scrollToLocation({
+      scrollListToLocation={ratio =>
+        list.scrollToLocation({
           animated: true,
           sectionIndex: 0,
           itemIndex: ratio,
-          viewPosition: 0,
+          viewPosition: 0
         })
       }
     />
     <SectionList
-      ref={(ref) => {
-        this.list = ref;
+      ref={ref => {
+        list = ref;
       }}
       style={{
         position: "absolute",
         top: 330,
         left: 0,
         right: 0,
-        bottom: 0,
+        bottom: 0
       }}
       getItemLayout={(data, index) => ({
         length: 50,
         offset: 50 * index,
-        index,
+        index
       })}
       onContentSizeChange={(w, h) => {
-        this.sectionHeight = h;
+        sectionHeight = h;
       }}
-      onScroll={(e) => {
+      onScroll={e => {
         const len = props.health.length;
         const chartWidth = Math.max(width, len * 50);
-        const scrollAmount =
-          this.sectionHeight - (e.nativeEvent.contentOffset.y + 343.5);
-        const ratio = chartWidth / this.sectionHeight;
-        if (this.issectionList) {
-          this.graph.scrollTo({ x: scrollAmount * ratio + 10 });
+        const scrollAmount = sectionHeight - (e.nativeEvent.contentOffset.y + 343.5);
+        const ratio = chartWidth / sectionHeight;
+        if (issectionList) {
+          graph.scrollTo({ x: scrollAmount * ratio + 10 });
         }
       }}
-      onMomentumScrollBegin={() => (this.issectionList = true)}
-      onMomentumScrollEnd={() => (this.issectionList = false)}
+      onMomentumScrollBegin={() => (issectionList = true)}
+      onMomentumScrollEnd={() => (issectionList = false)}
       sections={[
         {
           title: moment().format("MMMM"),
-          data: [...props.health],
-        },
+          data: [...props.health]
+        }
       ]}
       renderItem={({ item, index, section }) => (
         <Swipeout
@@ -214,15 +194,15 @@ const Content = (props) => (
               underlayColor: "red",
               onPress: () => {
                 props.delete(item.date.toDate());
-              },
-            },
+              }
+            }
           ]}
         >
           <ListItem
             onPress={() =>
               props.navigation.navigate("Scale", {
                 date: item.date.toDate(),
-                weight: item.weight,
+                weight: item.weight
               })
             }
             style={{ height: 50, backgroundColor: "lightgrey" }}
@@ -237,7 +217,7 @@ const Content = (props) => (
           style={{
             fontWeight: "bold",
             backgroundColor: "lightgrey",
-            height: 10,
+            height: 10
           }}
         />
       )}
@@ -246,18 +226,18 @@ const Content = (props) => (
   </>
 );
 
-const Empty = (props) => (
+const Empty = props => (
   <View
     style={{
       flex: 1,
-      justifyContent: "center",
+      justifyContent: "center"
     }}
   >
     <Text
       style={{
         alignItems: "center",
         textAlign: "center",
-        fontSize: 20,
+        fontSize: 20
       }}
     >
       今日の体重を記録しよう！
@@ -268,20 +248,16 @@ const Empty = (props) => (
       color={"black"}
       name="scale-bathroom"
       containerStyle={{
-        marginVertical: 40,
+        marginVertical: 40
       }}
     />
     <Button title={"計測"} onPress={() => props.navigation.navigate("Scale")} />
   </View>
 );
 
-const Container = (props) => {
+const Container = props => {
   if (props.health) {
-    return props.health.length > 0 ? (
-      <Content {...props} />
-    ) : (
-      <Empty {...props} />
-    );
+    return props.health.length > 0 ? <Content {...props} /> : <Empty {...props} />;
   } else {
     return <></>;
   }
@@ -289,10 +265,10 @@ const Container = (props) => {
 
 class HomeScreen extends React.Component {
   public async componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged(user => {
       this.props.navigation.navigate(user ? "App" : "Auth");
     });
-    await new Promise((r) => setTimeout(r, 1));
+    await new Promise(r => setTimeout(r, 1));
   }
 
   public render() {
@@ -309,40 +285,34 @@ class HomeScreen extends React.Component {
                     title: "App Veison: 0.0.1",
                     options,
                     destructiveButtonIndex: 2,
-                    cancelButtonIndex: 0,
+                    cancelButtonIndex: 0
                   },
-                  (buttonIndex) => {
+                  buttonIndex => {
                     if (buttonIndex === 1) {
                       handleEmail();
                       /* destructive action */
                     } else if (buttonIndex === 2) {
                       firebase.auth().signOut();
                     }
-                  },
+                  }
                 );
               }}
             >
               <Icon type="evilicon" size={28} color={THEME_COLOR} name="gear" />
             </TouchableOpacity>
           }
-          centerComponent={
-            <Text style={{ fontSize: 18, color: BLACK }}>体重記録</Text>
-          }
+          centerComponent={<Text style={{ fontSize: 18, color: BLACK }}>体重記録</Text>}
           rightComponent={
             <TouchableOpacity
               onPress={() => {
                 this.props.navigation.navigate("Scale");
               }}
             >
-              <Text
-                style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}
-              >
-                追加
-              </Text>
+              <Text style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}>追加</Text>
             </TouchableOpacity>
           }
           containerStyle={{
-            backgroundColor: "white",
+            backgroundColor: "white"
           }}
         />
 
@@ -353,27 +323,28 @@ class HomeScreen extends React.Component {
 }
 
 const enhance = compose(
-  withFirestore,
+  // withFirestore,
   connect(({ firebase: { auth: { uid } } }) => ({ uid })),
   firestoreConnect(({ uid }) => {
+    // console.warn(props);
     return [
       {
         collection: `users/${uid}/health`,
-        orderBy: ["date", "desc"],
-      },
+        orderBy: ["date", "desc"]
+      }
     ];
   }),
   connect(({ firestore: { ordered } }, { uid }) => {
     return { health: ordered[`users/${uid}/health`] };
   }),
   withHandlers({
-    delete: ({ firestore, uid }) => (date) => {
+    delete: ({ firestore, uid }) => date => {
       firestore.delete({
         collection: `users/${uid}/health`,
-        doc: moment(date).format("YYYY-MM-DD"),
+        doc: moment(date).format("YYYY-MM-DD")
       });
-    },
-  }),
+    }
+  })
 );
 
 export default enhance(HomeScreen);

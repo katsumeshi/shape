@@ -100,7 +100,7 @@ class LoginScreen extends React.Component {
       const credential = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken);
       await firebase.auth().signInWithCredential(credential);
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }
   };
 
