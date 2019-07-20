@@ -20,8 +20,8 @@
 		689E6EB05B5F4207B24B0AE9 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 63AE18A63A3244A78C5B8813 /* EvilIcons.ttf */; };
 		6CD3BE6551654B46AB0EA9F5 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 207B06005611410C8B4D6311 /* MaterialCommunityIcons.ttf */; };
 		6F76D44EAB91403E8F3A4BCE /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3CC468B59E24DCDAD167202 /* Octicons.ttf */; };
-		811E849D22DEDFDA0046CDE7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 811E849C22DEDFDA0046CDE7 /* GoogleService-Info.plist */; };
-		811E84B822E051E00046CDE7 /* libRNGoogleSignin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 811E84B722E051E00046CDE7 /* libRNGoogleSignin.a */; };
+		811E84D122E2F3B70046CDE7 /* DEVELOPMENT in Resources */ = {isa = PBXBuildFile; fileRef = 811E84CF22E2F3B70046CDE7 /* DEVELOPMENT */; };
+		811E84D222E2F3B70046CDE7 /* PRODUCTION in Resources */ = {isa = PBXBuildFile; fileRef = 811E84D022E2F3B70046CDE7 /* PRODUCTION */; };
 		90F1173160364AA8BA8A2ED9 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 994694D0DFA84FBE8C9AD707 /* FontAwesome5_Regular.ttf */; };
 		A3857208F79EB59434D1D95F /* libPods-shape.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAE9205504A06DBEC7350033 /* libPods-shape.a */; };
 		B6AA5680C9D9492E90504D75 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9CCAE883D444417CA6EC4535 /* FontAwesome5_Brands.ttf */; };
@@ -51,9 +51,10 @@
 		6FAC347F291ED64098168663 /* Pods-shape.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-shape.release.xcconfig"; path = "Pods/Target Support Files/Pods-shape/Pods-shape.release.xcconfig"; sourceTree = "<group>"; };
 		75FFB612F2E54E97AC8C4EB3 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		770297A6406A4B7A8F89D44A /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
-		811E849C22DEDFDA0046CDE7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		811E84AF22E0459E0046CDE7 /* libRNGoogleSignin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNGoogleSignin.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		811E84B722E051E00046CDE7 /* libRNGoogleSignin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNGoogleSignin.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		811E84B922E2D2510046CDE7 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		811E84C422E2D5A40046CDE7 /* libreact-native-config.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-config.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		811E84CF22E2F3B70046CDE7 /* DEVELOPMENT */ = {isa = PBXFileReference; lastKnownFileType = folder; path = DEVELOPMENT; sourceTree = "<group>"; };
+		811E84D022E2F3B70046CDE7 /* PRODUCTION */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PRODUCTION; sourceTree = "<group>"; };
 		994694D0DFA84FBE8C9AD707 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		99EC61A528F14CF99534853E /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		9BEA8955455144D2B4234AC9 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -72,7 +73,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				811E84B822E051E00046CDE7 /* libRNGoogleSignin.a in Frameworks */,
 				A3857208F79EB59434D1D95F /* libPods-shape.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -92,7 +92,7 @@
 		13B07FAE1A68108700A75B9A /* shape */ = {
 			isa = PBXGroup;
 			children = (
-				811E849C22DEDFDA0046CDE7 /* GoogleService-Info.plist */,
+				811E84CE22E2F3AB0046CDE7 /* Configs */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -107,13 +107,21 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				811E84B722E051E00046CDE7 /* libRNGoogleSignin.a */,
-				811E84AF22E0459E0046CDE7 /* libRNGoogleSignin.a */,
+				811E84C422E2D5A40046CDE7 /* libreact-native-config.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				AAE9205504A06DBEC7350033 /* libPods-shape.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		811E84CE22E2F3AB0046CDE7 /* Configs */ = {
+			isa = PBXGroup;
+			children = (
+				811E84CF22E2F3B70046CDE7 /* DEVELOPMENT */,
+				811E84D022E2F3B70046CDE7 /* PRODUCTION */,
+			);
+			name = Configs;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -126,6 +134,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				811E84B922E2D2510046CDE7 /* Config.xcconfig */,
 				13B07FAE1A68108700A75B9A /* shape */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -232,13 +241,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				811E84D222E2F3B70046CDE7 /* PRODUCTION in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				811E849D22DEDFDA0046CDE7 /* GoogleService-Info.plist in Resources */,
 				D228C4BEF17C4136926E0C70 /* AntDesign.ttf in Resources */,
 				C5D18FE422C64F248E8FCFE6 /* Entypo.ttf in Resources */,
 				689E6EB05B5F4207B24B0AE9 /* EvilIcons.ttf in Resources */,
 				0B3A9EC263DF4D5F8E12CCD9 /* Feather.ttf in Resources */,
 				CE79D6CB1335472792F8DD88 /* FontAwesome.ttf in Resources */,
+				811E84D122E2F3B70046CDE7 /* DEVELOPMENT in Resources */,
 				B6AA5680C9D9492E90504D75 /* FontAwesome5_Brands.ttf in Resources */,
 				90F1173160364AA8BA8A2ED9 /* FontAwesome5_Regular.ttf in Resources */,
 				0CC5AD03EF884252A99D1FCE /* FontAwesome5_Solid.ttf in Resources */,
@@ -405,6 +415,9 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = Y39CHLQ6L9;
 				INFOPLIST_FILE = shape/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -425,6 +438,9 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y39CHLQ6L9;
 				INFOPLIST_FILE = shape/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREFIX_HEADER = "";
+				INFOPLIST_PREPROCESS = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -439,6 +455,7 @@
 		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 811E84B922E2D2510046CDE7 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -492,6 +509,7 @@
 		};
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 811E84B922E2D2510046CDE7 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";

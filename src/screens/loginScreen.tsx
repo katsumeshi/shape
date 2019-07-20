@@ -4,7 +4,7 @@ import { Alert, Dimensions, Image, NativeModules, PixelRatio, Text, View } from 
 
 import store from "../store";
 
-// import Config from "react-native-config";
+import Config from "react-native-config";
 import DeviceInfo from "react-native-device-info";
 import { Header, Icon, Input } from "react-native-elements";
 import { AccessToken, LoginManager } from "react-native-fbsdk";
@@ -22,7 +22,7 @@ const { height, width } = Dimensions.get("window");
 
 GoogleSignin.configure({
   offlineAccess: false,
-  webClientId: "1068703927331-2ee061qtm4a8v7227j1vh4ad19kh05fh.apps.googleusercontent.com"
+  webClientId: Config.GOOGLE_API_KEY
 });
 
 interface IFormValues {
