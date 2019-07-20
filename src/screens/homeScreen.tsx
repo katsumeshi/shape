@@ -52,6 +52,7 @@ const Chart = props => {
   const chartWidth = Math.max(width, len * 50);
   return (
     <>
+      {/* <View style={{ height: "2%" }} /> */}
       <ScrollView
         ref={ref => {
           props.graphRef(ref);
@@ -96,7 +97,7 @@ const Chart = props => {
           backgroundColor: "white",
           height: 250,
           position: "absolute",
-          top: 70,
+          top: "10%",
           width: 50
         }}
       >
@@ -152,7 +153,7 @@ const Content = props => (
       }}
       style={{
         position: "absolute",
-        top: 330,
+        top: 340,
         left: 0,
         right: 0,
         bottom: 0
