@@ -19,18 +19,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [FIROptions defaultOptions].deepLinkURLScheme = @"com.yukimatsushita.shape";
+  [FIROptions defaultOptions].deepLinkURLScheme = [[NSBundle mainBundle] bundleIdentifier];
   
-  //#if DEVELOPMENT
-  //    NSString* filePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-dev" ofType:@"plist"];
-  //    FIROptions* options = [[FIROptions new] initWithContentsOfFile:filePath];
-  //    [FIRApp configureWithOptions:options];
-  //#else
-  //   [FIRApp configure];
-  //#endif
-  
-  
-  [FIRApp configure];
+  #if DEBUG
+      NSString* filePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-dev" ofType:@"plist"];
+      FIROptions* options = [[FIROptions new] initWithContentsOfFile:filePath];
+      [FIRApp configureWithOptions:options];
+  #else
+     [FIRApp configure];
+  #endif
   
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
@@ -38,6 +35,9 @@
                                             initialProperties:nil];
   
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
+  
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                           didFinishLaunchingWithOptions:launchOptions];
   
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
@@ -57,11 +57,23 @@
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options {
-  return [[RNFirebaseLinks instance] application:app openURL:url options:options];
+  
+  BOOL handled = [[FBSDKApplicationDelegate sharedInstance] application:app
+                                                                openURL:url
+                                                      sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                                                             annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
+                  ];
+  handled = [[RNFirebaseLinks instance] application:app openURL:url options:options];
+  
+    return handled;
 }
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
   return [[RNFirebaseLinks instance] application:application continueUserActivity:userActivity restorationHandler:restorationHandler];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+  [FBSDKAppEvents activateApp];
 }
 
 @end

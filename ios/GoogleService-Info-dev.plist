@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>455498624462-e50nd1bas0lbceovdugaantnqt7e90fe.apps.googleusercontent.com</string>
+	<string>1068703927331-g05ktqij8glt53rqlmsbsh4ea9afe1hv.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.455498624462-e50nd1bas0lbceovdugaantnqt7e90fe</string>
+	<string>com.googleusercontent.apps.1068703927331-g05ktqij8glt53rqlmsbsh4ea9afe1hv</string>
 	<key>API_KEY</key>
-	<string>AIzaSyC6FlR9fw5_dADQarFeTy-SUaaZjL32noo</string>
+	<string>AIzaSyAzEcB1gfH3eZepEB_lp_iR30K8JUa2qRA</string>
 	<key>GCM_SENDER_ID</key>
-	<string>455498624462</string>
+	<string>1068703927331</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.yukimatsushita.shape</string>
+	<string>com.yukimatsushita.shape.dev</string>
 	<key>PROJECT_ID</key>
-	<string>shape-ce043</string>
+	<string>healther-24332</string>
 	<key>STORAGE_BUCKET</key>
-	<string>shape-ce043.appspot.com</string>
+	<string>healther-24332.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:455498624462:ios:938c83155f666073</string>
+	<string>1:1068703927331:ios:a351e4af86e9bd20</string>
 	<key>DATABASE_URL</key>
-	<string>https://shape-ce043.firebaseio.com</string>
+	<string>https://healther-24332.firebaseio.com</string>
 </dict>
 </plist>

@@ -257,7 +257,12 @@ PODS:
   - yoga (0.60.3.React)
 
 DEPENDENCIES:
+  - Crashlytics (~> 3.13.1)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - Fabric (~> 1.10.1)
+  - FBSDKCoreKit (~> 5.0.0)
+  - FBSDKLoginKit (~> 5.0.0)
+  - FBSDKShareKit (~> 5.0.0)
   - Firebase/Auth
   - Firebase/Core
   - Firebase/DynamicLinks
@@ -446,6 +451,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 66af4d5c8ff4f584c7b7cd9c4b0780920f27fce2
   yoga: 88c514f310aff89b94a14c5fbf44b95735af0cb7
 
-PODFILE CHECKSUM: b51e9815c8864480ba53ba324d7efd13a0606595
+PODFILE CHECKSUM: 054654ba7e278331cfd281def595c437b792bf97
 
 COCOAPODS: 1.5.3

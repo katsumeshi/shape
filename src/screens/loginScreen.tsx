@@ -106,7 +106,8 @@ class LoginScreen extends React.Component {
 
   public facebookLogin = async () => {
     try {
-      const result = await LoginManager.logInWithReadPermissions(["public_profile", "email"]);
+      const result = await LoginManager.logInWithPermissions(["public_profile", "email"]);
+
       if (result.isCancelled) {
         throw new Error("User cancelled request");
       }
@@ -133,17 +134,17 @@ class LoginScreen extends React.Component {
     this.props.dispatch({ type: "INCREMENT", email: values.email });
 
     const actionCodeSettings = {
-      url: "https://healther-24332.firebaseapp.com",
+      url: Config.FIREBASE_URL,
       handleCodeInApp: true, // must always be true for sendSignInLinkToEmail
       iOS: {
-        bundleId: "com.yukimatsushita.shape"
+        bundleId: Config.BUNDLE_ID
       },
       android: {
-        packageName: "com.yukimatsushita.shape",
+        packageName: Config.BUNDLE_ID,
         installApp: true,
         minimumVersion: "12"
       },
-      dynamicLinkDomain: "yukimatsushita.page.link"
+      dynamicLinkDomain: Config.DYNAMIC_LINK_DOMAIN
     };
 
     try {
