@@ -22,7 +22,8 @@ const { height, width } = Dimensions.get("window");
 
 GoogleSignin.configure({
   offlineAccess: false,
-  webClientId: Config.GOOGLE_API_KEY
+  webClientId: Config.GOOGLE_API_KEY,
+  iosClientId: Config.GOOGLE_API_KEY
 });
 
 interface IFormValues {
