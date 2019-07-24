@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Alert,
-  AppState,
-  Dimensions,
-  ImageBackground,
-  PixelRatio,
-  Text,
-  View,
-} from "react-native";
+import { Alert, AppState, Dimensions, ImageBackground, PixelRatio, Text, View } from "react-native";
 import firebase from "react-native-firebase";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { GoogleSignin } from "react-native-google-signin";
@@ -28,31 +20,20 @@ const hasNotch = DeviceInfo.hasNotch();
 const styles = EStyleSheet.create({
   buttonContainer: {
     marginHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 16
   },
   button: {
     height: 44,
     borderRadius: 5,
     justifyContent: "center",
-    borderWidth: 1,
+    borderWidth: 1
   },
-  text: { textAlign: "center", fontSize: "1rem" },
+  text: { textAlign: "center", fontSize: "1rem" }
 });
 
-const Button = ({
-  title,
-  color = "white",
-  backgroundColor = THEME_COLOR,
-  borderColor = "transparent",
-  style,
-  onPress,
-  iconComp,
-}) => (
+const Button = ({ title, color = "white", backgroundColor = THEME_COLOR, borderColor = "transparent", style, onPress, iconComp }) => (
   <View style={[styles.buttonContainer, style]}>
-    <TouchableOpacity
-      style={{ ...styles.button, backgroundColor, borderColor }}
-      onPress={onPress}
-    >
+    <TouchableOpacity style={{ ...styles.button, backgroundColor, borderColor }} onPress={onPress}>
       <View style={{ position: "absolute", left: "16%" }}>{iconComp}</View>
       <Text style={{ ...styles.text, color }}>{title}</Text>
     </TouchableOpacity>
@@ -61,28 +42,24 @@ const Button = ({
 
 class StartScreen extends React.Component {
   public state = {
-    appState: AppState.currentState,
+    appState: AppState.currentState
   };
 
   public async componentDidMount() {
-    this.subscribe = firebase.links().onLink(async (url) => {
+    this.subscribe = firebase.links().onLink(async url => {
       try {
         await firebase.auth().signInWithEmailLink(this.props.login.email, url);
       } catch (e) {
-        Alert.alert(
-          "認証失敗",
-          "Eメールが正しく入力されているか確認してください。",
-          [
-            {
-              text: "OK",
-            },
-          ],
-        );
+        Alert.alert("認証失敗", "Eメールが正しく入力されているか確認してください。", [
+          {
+            text: "OK"
+          }
+        ]);
       }
     });
     await GoogleSignin.revokeAccess();
     await GoogleSignin.signOut();
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged(user => {
       this.props.navigation.navigate(user ? "App" : "Auth");
     });
   }
@@ -95,42 +72,31 @@ class StartScreen extends React.Component {
 
   public goToLogin = () => {
     this.props.navigation.navigate("Login");
-  }
+  };
 
   public render() {
     return (
-      <ImageBackground
-        style={{ flex: 1 }}
-        resizeMode={"cover"}
-        source={require("../../images/introBackground.png")}
-      >
+      <ImageBackground style={{ flex: 1 }} resizeMode={"cover"} source={require("../../images/introBackground.png")}>
         <View
           style={{
             flex: 1,
             marginBottom: 70 * PixelRatio.get(),
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "center"
           }}
         >
           <AppTitle />
         </View>
         <View style={{ flexDirection: "row" }}>
-          <Button
-            title={"アプリを始める"}
-            style={{ flex: 1, marginRight: 8, marginBottom: 60 }}
-            onPress={this.goToLogin}
-          />
+          <Button title={"アプリを始める"} style={{ flex: 1, marginRight: 8, marginBottom: 60 }} onPress={this.goToLogin} />
         </View>
         <View
           style={{
             backgroundColor: "rgba(0, 0, 0, 0.3)",
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "center"
           }}
         />
-        {hasNotch && (
-          <View style={{ height: 10, backgroundColor: "rgba(0, 0, 0, 0.3)" }} />
-        )}
       </ImageBackground>
     );
   }
@@ -151,12 +117,12 @@ const enhance = compose(
   //   //   };
   // }),
   connect((state, ownProps) => ({
-    login: state.login,
+    login: state.login
   })),
   withStateHandlers(null, {
-    onSubmit: () => (email) => ({ email }),
+    onSubmit: () => email => ({ email })
     // onWeightChange: () => weight => ({ weight }),
-  }),
+  })
   // withProps((props) => {
   //   console.warn(props);
   //   return {};

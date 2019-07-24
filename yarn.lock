@@ -5546,10 +5546,10 @@ react-native-extended-stylesheet@^0.12.0:
     css-mediaquery "^0.1.2"
     object-resolve-path "^1.1.0"
 
-react-native-fbsdk@^0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-0.10.1.tgz#b3ed4237b1322956f2260c716d49c2ce08514741"
-  integrity sha512-/TfpiT7wLdP1ABWk46DhpadbOSXdizWEvrNhLABe+9jK8/ljaCL7nwHj+Xp0Yd6KBnW88in67ukAy2kbfbfZ+A==
+react-native-fbsdk@v1.0.0-rc.4:
+  version "1.0.0-rc.4"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-1.0.0-rc.4.tgz#d1123a948e922a88385f86e3316a57329b90dd38"
+  integrity sha512-/yR7jIIpfo9pBpXXl3mOMrzdeJA/t0vqGcgoPtuV0jq1FzdV01ajAKlQvHc8gmROTNDBY/w+BdiQTa79i5TsHQ==
 
 react-native-firebase@^5.5.5:
   version "5.5.5"
