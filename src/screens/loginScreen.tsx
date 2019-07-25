@@ -1,6 +1,6 @@
 import { Formik, FormikActions, FormikProps } from "formik";
 import React from "react";
-import { Alert, Dimensions, Image, NativeModules, PixelRatio, Text, View } from "react-native";
+import { Alert, Dimensions, Image, NativeModules, PixelRatio, Text, View, TouchableOpacity } from "react-native";
 
 import store from "../store";
 
@@ -9,7 +9,6 @@ import DeviceInfo from "react-native-device-info";
 import { Header, Icon, Input } from "react-native-elements";
 import { AccessToken, LoginManager } from "react-native-fbsdk";
 import firebase from "react-native-firebase";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { GoogleSignin, GoogleSigninButton, statusCodes } from "react-native-google-signin";
 import { connect } from "react-redux";
 import { firestoreConnect, withFirestore } from "react-redux-firebase";

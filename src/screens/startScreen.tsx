@@ -1,7 +1,6 @@
 import React from "react";
-import { Alert, AppState, Dimensions, ImageBackground, PixelRatio, Text, View } from "react-native";
+import { Alert, AppState, Dimensions, ImageBackground, PixelRatio, Text, View, TouchableOpacity } from "react-native";
 import firebase from "react-native-firebase";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { GoogleSignin } from "react-native-google-signin";
 import { firestoreConnect, withFirestore } from "react-redux-firebase";
 
@@ -97,6 +96,7 @@ class StartScreen extends React.Component {
             alignItems: "center"
           }}
         />
+        {hasNotch && <View style={{ height: 10, backgroundColor: "rgba(0, 0, 0, 0.3)" }} />}
       </ImageBackground>
     );
   }

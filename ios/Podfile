@@ -51,6 +51,8 @@ target 'shape' do
   use_native_modules!
 
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
 end
 
 post_install do |installer|
