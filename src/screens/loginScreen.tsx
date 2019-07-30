@@ -22,7 +22,6 @@ const { height, width } = Dimensions.get("window");
 
 GoogleSignin.configure({
   offlineAccess: false,
-  // forceConsentPrompt: true,
   webClientId: Config.WEB_API_KEY,
   iosClientId: Config.IOS_API_KEY
 });

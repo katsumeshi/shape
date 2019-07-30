@@ -79,16 +79,18 @@ const Chart = props => {
       >
         <View pointerEvents="none">
           <VictoryChart padding={{ top: 20, left: 50, bottom: 40, right: 10 }} theme={VictoryTheme.material} height={250} width={chartWidth}>
-            <VictoryLine
-              style={{
-                data: { stroke: THEME_COLOR },
-                parent: { border: "1px solid #ccc" }
-              }}
-              data={[...props.health].reverse().map(r => ({
-                x: `${moment(r.date.toDate()).month() + 1}/${moment(r.date.toDate()).date()}`,
-                y: r.weight
-              }))}
-            />
+            {props.health.length > 1 && (
+              <VictoryLine
+                style={{
+                  data: { stroke: THEME_COLOR },
+                  parent: { border: "1px solid #ccc" }
+                }}
+                data={[...props.health].reverse().map(r => ({
+                  x: `${moment(r.date.toDate()).month() + 1}/${moment(r.date.toDate()).date()}`,
+                  y: r.weight
+                }))}
+              />
+            )}
             <VictoryAxis tickValues={props.health.map(r => moment(r.date.toDate()).date())} />
           </VictoryChart>
         </View>

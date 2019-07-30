@@ -1,5 +1,6 @@
 {
-  "GOOGLE_API_KEY": "455498624462-e50nd1bas0lbceovdugaantnqt7e90fe.apps.googleusercontent.com",
+  "IOS_API_KEY": "455498624462-e50nd1bas0lbceovdugaantnqt7e90fe.apps.googleusercontent.com",
+  "WEB_API_KEY": "455498624462-2ef91r2mkn2ppl8iemoqfpgr0hdou4le.apps.googleusercontent.com ",
   "FIREBASE_URL": "https://shape-ce043.firebaseio.com",
   "BUNDLE_ID": "com.yukimatsushita.shape",
   "DYNAMIC_LINK_DOMAIN": "shapeapp.page.link"
