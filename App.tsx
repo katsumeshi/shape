@@ -9,8 +9,15 @@ import { THEME_COLOR } from "./src/constants";
 import AppNavigator from "./src/navigation";
 import { AppWithNavigationState } from "./src/reducers";
 import store from "./src/store";
+// import Config2 from "./config";
+// var Config2 = require("./config");
 
+// (() => {
+//   console.warn(Config2);
+// })();
 firebase.crashlytics().enableCrashlyticsCollection();
+
+// console.log("hogehogehogehgoe");
 
 EStyleSheet.build();
 const styles = EStyleSheet.create({

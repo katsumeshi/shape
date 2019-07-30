@@ -53,6 +53,10 @@ target 'shape' do
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
+  pod 'react-native-mail', :path => '../node_modules/react-native-mail'
+
 end
 
 post_install do |installer|

@@ -1,6 +1,7 @@
 import moment from "moment";
 import React from "react";
-import { ActionSheetIOS, ActivityIndicator, Dimensions, SectionList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, SectionList, StyleSheet, TouchableOpacity, View } from "react-native";
+import ActionSheet from "react-native-actionsheet";
 import { Header, Icon, ListItem, Text } from "react-native-elements";
 import firebase from "react-native-firebase";
 import Mailer from "react-native-mail";
@@ -281,22 +282,23 @@ class HomeScreen extends React.Component {
           leftComponent={
             <TouchableOpacity
               onPress={() => {
-                ActionSheetIOS.showActionSheetWithOptions(
-                  {
-                    title: "App Veison: 0.0.1",
-                    options,
-                    destructiveButtonIndex: 2,
-                    cancelButtonIndex: 0
-                  },
-                  buttonIndex => {
-                    if (buttonIndex === 1) {
-                      handleEmail();
-                      /* destructive action */
-                    } else if (buttonIndex === 2) {
-                      firebase.auth().signOut();
-                    }
-                  }
-                );
+                this.ActionSheet.show();
+                // ActionSheetIOS.showActionSheetWithOptions(
+                //   {
+                //     title: "App Veison: 0.0.1",
+                //     options,
+                //     destructiveButtonIndex: 2,
+                //     cancelButtonIndex: 0
+                //   },
+                //   buttonIndex => {
+                //     if (buttonIndex === 1) {
+                //       handleEmail();
+                //       /* destructive action */
+                //     } else if (buttonIndex === 2) {
+                //       firebase.auth().signOut();
+                //     }
+                //   }
+                // );
               }}
             >
               <Icon type="evilicon" size={28} color={THEME_COLOR} name="gear" />
@@ -318,6 +320,20 @@ class HomeScreen extends React.Component {
         />
 
         <Container {...this.props} />
+        <ActionSheet
+          ref={o => (this.ActionSheet = o)}
+          title={"App Veison: 0.0.1"}
+          options={["キャンセル", "フィードバックを送る", "ログアウト"]}
+          cancelButtonIndex={0}
+          destructiveButtonIndex={2}
+          onPress={index => {
+            if (index === 1) {
+              handleEmail();
+            } else if (index === 2) {
+              firebase.auth().signOut();
+            }
+          }}
+        />
       </View>
     );
   }
