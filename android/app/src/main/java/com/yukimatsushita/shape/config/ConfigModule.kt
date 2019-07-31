@@ -20,7 +20,7 @@ class ConfigModule(reactContext: ReactApplicationContext) : ReactContextBaseJava
 
     override fun getConstants(): MutableMap<String, Any> {
         val constants = mutableMapOf<String, Any>()
-        constants[DEBUG_KEY] = BuildConfig.DEBUG
+        constants[DEBUG_KEY] = BuildConfig.BUILD_TYPE.equals("debug")
         return constants
     }
 }
