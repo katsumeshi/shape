@@ -31,7 +31,6 @@ target 'shape' do
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
   pod 'RNGoogleSignin', :path => '../node_modules/react-native-google-signin'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-  pod 'react-native-config', :path => '../node_modules/react-native-config'
   pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
   
   pod 'Firebase/Core'

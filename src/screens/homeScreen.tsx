@@ -100,7 +100,7 @@ const Chart = props => {
           backgroundColor: "white",
           height: 250,
           position: "absolute",
-          top: "10%",
+          top: "12%",
           width: 50
         }}
       >
