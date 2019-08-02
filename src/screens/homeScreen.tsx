@@ -1,6 +1,6 @@
 import moment from "moment";
 import React from "react";
-import { ActivityIndicator, Dimensions, SectionList, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, SectionList, StyleSheet, TouchableOpacity, View, Platform } from "react-native";
 import ActionSheet from "react-native-actionsheet";
 import { Header, Icon, ListItem, Text } from "react-native-elements";
 import firebase from "react-native-firebase";
@@ -76,6 +76,7 @@ const Chart = props => {
         contentContainerStyle={{ width: chartWidth }}
         alwaysBounceVertical={false}
         alwaysBounceHorizontal={true}
+        horizontal={true}
       >
         <View pointerEvents="none">
           <VictoryChart padding={{ top: 20, left: 50, bottom: 40, right: 10 }} theme={VictoryTheme.material} height={250} width={chartWidth}>
@@ -100,7 +101,7 @@ const Chart = props => {
           backgroundColor: "white",
           height: 250,
           position: "absolute",
-          top: "12%",
+          top: Platform.OS === "ios" ? "12%" : "13%",
           width: 50
         }}
       >
