@@ -11,6 +11,7 @@ import Swipeout from "react-native-swipeout";
 import { VictoryAxis, VictoryChart, VictoryLine, VictoryTheme } from "victory-native";
 import { Button } from "../components/common";
 import { BLACK, THEME_COLOR } from "../constants";
+import DeviceInfo from "react-native-device-info";
 
 import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
@@ -342,7 +343,7 @@ class HomeScreen extends React.Component {
         <Container {...this.props} />
         <ActionSheet
           ref={o => (this.ActionSheet = o)}
-          title={"App Veison: 0.0.1"}
+          title={`App Veison: ${DeviceInfo.getVersion()}`}
           options={["キャンセル", "フィードバックを送る", "ログアウト"]}
           cancelButtonIndex={0}
           destructiveButtonIndex={2}
