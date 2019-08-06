@@ -1,6 +1,6 @@
 import moment from "moment";
 import React from "react";
-import { ActivityIndicator, Dimensions, SectionList, StyleSheet, TouchableOpacity, View, Platform } from "react-native";
+import { PixelRatio, Dimensions, SectionList, StyleSheet, TouchableOpacity, View, Platform } from "react-native";
 import ActionSheet from "react-native-actionsheet";
 import { Header, Icon, ListItem, Text } from "react-native-elements";
 import firebase from "react-native-firebase";
@@ -16,6 +16,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
 import { firestoreConnect, withFirestore } from "react-redux-firebase";
 import { compose, withHandlers } from "recompose";
+import ShapeIcon from "../../fonts/icon";
 
 let graph;
 let list;
@@ -101,7 +102,7 @@ const Chart = props => {
           backgroundColor: "white",
           height: 250,
           position: "absolute",
-          top: Platform.OS === "ios" ? "12%" : "13%",
+          top: PixelRatio.get() >= 3 ? "12%" : "13%",
           width: 50
         }}
       >
@@ -133,6 +134,22 @@ const Chart = props => {
       </View>
     </>
   );
+};
+
+let prevWeight = -1;
+const STATUS_ICON = {
+  UP: {
+    name: "up",
+    color: THEME_COLOR
+  },
+  DOWN: {
+    name: "down",
+    color: "#66B6EA"
+  },
+  EVEN: {
+    name: "even",
+    color: "#C4C4C4"
+  }
 };
 const Content = props => (
   <>
@@ -187,36 +204,53 @@ const Content = props => (
           data: [...props.health]
         }
       ]}
-      renderItem={({ item, index, section }) => (
-        <Swipeout
-          autoClose
-          backgroundColor={"red"}
-          right={[
-            {
-              text: "Delete",
-              backgroundColor: "red",
-              color: "white",
-              underlayColor: "red",
-              onPress: () => {
-                props.delete(item.date.toDate());
+      renderItem={({ item, index, section }) => {
+        let weightStatusIcon = STATUS_ICON.EVEN;
+        if (props.health.length > index + 1) {
+          let diff = props.health[index].weight - props.health[index + 1].weight;
+          if (diff > 0) {
+            weightStatusIcon = STATUS_ICON.UP;
+          } else if (diff < 0) {
+            weightStatusIcon = STATUS_ICON.DOWN;
+          }
+        }
+
+        return (
+          <Swipeout
+            autoClose
+            backgroundColor={"red"}
+            right={[
+              {
+                text: "Delete",
+                backgroundColor: "red",
+                color: "white",
+                underlayColor: "red",
+                onPress: () => {
+                  props.delete(item.date.toDate());
+                }
               }
-            }
-          ]}
-        >
-          <ListItem
-            onPress={() =>
-              props.navigation.navigate("Scale", {
-                date: item.date.toDate(),
-                weight: item.weight
-              })
-            }
-            style={{ height: 50, backgroundColor: "lightgrey" }}
-            title={moment(item.date.toDate()).format("YYYY/MM/DD")}
-            topDivider
-            rightTitle={`${item.weight}kg`}
-          />
-        </Swipeout>
-      )}
+            ]}
+          >
+            <ListItem
+              onPress={() =>
+                props.navigation.navigate("Scale", {
+                  date: item.date.toDate(),
+                  weight: item.weight
+                })
+              }
+              style={{ height: 50, backgroundColor: "lightgrey" }}
+              title={moment(item.date.toDate()).format("YYYY/MM/DD")}
+              topDivider
+              rightTitle={
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={{ color: "#666", fontSize: 18 }}>{`${item.weight}kg`}</Text>
+                  <ShapeIcon style={{ width: 25, marginLeft: 16, textAlign: "center" }} size={20} color={weightStatusIcon.color} name={weightStatusIcon.name} />
+                </View>
+              }
+            />
+          </Swipeout>
+        );
+      }}
       renderSectionHeader={({ section: { title } }) => (
         <View
           style={{
@@ -277,7 +311,6 @@ class HomeScreen extends React.Component {
   }
 
   public render() {
-    const options = ["キャンセル", "フィードバックを送る", "ログアウト"];
     return (
       <View style={{ flex: 1 }}>
         <Header
@@ -286,22 +319,6 @@ class HomeScreen extends React.Component {
             <TouchableOpacity
               onPress={() => {
                 this.ActionSheet.show();
-                // ActionSheetIOS.showActionSheetWithOptions(
-                //   {
-                //     title: "App Veison: 0.0.1",
-                //     options,
-                //     destructiveButtonIndex: 2,
-                //     cancelButtonIndex: 0
-                //   },
-                //   buttonIndex => {
-                //     if (buttonIndex === 1) {
-                //       handleEmail();
-                //       /* destructive action */
-                //     } else if (buttonIndex === 2) {
-                //       firebase.auth().signOut();
-                //     }
-                //   }
-                // );
               }}
             >
               <Icon type="evilicon" size={28} color={THEME_COLOR} name="gear" />
@@ -343,10 +360,8 @@ class HomeScreen extends React.Component {
 }
 
 const enhance = compose(
-  // withFirestore,
   connect(({ firebase: { auth: { uid } } }) => ({ uid })),
   firestoreConnect(({ uid }) => {
-    // console.warn(props);
     return [
       {
         collection: `users/${uid}/health`,
