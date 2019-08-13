@@ -46,8 +46,6 @@ target 'shape' do
   
   pod 'Fabric', '~> 1.10.1'
   pod 'Crashlytics', '~> 3.13.1'
-  
-  use_native_modules!
 
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
@@ -55,6 +53,10 @@ target 'shape' do
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
   pod 'react-native-mail', :path => '../node_modules/react-native-mail'
+
+  pod 'RNCPushNotificationIOS', :path => '../node_modules/@react-native-community/push-notification-ios'
+  
+  use_native_modules!
 
 end
 

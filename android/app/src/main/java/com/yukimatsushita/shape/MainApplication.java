@@ -3,6 +3,7 @@ package com.yukimatsushita.shape;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 
 import androidx.multidex.MultiDexApplication;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
