@@ -176,7 +176,7 @@ class ScaleScreen extends React.Component {
         </KeyboardAvoidingView>
         {this.state.isDatePickerShowing && (
           <DatePicker
-            date={this.props.date}
+            date={new Date()}
             onCancel={() => {
               this.setState({ isDatePickerShowing: false });
             }}

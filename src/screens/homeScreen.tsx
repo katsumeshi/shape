@@ -21,6 +21,7 @@ import { compose, withHandlers } from "recompose";
 import ShapeIcon from "../../fonts/icon";
 
 import PushNotification from "react-native-push-notification";
+import DatePicker from "../components/datePicker";
 
 let graph;
 let list;
@@ -307,6 +308,12 @@ const Container = props => {
 };
 
 class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isDatePickerShowing: false
+    };
+  }
   public async componentDidMount() {
     PushNotification.configure({
       // (optional) Called when Token is generated (iOS and Android)
@@ -346,16 +353,20 @@ class HomeScreen extends React.Component {
       requestPermissions: true
     });
 
+    console.warn("hogehoge");
+    PushNotification.cancelAllLocalNotifications();
     PushNotification.localNotificationSchedule({
-      //... You can use all the options from localNotifications
+      id: "scale",
       message: "My Notification Message", // (required)
-      date: new Date(Date.now() + 10 * 1000) // in 60 secs
+      date: new Date(Date.now() + 10 * 1000),
+      repeatType: "minute"
     });
 
+    // PushNotification.cancelLocalNotifications({ id: "scale" });
     firebase.auth().onAuthStateChanged(user => {
       this.props.navigation.navigate(user ? "App" : "Auth");
     });
-    await new Promise(r => setTimeout(r, 1));
+    // await new Promise(r => setTimeout(r, 1));
   }
 
   public render() {
@@ -391,17 +402,32 @@ class HomeScreen extends React.Component {
         <ActionSheet
           ref={o => (this.ActionSheet = o)}
           title={`App Veison: ${DeviceInfo.getVersion()}`}
-          options={["キャンセル", "フィードバックを送る", "ログアウト"]}
+          options={["キャンセル", "通知設定", "フィードバックを送る", "ログアウト"]}
           cancelButtonIndex={0}
-          destructiveButtonIndex={2}
+          destructiveButtonIndex={3}
           onPress={index => {
             if (index === 1) {
-              handleEmail();
+              this.setState({ isDatePickerShowing: true });
             } else if (index === 2) {
+              handleEmail();
+            } else if (index === 3) {
               firebase.auth().signOut();
             }
           }}
         />
+
+        {this.state.isDatePickerShowing && (
+          <DatePicker
+            date={this.props.date}
+            onCancel={() => {
+              this.setState({ isDatePickerShowing: false });
+            }}
+            onDone={date => {
+              this.props.onDateChange(date);
+              this.setState({ isDatePickerShowing: false });
+            }}
+          />
+        )}
       </View>
     );
   }

@@ -12,7 +12,7 @@ const DatePickerPanel = ({ date, onCancel, onDone, onDateChange }) => (
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          marginHorizontal: 8,
+          marginHorizontal: 8
         }}
       >
         <Button title="Cancel" type="clear" onPress={onCancel} />
@@ -27,7 +27,7 @@ export default class DatePicker extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: props.date,
+      date: props.date
     };
   }
   public render() {
@@ -42,12 +42,12 @@ export default class DatePicker extends React.Component {
           bottom: 0,
           right: 0,
           backgroundColor: "rgba(0, 0, 0, 0.2)",
-          justifyContent: "flex-end",
+          justifyContent: "flex-end"
         }}
       >
         <DatePickerPanel
           date={this.state.date}
-          onDateChange={(date) => {
+          onDateChange={date => {
             this.setState({ date });
           }}
           onCancel={this.props.onCancel}

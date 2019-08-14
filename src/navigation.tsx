@@ -1,58 +1,60 @@
-import {
-  createAppContainer,
-  createStackNavigator,
-  createSwitchNavigator,
-} from "react-navigation";
+import { createAppContainer, createStackNavigator, createSwitchNavigator, createBottomTabNavigator } from "react-navigation";
 import AuthLoadingScreen from "./screens/authLoadingScreen";
 import HomeScreen from "./screens/homeScreen";
 import LoginScreen from "./screens/loginScreen";
 import ScaleScreen from "./screens/scaleScreen";
 import StartScreen from "./screens/startScreen";
+import SettingScreen from "./screens/settingScreen";
 
 const MainStack = createStackNavigator(
   {
     Home: {
-      screen: HomeScreen,
+      screen: HomeScreen
     },
     Scale: {
-      screen: ScaleScreen,
-    },
+      screen: ScaleScreen
+    }
   },
   {
-    headerMode: "none",
-  },
+    headerMode: "none"
+  }
 );
 
 const AppStack = createStackNavigator(
   {
     Main: {
-      screen: MainStack,
-    },
+      screen: MainStack
+    }
   },
   {
     mode: "modal",
-    headerMode: "none",
-  },
+    headerMode: "none"
+  }
 );
+
+const TabNavigator = createBottomTabNavigator({
+  Home: AppStack,
+  Settings: SettingScreen
+});
 
 const AuthStack = createStackNavigator(
   { Start: StartScreen, Login: LoginScreen },
   {
-    headerMode: "none",
-  },
+    headerMode: "none"
+  }
 );
 
 const AppNavigator = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
-      App: AppStack,
-      Auth: AuthStack,
+      App: TabNavigator,
+      Auth: AuthStack
     },
     {
-      initialRouteName: "AuthLoading",
-    },
-  ),
+      initialRouteName: "AuthLoading"
+    }
+  )
 );
 
 export default AppNavigator;
