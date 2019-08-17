@@ -375,13 +375,15 @@ class HomeScreen extends React.Component {
         <Header
           containerStyle={{ zIndex: 200 }}
           leftComponent={
-            <TouchableOpacity
-              onPress={() => {
-                this.ActionSheet.show();
-              }}
-            >
-              <Icon type="evilicon" size={28} color={THEME_COLOR} name="gear" />
-            </TouchableOpacity>
+
+              // <TouchableOpacity
+              //   onPress={() => {
+              //     this.ActionSheet.show();
+              //   }}
+              // >
+              //   <Icon type="evilicon" size={28} color={THEME_COLOR} name="gear" />
+              // </TouchableOpacity>
+
           }
           centerComponent={<Text style={{ fontSize: 18, color: BLACK }}>体重記録</Text>}
           rightComponent={
