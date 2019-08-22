@@ -8,5 +8,6 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Add any project specific keep options here:
--keep class com.yukimatsushita.shape.BuildConfig { *; }
--keep class com.yukimatsushita.shape.dev.BuildConfig { *; }
+
+-keep class io.invertase.firebase.** { *; }
+-dontwarn io.invertase.firebase.**
