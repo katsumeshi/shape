@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "455498624462-2so3gn6f0078i972jg1nr6ibq5rsvifl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yukimatsushita.shape",
+            "certificate_hash": "1fe48e0880857bfdf2281b56915ffa9129bc6f59"
+          }
+        },
+        {
           "client_id": "455498624462-bev8bj6net10dnb2ck335itted2a76g9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
