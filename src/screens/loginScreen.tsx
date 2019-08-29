@@ -17,7 +17,6 @@ import { compose, lifecycle, withHandlers, withReducer, withStateHandlers } from
 import * as Yup from "yup";
 import { AppTitle } from "../components/common";
 import { THEME_COLOR } from "../constants";
-const hasNotch = DeviceInfo.hasNotch();
 const { height, width } = Dimensions.get("window");
 
 GoogleSignin.configure({

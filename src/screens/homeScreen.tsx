@@ -22,6 +22,7 @@ import ShapeIcon from "../../fonts/icon";
 
 import PushNotification from "react-native-push-notification";
 import DatePicker from "../components/datePicker";
+const hasNotch = DeviceInfo.hasNotch();
 
 let graph;
 let list;
@@ -59,7 +60,6 @@ const Chart = props => {
   const chartWidth = Math.max(width, len * 50);
   return (
     <>
-      {/* <View style={{ height: "2%" }} /> */}
       <ScrollView
         ref={ref => {
           props.graphRef(ref);
@@ -107,7 +107,7 @@ const Chart = props => {
           backgroundColor: "white",
           height: 250,
           position: "absolute",
-          top: PixelRatio.get() >= 3 ? "12%" : "13%",
+          top: hasNotch ? 95 : 70,
           width: 50
         }}
       >
@@ -141,7 +141,6 @@ const Chart = props => {
   );
 };
 
-let prevWeight = -1;
 const STATUS_ICON = {
   UP: {
     name: "up",
@@ -179,7 +178,7 @@ const Content = props => (
       }}
       style={{
         position: "absolute",
-        top: 340,
+        top: hasNotch ? 360 : 340,
         left: 0,
         right: 0,
         bottom: 0
@@ -353,7 +352,7 @@ class HomeScreen extends React.Component {
       requestPermissions: true
     });
 
-    console.warn("hogehoge");
+    // console.warn("hogehoge");
     PushNotification.cancelAllLocalNotifications();
     PushNotification.localNotificationSchedule({
       id: "scale",
