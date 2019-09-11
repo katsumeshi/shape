@@ -2,15 +2,13 @@ import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { SectionList, Dimensions, Alert, KeyboardAvoidingView, Text, TouchableOpacity, TouchableWithoutFeedback, View, DatePickerIOS, Switch } from "react-native";
 import { Header, Icon, ListItem } from "react-native-elements";
-import { connect } from "react-redux";
-import { withFirestore } from "react-redux-firebase";
 import { compose, withState, withHandlers, withProps, withStateHandlers } from "recompose";
-import DatePicker from "../components/datePicker";
 import { BLACK, THEME_COLOR } from "../constants";
 import { Button } from "../components/common";
 import firebase from "react-native-firebase";
 import DeviceInfo from "react-native-device-info";
 import AsyncStorage from "@react-native-community/async-storage";
+import { notificationSet } from "../utils/notificationUtils";
 
 const SettingList = () => {
   const [showPicker, onShowPicker] = useState(false);
@@ -18,20 +16,32 @@ const SettingList = () => {
   const [notification, onChangeNotification] = useState(true);
 
   useEffect(() => {
-    async function fetchMyAPI() {
-      const notifUnixTime = await AsyncStorage.getItem("notifUnixTime");
-      if (notifUnixTime) {
-        const notifDate = moment.unix(parseInt(notifUnixTime)).toDate();
-        onDateChange(notifDate);
-      }
+    async function didMount() {
+      const notifUnixTime = (await AsyncStorage.getItem("notifUnixTime")) || `${moment().unix()}`;
+      const notifDate = moment.unix(parseInt(notifUnixTime)).toDate();
+      onDateChange(notifDate);
     }
-    fetchMyAPI();
+    didMount();
   }, []);
 
   useEffect(() => {
-    AsyncStorage.setItem("notifUnixTime", `${moment(date).unix()}`);
-    console.warn(`${moment(date).unix()}`);
+    async function dateChanged() {
+      let m = moment()
+        .hour(moment(date).hour())
+        .minute(moment(date).minute());
+      await AsyncStorage.setItem("notifUnixTime", `${m.unix()}`);
+      notificationSet();
+    }
+    dateChanged();
   }, [date]);
+
+  useEffect(() => {
+    async function notifChanged() {
+      await AsyncStorage.setItem("notif", `${notification}`);
+      notificationSet();
+    }
+    notifChanged();
+  }, [notification]);
 
   const data = [
     {
@@ -86,14 +96,12 @@ class ScaleScreen extends React.Component {
     };
   }
 
-  public render() {
+  render() {
     return (
       <>
         <Header
           containerStyle={{ zIndex: 200 }}
-          //   leftComponent={}
           centerComponent={<Text style={{ fontSize: 18, color: BLACK }}>設定</Text>}
-          //   rightComponent={}
           containerStyle={{
             backgroundColor: "white"
           }}
@@ -114,12 +122,14 @@ class ScaleScreen extends React.Component {
                 },
                 {
                   text: "ログアウト",
-                  onPress: () => firebase.auth().signOut()
+                  onPress: () => {
+                    AsyncStorage.clear();
+                    firebase.auth().signOut();
+                  }
                 }
               ],
               { cancelable: true }
             );
-            // firebase.auth().signOut();
           }}
         />
       </>
