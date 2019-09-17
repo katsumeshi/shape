@@ -10,6 +10,8 @@ import DeviceInfo from "react-native-device-info";
 import AsyncStorage from "@react-native-community/async-storage";
 import { notificationSet } from "../utils/notificationUtils";
 
+import { connect } from "react-redux";
+
 const SettingList = () => {
   const [showPicker, onShowPicker] = useState(false);
   const [date, onDateChange] = useState(new Date());
@@ -88,55 +90,70 @@ const SettingList = () => {
   );
 };
 
-class ScaleScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isDatePickerShowing: false
-    };
-  }
+// const LoginScreen = props => {
+//   useEffect(() => {
+//     props.navigation.navigate(props.auth.isLoggedIn ? "App" : "Auth");
+//   });
 
-  render() {
-    return (
-      <>
-        <Header
-          containerStyle={{ zIndex: 200 }}
-          centerComponent={<Text style={{ fontSize: 18, color: BLACK }}>設定</Text>}
-          containerStyle={{
-            backgroundColor: "white"
-          }}
-        />
-        <View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
-        <SettingList />
-        <Button
-          title={"ログアウト"}
-          style={{}}
-          onPress={() => {
-            Alert.alert(
-              "確認",
-              "本当にログアウトしますか？",
-              [
-                {
-                  text: "キャンセル",
-                  style: "cancel"
-                },
-                {
-                  text: "ログアウト",
-                  onPress: () => {
-                    AsyncStorage.clear();
-                    firebase.auth().signOut();
-                  }
+// class ScaleScreen extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       isDatePickerShowing: false
+//     };
+//   }
+
+const ScaleScreen = props => {
+  useEffect(() => {
+    if (props.auth.isLoggedIn !== undefined) {
+      props.navigation.navigate(props.auth.isLoggedIn ? "App" : "Auth");
+    }
+  });
+
+  return (
+    <>
+      <Header
+        containerStyle={{ zIndex: 200 }}
+        centerComponent={<Text style={{ fontSize: 18, color: BLACK }}>設定</Text>}
+        containerStyle={{
+          backgroundColor: "white"
+        }}
+      />
+      <View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
+      <SettingList />
+      <Button
+        title={"ログアウト"}
+        style={{}}
+        onPress={() => {
+          Alert.alert(
+            "確認",
+            "本当にログアウトしますか？",
+            [
+              {
+                text: "キャンセル",
+                style: "cancel"
+              },
+              {
+                text: "ログアウト",
+                onPress: () => {
+                  AsyncStorage.clear();
+                  firebase.auth().signOut();
                 }
-              ],
-              { cancelable: true }
-            );
-          }}
-        />
-      </>
-    );
-  }
-}
+              }
+            ],
+            { cancelable: true }
+          );
+        }}
+      />
+    </>
+  );
+};
 
-const enhance = compose(withState("showPicker", "onShowPicker", false));
+// const enhance = compose(withState("showPicker", "onShowPicker", false));
 
-export default enhance(ScaleScreen);
+// export default enhance(ScaleScreen);
+
+export default connect(
+  state => ({ auth: state.auth })
+  // { requestLoginStatus }
+)(ScaleScreen);

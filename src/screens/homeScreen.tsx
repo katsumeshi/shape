@@ -1,12 +1,11 @@
 import moment from "moment";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { PixelRatio, Dimensions, SectionList, StyleSheet, TouchableOpacity, View, Platform } from "react-native";
 import ActionSheet from "react-native-actionsheet";
 import { Header, Icon, ListItem, Text } from "react-native-elements";
 import firebase from "react-native-firebase";
 import Mailer from "react-native-mail";
-import styled from "styled-components/native";
-const { height, width } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 import Swipeout from "react-native-swipeout";
 import { VictoryAxis, VictoryChart, VictoryLine, VictoryTheme } from "victory-native";
 import { Button } from "../components/common";
@@ -14,12 +13,12 @@ import { BLACK, THEME_COLOR } from "../constants";
 import DeviceInfo from "react-native-device-info";
 
 import { ScrollView } from "react-native-gesture-handler";
-import { connect } from "react-redux";
-import { firestoreConnect, withFirestore } from "react-redux-firebase";
-import { compose, withHandlers } from "recompose";
 import ShapeIcon from "../../fonts/icon";
 import DatePicker from "../components/datePicker";
 import { notificationSet } from "../utils/notificationUtils";
+import { connect } from "react-redux";
+
+import { requestWeights } from "../redux/modules/health";
 const hasNotch = DeviceInfo.hasNotch();
 
 let graph;
@@ -27,17 +26,6 @@ let list;
 let sectionHeight;
 let issectionList;
 let isGraphScroll;
-
-const styles = StyleSheet.create({
-  container: {
-    height: 200,
-    width,
-    backgroundColor: "#F5FCFF"
-  },
-  chart: {
-    flex: 1
-  }
-});
 
 const handleEmail = () => {
   Mailer.mail(
@@ -304,104 +292,179 @@ const Container = props => {
   }
 };
 
-class HomeScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isDatePickerShowing: false
-    };
-  }
-  componentWillMount() {
-    notificationSet();
-  }
+// class HomeScreen extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       isDatePickerShowing: false
+//     };
+//   }
+//   componentWillMount() {
+//     notificationSet();
+//   }
 
-  public render() {
-    return (
-      <View style={{ flex: 1 }}>
-        <Header
-          containerStyle={{ zIndex: 200 }}
-          leftComponent={
+//   public render() {
+//     return (
+//       <View style={{ flex: 1 }}>
+//         <Header
+//           containerStyle={{ zIndex: 200 }}
+//           leftComponent={
 
-              // <TouchableOpacity
-              //   onPress={() => {
-              //     this.ActionSheet.show();
-              //   }}
-              // >
-              //   <Icon type="evilicon" size={28} color={THEME_COLOR} name="gear" />
-              // </TouchableOpacity>
+//               // <TouchableOpacity
+//               //   onPress={() => {
+//               //     this.ActionSheet.show();
+//               //   }}
+//               // >
+//               //   <Icon type="evilicon" size={28} color={THEME_COLOR} name="gear" />
+//               // </TouchableOpacity>
 
+//           }
+//           centerComponent={<Text style={{ fontSize: 18, color: BLACK }}>体重記録</Text>}
+//           rightComponent={
+//             <TouchableOpacity
+//               onPress={() => {
+//                 this.props.navigation.navigate("Scale");
+//               }}
+//             >
+//               <Text style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}>追加</Text>
+//             </TouchableOpacity>
+//           }
+//           containerStyle={{
+//             backgroundColor: "white"
+//           }}
+//         />
+
+//         <Container {...this.props} />
+//         <ActionSheet
+//           ref={o => (this.ActionSheet = o)}
+//           title={`App Veison: ${DeviceInfo.getVersion()}`}
+//           options={["キャンセル", "通知設定", "フィードバックを送る", "ログアウト"]}
+//           cancelButtonIndex={0}
+//           destructiveButtonIndex={3}
+//           onPress={index => {
+//             if (index === 1) {
+//               this.setState({ isDatePickerShowing: true });
+//             } else if (index === 2) {
+//               handleEmail();
+//             } else if (index === 3) {
+//               firebase.auth().signOut();
+//             }
+//           }}
+//         />
+
+//         {this.state.isDatePickerShowing && (
+//           <DatePicker
+//             date={this.props.date}
+//             onCancel={() => {
+//               this.setState({ isDatePickerShowing: false });
+//             }}
+//             onDone={date => {
+//               this.props.onDateChange(date);
+//               this.setState({ isDatePickerShowing: false });
+//             }}
+//           />
+//         )}
+//       </View>
+//     );
+//   }
+// }
+
+const HomeScreen = props => {
+  const [isDatePickerShowing, datePickerShowing] = useState(false);
+
+  useEffect(() => {
+    //   async function didMount() {
+    //     const notifUnixTime = (await AsyncStorage.getItem("notifUnixTime")) || `${moment().unix()}`;
+    //     const notifDate = moment.unix(parseInt(notifUnixTime)).toDate();
+    //     onDateChange(notifDate);
+    //   }
+    //   didMount();
+    props.requestWeights();
+  }, []);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Header
+        containerStyle={{ zIndex: 200 }}
+        centerComponent={<Text style={{ fontSize: 18, color: BLACK }}>体重記録</Text>}
+        rightComponent={
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("Scale");
+            }}
+          >
+            <Text style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}>追加</Text>
+          </TouchableOpacity>
+        }
+        containerStyle={{
+          backgroundColor: "white"
+        }}
+      />
+
+      <Container {...props} />
+      {/* <ActionSheet
+        // ref={o => (ActionSheet = o)}
+        title={`App Veison: ${DeviceInfo.getVersion()}`}
+        options={["キャンセル", "通知設定", "フィードバックを送る", "ログアウト"]}
+        cancelButtonIndex={0}
+        destructiveButtonIndex={3}
+        onPress={index => {
+          if (index === 1) {
+            datePickerShowing(true);
+            // setState({ isDatePickerShowing: true });
+          } else if (index === 2) {
+            handleEmail();
+          } else if (index === 3) {
+            firebase.auth().signOut();
           }
-          centerComponent={<Text style={{ fontSize: 18, color: BLACK }}>体重記録</Text>}
-          rightComponent={
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate("Scale");
-              }}
-            >
-              <Text style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}>追加</Text>
-            </TouchableOpacity>
-          }
-          containerStyle={{
-            backgroundColor: "white"
+        }}
+      /> */}
+
+      {/* {isDatePickerShowing && (
+        <DatePicker
+          date={props.date || new Date()}
+          onCancel={() => {
+            datePickerShowing(false);
+            // setState({ isDatePickerShowing: false });
+          }}
+          onDone={date => {
+            props.onDateChange(date);
+            datePickerShowing(false);
+            // setState({ isDatePickerShowing: false });
           }}
         />
+      )} */}
+    </View>
+  );
+};
 
-        <Container {...this.props} />
-        <ActionSheet
-          ref={o => (this.ActionSheet = o)}
-          title={`App Veison: ${DeviceInfo.getVersion()}`}
-          options={["キャンセル", "通知設定", "フィードバックを送る", "ログアウト"]}
-          cancelButtonIndex={0}
-          destructiveButtonIndex={3}
-          onPress={index => {
-            if (index === 1) {
-              this.setState({ isDatePickerShowing: true });
-            } else if (index === 2) {
-              handleEmail();
-            } else if (index === 3) {
-              firebase.auth().signOut();
-            }
-          }}
-        />
+// const enhance = compose(
+//   connect(({ firebase: { auth: { uid } } }) => ({ uid })),
+//   firestoreConnect(({ uid }) => {
+//     return [
+//       {
+//         collection: `users/${uid}/health`,
+//         orderBy: ["date", "desc"]
+//       }
+//     ];
+//   }),
+//   connect(({ firestore: { ordered } }, { uid }) => {
+//     return { health: ordered[`users/${uid}/health`] };
+//   }),
+//   withHandlers({
+//     delete: ({ firestore, uid }) => date => {
+//       firestore.delete({
+//         collection: `users/${uid}/health`,
+//         doc: moment(date).format("YYYY-MM-DD")
+//       });
+//     }
+//   })
+// );
 
-        {this.state.isDatePickerShowing && (
-          <DatePicker
-            date={this.props.date}
-            onCancel={() => {
-              this.setState({ isDatePickerShowing: false });
-            }}
-            onDone={date => {
-              this.props.onDateChange(date);
-              this.setState({ isDatePickerShowing: false });
-            }}
-          />
-        )}
-      </View>
-    );
-  }
-}
+// export default enhance(HomeScreen);
+// export default HomeScreen;
 
-const enhance = compose(
-  connect(({ firebase: { auth: { uid } } }) => ({ uid })),
-  firestoreConnect(({ uid }) => {
-    return [
-      {
-        collection: `users/${uid}/health`,
-        orderBy: ["date", "desc"]
-      }
-    ];
-  }),
-  connect(({ firestore: { ordered } }, { uid }) => {
-    return { health: ordered[`users/${uid}/health`] };
-  }),
-  withHandlers({
-    delete: ({ firestore, uid }) => date => {
-      firestore.delete({
-        collection: `users/${uid}/health`,
-        doc: moment(date).format("YYYY-MM-DD")
-      });
-    }
-  })
-);
-
-export default enhance(HomeScreen);
+export default connect(
+  state => ({ auth: state.auth }),
+  { requestWeights }
+)(HomeScreen);

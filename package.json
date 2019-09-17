@@ -33,6 +33,7 @@
     "recompose": "^0.30.0",
     "redux": "^4.0.4",
     "redux-firestore": "^0.7.3",
+    "redux-saga": "^1.0.5",
     "styled-components": "^4.3.2",
     "victory-native": "^32.0.2",
     "yup": "^0.27.0"
