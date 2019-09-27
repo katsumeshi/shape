@@ -214,5 +214,4 @@ const LoginScreen = props => {
 
 export default connect(
   state => ({ auth: state.auth })
-  // { requestLoginStatus }
 )(LoginScreen);
