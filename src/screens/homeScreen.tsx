@@ -222,8 +222,9 @@ const Content = props => (
 						<ListItem
 							onPress={() =>
 								props.navigation.navigate("Scale", {
+									type: "update",
 									date: item.date.toDate(),
-									weight: item.weight
+									weight: `${item.weight}`
 								})
 							}
 							style={{ height: 50, backgroundColor: "lightgrey" }}
@@ -278,7 +279,7 @@ const Empty = props => (
 				marginVertical: 40
 			}}
 		/>
-		<Button title={"計測"} onPress={() => props.navigation.navigate("Scale")} />
+		<Button title={"計測"} onPress={() => props.navigation.navigate("Scale", { type: "create" })} />
 	</View>
 );
 
@@ -303,7 +304,7 @@ const HomeScreen = props => {
 				rightComponent={
 					<TouchableOpacity
 						onPress={() => {
-							props.navigation.navigate("Scale");
+							props.navigation.navigate("Scale", { type: "create" });
 						}}
 					>
 						<Text style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}>追加</Text>
