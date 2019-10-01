@@ -2,7 +2,6 @@ import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { SectionList, Dimensions, Alert, KeyboardAvoidingView, Text, TouchableOpacity, TouchableWithoutFeedback, View, DatePickerIOS, Switch } from "react-native";
 import { Header, Icon, ListItem } from "react-native-elements";
-import { compose, withState, withHandlers, withProps, withStateHandlers } from "recompose";
 import { BLACK, THEME_COLOR } from "../constants";
 import { Button } from "../components/common";
 import firebase from "react-native-firebase";
@@ -73,7 +72,6 @@ const SettingList = () => {
 						style={{ height: 50, backgroundColor: "lightgrey" }}
 						title={item.left}
 						bottomDivider
-						// rightTitle={<Text style={{ color: "#666", fontSize: 18 }}>{item.right}</Text>}
 						rightElement={<Text style={{ color: "#666", fontSize: 18 }}>{item.right}</Text>}
 					/>
 					{item.isDatePicker && showPicker && <DatePickerIOS date={date} mode="time" onDateChange={onDateChange} />}
@@ -89,19 +87,6 @@ const SettingList = () => {
 		/>
 	);
 };
-
-// const LoginScreen = props => {
-//   useEffect(() => {
-//     props.navigation.navigate(props.auth.isLoggedIn ? "App" : "Auth");
-//   });
-
-// class ScaleScreen extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       isDatePickerShowing: false
-//     };
-//   }
 
 const ScaleScreen = props => {
 	useEffect(() => {
@@ -123,7 +108,6 @@ const ScaleScreen = props => {
 			<SettingList />
 			<Button
 				title={"ログアウト"}
-				style={{}}
 				onPress={() => {
 					Alert.alert(
 						"確認",

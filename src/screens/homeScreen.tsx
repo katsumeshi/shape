@@ -1,6 +1,6 @@
 import moment from "moment";
-import React, { useState, useEffect } from "react";
-import { PixelRatio, Dimensions, SectionList, StyleSheet, TouchableOpacity, View, Platform } from "react-native";
+import React, { useEffect } from "react";
+import { Dimensions, SectionList, TouchableOpacity, View } from "react-native";
 import { Header, Icon, ListItem, Text } from "react-native-elements";
 import Mailer from "react-native-mail";
 const { width } = Dimensions.get("window");
@@ -12,8 +12,6 @@ import DeviceInfo from "react-native-device-info";
 
 import { ScrollView } from "react-native-gesture-handler";
 import ShapeIcon from "../../fonts/icon";
-import DatePicker from "../components/datePicker";
-import { notificationSet } from "../utils/notificationUtils";
 import { connect } from "react-redux";
 
 import { requestWeights } from "../redux/modules/health";

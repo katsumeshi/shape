@@ -1,12 +1,10 @@
 import moment from "moment";
 import React from "react";
-import { DatePickerAndroid, Dimensions, Keyboard, KeyboardAvoidingView, Text, TouchableOpacity, TouchableWithoutFeedback, View, Platform } from "react-native";
+import { DatePickerAndroid, Keyboard, KeyboardAvoidingView, Text, TouchableOpacity, TouchableWithoutFeedback, View, Platform } from "react-native";
 import { Button, Header, Icon, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import DatePicker from "../components/datePicker";
 import { BLACK, THEME_COLOR } from "../constants";
-
-const { height, width } = Dimensions.get("window");
 const margin = 8;
 
 const limitWeight = text => {
