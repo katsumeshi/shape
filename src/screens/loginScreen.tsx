@@ -137,6 +137,43 @@ const signInWithEmailAndPassword = async values => {
 	}
 };
 
+const EmailField = () => (
+	<Formik initialValues={{ email: "" }} onSubmit={signInWithEmailAndPassword} validationSchema={SignupSchema} render={(formikBag: FormikProps<IFormValues>) => renderForm(formikBag)} />
+);
+
+const Separator = () => (
+	<View
+		style={{
+			flexDirection: "row",
+			marginVertical: 24
+		}}
+	>
+		<View
+			style={{
+				flex: 1,
+				borderBottomWidth: 1,
+				marginBottom: 8,
+				borderColor: "rgba(0, 0, 0, 0.3)"
+			}}
+		/>
+		<Text style={{ marginHorizontal: 8, color: "rgba(0, 0, 0, 0.3)" }}>OR</Text>
+		<View
+			style={{
+				flex: 1,
+				borderBottomWidth: 1,
+				marginBottom: 8,
+				borderColor: "rgba(0, 0, 0, 0.3)"
+			}}
+		/>
+	</View>
+);
+
+const GoogleLoginButton = () => (
+	<Button title={"Googleで続ける"} backgroundColor="white" color="#757575" borderColor="#E0E0E0" onPress={googleSignIn} iconComp={<Image source={require("../../images/logoGoogle.png")} />} />
+);
+
+const FacebookLoginButton = () => <Button title={"Facebookで続ける"} backgroundColor="#3B5998" onPress={facebookLogin} iconComp={<Icon type="font-awesome" color={"white"} name="facebook" />} />;
+
 const LoginScreen = props => {
 	useEffect(() => {
 		props.navigation.navigate(props.auth.isLoggedIn ? "App" : "Auth");
@@ -168,40 +205,10 @@ const LoginScreen = props => {
 			/>
 			<View style={{ flex: 1, marginHorizontal: 16 }}>
 				<View style={{ flex: 1 }} />
-				<Formik initialValues={{ email: "" }} onSubmit={signInWithEmailAndPassword} validationSchema={SignupSchema} render={(formikBag: FormikProps<IFormValues>) => renderForm(formikBag)} />
-				<View
-					style={{
-						flexDirection: "row",
-						marginVertical: 24
-					}}
-				>
-					<View
-						style={{
-							flex: 1,
-							borderBottomWidth: 1,
-							marginBottom: 8,
-							borderColor: "rgba(0, 0, 0, 0.3)"
-						}}
-					/>
-					<Text style={{ marginHorizontal: 8, color: "rgba(0, 0, 0, 0.3)" }}>OR</Text>
-					<View
-						style={{
-							flex: 1,
-							borderBottomWidth: 1,
-							marginBottom: 8,
-							borderColor: "rgba(0, 0, 0, 0.3)"
-						}}
-					/>
-				</View>
-				<Button
-					title={"Googleで続ける"}
-					backgroundColor="white"
-					color="#757575"
-					borderColor="#E0E0E0"
-					onPress={googleSignIn}
-					iconComp={<Image source={require("../../images/logoGoogle.png")} />}
-				/>
-				<Button title={"Facebookで続ける"} backgroundColor="#3B5998" onPress={facebookLogin} iconComp={<Icon type="font-awesome" color={"white"} name="facebook" />} />
+				<EmailField />
+				<Separator />
+				<GoogleLoginButton />
+				<FacebookLoginButton />
 				<View style={{ flex: 1 }} />
 			</View>
 		</View>

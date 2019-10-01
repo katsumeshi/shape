@@ -88,6 +88,32 @@ const SettingList = () => {
 	);
 };
 
+const LogoutButton = () => (
+	<Button
+		title={"ログアウト"}
+		onPress={() => {
+			Alert.alert(
+				"確認",
+				"本当にログアウトしますか？",
+				[
+					{
+						text: "キャンセル",
+						style: "cancel"
+					},
+					{
+						text: "ログアウト",
+						onPress: () => {
+							AsyncStorage.clear();
+							firebase.auth().signOut();
+						}
+					}
+				],
+				{ cancelable: true }
+			);
+		}}
+	/>
+);
+
 const ScaleScreen = props => {
 	useEffect(() => {
 		if (props.auth.isLoggedIn !== undefined) {
@@ -106,29 +132,7 @@ const ScaleScreen = props => {
 			/>
 			<View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
 			<SettingList />
-			<Button
-				title={"ログアウト"}
-				onPress={() => {
-					Alert.alert(
-						"確認",
-						"本当にログアウトしますか？",
-						[
-							{
-								text: "キャンセル",
-								style: "cancel"
-							},
-							{
-								text: "ログアウト",
-								onPress: () => {
-									AsyncStorage.clear();
-									firebase.auth().signOut();
-								}
-							}
-						],
-						{ cancelable: true }
-					);
-				}}
-			/>
+			<LogoutButton />
 		</>
 	);
 };
