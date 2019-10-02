@@ -1,10 +1,8 @@
-import React from 'react';
-import { NavigationScreenProp } from 'react-navigation';
-import {
-  ImageBackground, PixelRatio, View, StyleSheet,
-} from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import { AppTitle, Button } from '../components/common';
+import React from "react";
+import { NavigationScreenProp } from "react-navigation";
+import { ImageBackground, PixelRatio, View, StyleSheet } from "react-native";
+import DeviceInfo from "react-native-device-info";
+import { AppTitle, Button } from "../components/common";
 
 type INavigation = NavigationScreenProp<any, any>;
 
@@ -14,7 +12,7 @@ interface Props {
 
 const hasNotch = DeviceInfo.hasNotch();
 
-const goToLogin = (navigation: INavigation) => navigation.navigate('Login');
+const goToLogin = (navigation: INavigation) => navigation.navigate("Login");
 
 const Title = () => (
   <View style={styles.title}>
@@ -23,7 +21,7 @@ const Title = () => (
 );
 
 const StartButton = (props: Props) => (
-  <View style={{ flexDirection: 'row' }}>
+  <View style={{ flexDirection: "row" }}>
     <Button
       title="アプリを始める"
       style={styles.button}
@@ -38,7 +36,7 @@ const StartScreen = (props: Props) => (
   <ImageBackground
     style={{ flex: 1 }}
     resizeMode="cover"
-    source={require('../../images/introBackground.png')}
+    source={require("../../images/introBackground.png")}
   >
     <Title />
     <StartButton {...props} />
@@ -50,18 +48,18 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     marginBottom: 70 * PixelRatio.get(),
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center"
   },
   button: {
     flex: 1,
     marginRight: 8,
-    marginBottom: 60,
+    marginBottom: 60
   },
   space: {
     height: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-  },
+    backgroundColor: "rgba(0, 0, 0, 0.3)"
+  }
 });
 
 export default StartScreen;

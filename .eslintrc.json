@@ -8,7 +8,17 @@
 		"react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
 		"react/prop-types": [0]
 	},
-	"extends": ["airbnb"],
+	"extends": [
+		"airbnb",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:import/typescript",
+		"plugin:jest/recommended",
+		"plugin:react/recommended",
+		"plugin:prettier/recommended",
+		"prettier",
+		"prettier/@typescript-eslint",
+		"prettier/react"
+	],
 	"settings": {
 		"react": {
 			"version": "detect"
