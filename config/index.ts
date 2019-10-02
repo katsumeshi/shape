@@ -6,7 +6,7 @@ import { NativeModules } from "react-native";
 const Config = NativeModules.Config;
 let c = production;
 if (Config.DEBUG) {
-  c = development;
+	c = development;
 }
 
 export default c;
