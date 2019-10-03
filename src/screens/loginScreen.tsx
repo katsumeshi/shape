@@ -1,77 +1,52 @@
-import { Formik, FormikProps } from 'formik';
-import React, { useEffect } from 'react';
-import {
-  Alert, Image, Text, View, TouchableOpacity,
-} from 'react-native';
+import { Formik, FormikProps } from "formik";
+import React, { useEffect } from "react";
+import { Alert, Image, Text, View, TouchableOpacity } from "react-native";
+import { Header, Icon, Input } from "react-native-elements";
+import { AccessToken, LoginManager } from "react-native-fbsdk";
+import firebase from "react-native-firebase";
+import { GoogleSignin } from "react-native-google-signin";
+import { connect } from "react-redux";
+import * as Yup from "yup";
+import { Button } from "../components/common";
+import Config from "../../config";
+import { THEME_COLOR } from "../constants";
 
-import { Header, Icon, Input } from 'react-native-elements';
-import { AccessToken, LoginManager } from 'react-native-fbsdk';
-import firebase from 'react-native-firebase';
-import { GoogleSignin } from 'react-native-google-signin';
-import { connect } from 'react-redux';
-import * as Yup from 'yup';
-import Config from '../../config';
-import { THEME_COLOR } from '../constants';
+import { signInWithEmailAndPassword } from "../services/firebase";
 
-import { signInWithEmailAndPassword } from '../services/firebase';
+import { Navigation } from "../types";
+
+interface Props {
+  navigation: Navigation;
+}
 
 GoogleSignin.configure({
   offlineAccess: false,
   webClientId: Config.WEB_API_KEY,
-  iosClientId: Config.IOS_API_KEY,
+  iosClientId: Config.IOS_API_KEY
 });
 
-interface IFormValues {
+interface FormValues {
   email: string;
 }
-const Button = ({
-  title,
-  color = 'white',
-  backgroundColor = THEME_COLOR,
-  borderColor = 'transparent',
-  style,
-  onPress,
-  iconComp,
-  disabled,
-}) => (
-  <View style={{ marginVertical: 8, ...style }}>
-    <TouchableOpacity
-      style={{
-        height: 44,
-        borderRadius: 5,
-        backgroundColor,
-        justifyContent: 'center',
-        borderColor,
-        borderWidth: 1,
-      }}
-      disabled={disabled}
-      onPress={onPress}
-    >
-      <View style={{ position: 'absolute', left: '16%' }}>{iconComp}</View>
-      <Text style={{ textAlign: 'center', color }}>{title}</Text>
-    </TouchableOpacity>
-  </View>
-);
-
 const SignupSchema = Yup.object().shape({
   email: Yup.string()
-    .email('正しいEメールを入力してください。')
-    .required('Eメールを入力してください。'),
+    .email("正しいEメールを入力してください。")
+    .required("Eメールを入力してください。")
 });
 
 const EmailField = () => (
   <Formik
-    initialValues={{ email: '' }}
-    onSubmit={async (props) => {
+    initialValues={{ email: "" }}
+    onSubmit={async props => {
       await signInWithEmailAndPassword(props);
-      Alert.alert('確認', '認証メールを送信しました。メールをご確認下さい。', [
+      Alert.alert("確認", "認証メールを送信しました。メールをご確認下さい。", [
         {
-          text: 'OK',
-        },
+          text: "OK"
+        }
       ]);
     }}
     validationSchema={SignupSchema}
-    render={(formikBag: FormikProps<IFormValues>) => renderForm(formikBag)}
+    render={(formikBag: FormikProps<FormValues>) => renderForm(formikBag)}
   />
 );
 
@@ -83,8 +58,8 @@ const renderForm = ({
   errors,
   setFieldTouched,
   isSubmitting,
-  setSubmitting,
-}: FormikProps<IFormValues>) => (
+  setSubmitting
+}: FormikProps<FormValues>) => (
   <>
     <Input
       placeholder="email"
@@ -92,15 +67,14 @@ const renderForm = ({
       autoCapitalize="none"
       autoCorrect={false}
       value={values.email}
-      onChangeText={(value) => setFieldValue('email', value)}
-      onBlur={() => setFieldTouched('email')}
+      onChangeText={value => setFieldValue("email", value)}
+      onBlur={() => setFieldTouched("email")}
       editable={!isSubmitting}
       errorMessage={touched.email && errors.email ? errors.email : undefined}
     />
 
     <Button
       title="新規作成 or ログイン"
-      style={{}}
       disabled={isSubmitting}
       onPress={() => {
         handleSubmit();
@@ -113,33 +87,33 @@ const renderForm = ({
 const facebookLogin = async () => {
   try {
     const result = await LoginManager.logInWithPermissions([
-      'public_profile',
-      'email',
+      "public_profile",
+      "email"
     ]);
 
     if (result.isCancelled) {
-      throw new Error('User cancelled request');
+      throw new Error("User cancelled request");
     }
 
     const data = await AccessToken.getCurrentAccessToken();
 
     if (!data) {
-      throw new Error('Something went wrong obtaining the users access token');
+      throw new Error("Something went wrong obtaining the users access token");
     }
     const credential = firebase.auth.FacebookAuthProvider.credential(
-      data.accessToken,
+      data.accessToken
     );
     await firebase.auth().signInWithCredential(credential);
   } catch (e) {
-    if (e.code === 'auth/account-exists-with-different-credential') {
+    if (e.code === "auth/account-exists-with-different-credential") {
       Alert.alert(
-        '確認',
-        '別の認証方法で登録されています。他の認証方法でログインして下さい。',
+        "確認",
+        "別の認証方法で登録されています。他の認証方法でログインして下さい。",
         [
           {
-            text: 'OK',
-          },
-        ],
+            text: "OK"
+          }
+        ]
       );
     }
   }
@@ -151,7 +125,7 @@ const googleSignIn = async () => {
     const data = await GoogleSignin.signIn();
     const credential = firebase.auth.GoogleAuthProvider.credential(
       data.idToken,
-      data.accessToken,
+      data.accessToken
     );
     await firebase.auth().signInWithCredential(credential);
   } catch (error) {
@@ -162,8 +136,8 @@ const googleSignIn = async () => {
 const Separator = () => (
   <View
     style={{
-      flexDirection: 'row',
-      marginVertical: 24,
+      flexDirection: "row",
+      marginVertical: 24
     }}
   >
     <View
@@ -171,16 +145,16 @@ const Separator = () => (
         flex: 1,
         borderBottomWidth: 1,
         marginBottom: 8,
-        borderColor: 'rgba(0, 0, 0, 0.3)',
+        borderColor: "rgba(0, 0, 0, 0.3)"
       }}
     />
-    <Text style={{ marginHorizontal: 8, color: 'rgba(0, 0, 0, 0.3)' }}>OR</Text>
+    <Text style={{ marginHorizontal: 8, color: "rgba(0, 0, 0, 0.3)" }}>OR</Text>
     <View
       style={{
         flex: 1,
         borderBottomWidth: 1,
         marginBottom: 8,
-        borderColor: 'rgba(0, 0, 0, 0.3)',
+        borderColor: "rgba(0, 0, 0, 0.3)"
       }}
     />
   </View>
@@ -193,7 +167,7 @@ const GoogleLoginButton = () => (
     color="#757575"
     borderColor="#E0E0E0"
     onPress={googleSignIn}
-    iconComp={<Image source={require('../../images/logoGoogle.png')} />}
+    iconComp={<Image source={require("../../images/logoGoogle.png")} />}
   />
 );
 
@@ -206,14 +180,14 @@ const FacebookLoginButton = () => (
   />
 );
 
-const LoginScreenHeader = () => (
+const LoginScreenHeader = (props: Props) => (
   <Header
-    leftComponent={(
+    leftComponent={
       <TouchableOpacity
         style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center"
         }}
         onPress={() => {
           props.navigation.goBack();
@@ -229,23 +203,23 @@ const LoginScreenHeader = () => (
         </View>
         <Text style={{ fontSize: 18, color: THEME_COLOR }}>戻る</Text>
       </TouchableOpacity>
-)}
+    }
     centerComponent={
-      <Text style={{ fontSize: 18, color: 'black' }}>新規作成 or ログイン</Text>
+      <Text style={{ fontSize: 18, color: "black" }}>新規作成 or ログイン</Text>
     }
     containerStyle={{
-      backgroundColor: 'white',
+      backgroundColor: "white"
     }}
   />
 );
 
-const LoginScreen = (props) => {
+const LoginScreen = (props: Props) => {
   useEffect(() => {
-    props.navigation.navigate(props.auth.isLoggedIn ? 'App' : 'Auth');
+    props.navigation.navigate(props.auth.isLoggedIn ? "App" : "Auth");
   });
   return (
     <View style={{ flex: 1 }}>
-      <LoginScreenHeader />
+      <LoginScreenHeader {...props} />
       <View style={{ flex: 1, marginHorizontal: 16 }}>
         <View style={{ flex: 1 }} />
         <EmailField />
@@ -258,4 +232,4 @@ const LoginScreen = (props) => {
   );
 };
 
-export default connect((state) => ({ auth: state.auth }))(LoginScreen);
+export default connect(state => ({ auth: state.auth }))(LoginScreen);

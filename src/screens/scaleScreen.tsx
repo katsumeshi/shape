@@ -1,5 +1,5 @@
-import moment from 'moment';
-import React from 'react';
+import moment from "moment";
+import React from "react";
 import {
   DatePickerAndroid,
   Keyboard,
@@ -8,26 +8,24 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  Platform,
-} from 'react-native';
-import {
-  Button, Header, Icon, Input,
-} from 'react-native-elements';
-import { connect } from 'react-redux';
-import DatePicker from '../components/datePicker';
-import { BLACK, THEME_COLOR } from '../constants';
+  Platform
+} from "react-native";
+import { Button, Header, Icon, Input } from "react-native-elements";
+import { connect } from "react-redux";
+import DatePicker from "../components/datePicker";
+import { BLACK, THEME_COLOR } from "../constants";
 
 const margin = 8;
 
-const limitWeight = (text) => {
-  const arr = text.split('.');
+const limitWeight = text => {
+  const arr = text.split(".");
   let weight = arr[0];
   if (arr.length > 1) {
     weight = `${arr[0]}.${arr[1].slice(0, 1)}`;
   }
   return weight;
 };
-const format = (weight) => `${weight}`;
+const format = weight => `${weight}`;
 
 const add = (weight, add) => {
   const result = (weight * 10 + add * 10) / 10;
@@ -38,25 +36,27 @@ class ScaleScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isDatePickerShowing: false,
+      isDatePickerShowing: false
     };
   }
 
   public render() {
-    const type = this.props.navigation.getParam('type');
-    const date = type === 'create' ? new Date() : this.props.navigation.getParam('date');
-    const weight = type === 'create'
-      ? `${this.props.weight}`
-      : this.props.navigation.getParam('weight');
+    const type = this.props.navigation.getParam("type");
+    const date =
+      type === "create" ? new Date() : this.props.navigation.getParam("date");
+    const weight =
+      type === "create"
+        ? `${this.props.weight}`
+        : this.props.navigation.getParam("weight");
     return (
       <>
         <Header
-          leftComponent={(
+          leftComponent={
             <TouchableOpacity
               style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
               }}
               onPress={() => {
                 this.props.navigation.goBack();
@@ -74,11 +74,11 @@ class ScaleScreen extends React.Component {
                 戻る
               </Text>
             </TouchableOpacity>
-)}
+          }
           centerComponent={
             <Text style={{ fontSize: 18, color: BLACK }}>体重記録</Text>
           }
-          rightComponent={(
+          rightComponent={
             <TouchableOpacity
               onPress={() => {
                 this.props.save();
@@ -86,17 +86,17 @@ class ScaleScreen extends React.Component {
               }}
             >
               <Text
-                style={{ fontSize: 18, fontWeight: 'bold', color: THEME_COLOR }}
+                style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}
               >
                 保存
               </Text>
             </TouchableOpacity>
-)}
+          }
           containerStyle={{
-            backgroundColor: 'white',
+            backgroundColor: "white"
           }}
         />
-        <View style={{ borderColor: 'lightgrey', borderWidth: 1, height: 1 }} />
+        <View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
           <TouchableWithoutFeedback
             onPress={() => {
@@ -109,7 +109,7 @@ class ScaleScreen extends React.Component {
               style={{
                 marginHorizontal: margin,
                 flex: 2,
-                justifyContent: 'center',
+                justifyContent: "center"
               }}
             >
               <View>
@@ -117,12 +117,12 @@ class ScaleScreen extends React.Component {
                   buttonStyle={{
                     marginHorizontal: 16,
                     marginBottom: 20,
-                    backgroundColor: 'white',
+                    backgroundColor: "white"
                   }}
                   type="outline"
-                  title={`${moment(date).format('YYYY/MM/DD')}`}
+                  title={`${moment(date).format("YYYY/MM/DD")}`}
                   onPress={async () => {
-                    if (Platform.OS === 'ios') {
+                    if (Platform.OS === "ios") {
                       this.setState({ isDatePickerShowing: true });
                     } else {
                       try {
@@ -130,9 +130,9 @@ class ScaleScreen extends React.Component {
                           action,
                           year,
                           month,
-                          day,
+                          day
                         } = await DatePickerAndroid.open({
-                          date,
+                          date
                         });
                         if (action !== DatePickerAndroid.dismissedAction) {
                           this.props.onDateChange(new Date(year, month, day));
@@ -140,49 +140,49 @@ class ScaleScreen extends React.Component {
                           this.props.onDateChange(date);
                         }
                       } catch ({ code, message }) {
-                        console.warn('Cannot open date picker', message);
+                        console.warn("Cannot open date picker", message);
                       }
                     }
                   }}
                 />
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: "row" }}>
                   <Button
                     buttonStyle={{
                       height: 50,
                       width: 50,
                       borderRadius: 25,
                       marginHorizontal: 16,
-                      backgroundColor: THEME_COLOR,
+                      backgroundColor: THEME_COLOR
                     }}
                     onPress={() => {
                       this.props.onWeightChange(add(weight, -0.1));
                     }}
-                    icon={{ type: 'feather', color: 'white', name: 'minus' }}
+                    icon={{ type: "feather", color: "white", name: "minus" }}
                   />
                   <Input
                     containerStyle={{ flex: 1, marginRight: 16 }}
                     inputStyle={{
-                      textAlign: 'center',
-                      fontSize: 18,
+                      textAlign: "center",
+                      fontSize: 18
                     }}
                     inputContainerStyle={{
                       borderBottomWidth: 2,
                       borderWidth: 0,
-                      borderRadius: 0,
+                      borderRadius: 0
                     }}
                     keyboardType="numeric"
                     placeholder="00.00"
                     onSubmitEditing={() => {
                       this.props.onWeightChange(format(weight));
                     }}
-                    onChangeText={(text) => {
+                    onChangeText={text => {
                       this.props.onWeightChange(limitWeight(text));
                     }}
                     maxLength={5}
                     value={weight}
                   />
                   <View
-                    style={{ justifyContent: 'center', alignItems: 'center' }}
+                    style={{ justifyContent: "center", alignItems: "center" }}
                   >
                     <Text style={{ fontSize: 20 }}>kg</Text>
                   </View>
@@ -192,12 +192,12 @@ class ScaleScreen extends React.Component {
                       width: 50,
                       borderRadius: 25,
                       marginHorizontal: 16,
-                      backgroundColor: THEME_COLOR,
+                      backgroundColor: THEME_COLOR
                     }}
                     onPress={() => {
                       this.props.onWeightChange(add(weight, 0.1));
                     }}
-                    icon={{ type: 'feather', color: 'white', name: 'plus' }}
+                    icon={{ type: "feather", color: "white", name: "plus" }}
                   />
                 </View>
               </View>
@@ -210,7 +210,7 @@ class ScaleScreen extends React.Component {
             onCancel={() => {
               this.setState({ isDatePickerShowing: false });
             }}
-            onDone={(date) => {
+            onDone={date => {
               this.props.onDateChange(date);
               this.setState({ isDatePickerShowing: false });
             }}
@@ -221,7 +221,7 @@ class ScaleScreen extends React.Component {
   }
 }
 
-export default connect((state) => ({
+export default connect(state => ({
   auth: state.auth,
-  ...state.health.data[0],
+  ...state.health.data[0]
 }))(ScaleScreen);

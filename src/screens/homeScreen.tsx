@@ -2,7 +2,6 @@ import moment from "moment";
 import React, { useEffect } from "react";
 import { Dimensions, SectionList, TouchableOpacity, View } from "react-native";
 import { Header, Icon, ListItem, Text } from "react-native-elements";
-import Mailer from "react-native-mail";
 import Swipeout from "react-native-swipeout";
 import {
   VictoryAxis,
@@ -11,12 +10,12 @@ import {
   VictoryTheme
 } from "victory-native";
 import DeviceInfo from "react-native-device-info";
+import { ScrollView } from "react-native-gesture-handler";
+import { connect } from "react-redux";
 import { Button } from "../components/common";
 import { BLACK, THEME_COLOR } from "../constants";
 
-import { ScrollView } from "react-native-gesture-handler";
 import ShapeIcon from "../../fonts/icon";
-import { connect } from "react-redux";
 
 import { requestWeights } from "../redux/modules/health";
 
@@ -30,30 +29,16 @@ let sectionHeight;
 let issectionList;
 let isGraphScroll;
 
-const handleEmail = () => {
-  Mailer.mail(
-    {
-      subject: "お問い合わせ・改善要望",
-      recipients: ["katsumeshi@gmail.com"],
-      body: ""
-    },
-    (error, event) => {
-      console.log(error);
-      console.log(event);
-    }
-  );
-};
-
 const Chart = props => {
   const len = props.health.length;
   const chartWidth = Math.max(width, len * 50);
   return (
-      <>
-        <ScrollView
-          ref={ref => {
+    <>
+      <ScrollView
+        ref={ref => {
           props.graphRef(ref);
         }}
-          onScroll={e => {
+        onScroll={e => {
           let ratio =
             len - Math.floor((e.nativeEvent.contentOffset.x + 380) / 50);
           if (ratio < 0) {
@@ -63,27 +48,27 @@ const Chart = props => {
             props.scrollListToLocation(ratio);
           }
         }}
-    onScrollBeginDrag={() => (isGraphScroll = true)}
-          onScrollEndDrag={() => (isGraphScroll = false)}
-    onMomentumScrollBegin={() => (isGraphScroll = true)}
-          onMomentumScrollEnd={() => (isGraphScroll = false)}
-    onContentSizeChange={() => graph.scrollToEnd({ animated: false })}
-    style={{ height: 500 }}
-    contentContainerStyle={{ width: chartWidth }}
-    alwaysBounceVertical={false}
-          alwaysBounceHorizontal
-    horizontal
-  >
-    <View pointerEvents="none">
-                  <VictoryChart
+        onScrollBeginDrag={() => (isGraphScroll = true)}
+        onScrollEndDrag={() => (isGraphScroll = false)}
+        onMomentumScrollBegin={() => (isGraphScroll = true)}
+        onMomentumScrollEnd={() => (isGraphScroll = false)}
+        onContentSizeChange={() => graph.scrollToEnd({ animated: false })}
+        style={{ height: 500 }}
+        contentContainerStyle={{ width: chartWidth }}
+        alwaysBounceVertical={false}
+        alwaysBounceHorizontal
+        horizontal
+      >
+        <View pointerEvents="none">
+          <VictoryChart
             padding={{ top: 20, left: 50, bottom: 40, right: 10 }}
             theme={VictoryTheme.material}
             height={250}
             width={chartWidth}
           >
-    {props.health.length > 1 && (
+            {props.health.length > 1 && (
               <VictoryLine
-                              style={{
+                style={{
                   data: { stroke: THEME_COLOR },
                   parent: { border: "1px solid #ccc" }
                 }}
@@ -95,13 +80,13 @@ const Chart = props => {
                 }))}
               />
             )}
-              <VictoryAxis
+            <VictoryAxis
               tickValues={props.health.map(r => moment(r.date.toDate()).date())}
             />
-  </VictoryChart>
+          </VictoryChart>
         </View>
-  </ScrollView>
-    <View
+      </ScrollView>
+      <View
         style={{
           backgroundColor: "white",
           height: 250,
@@ -112,8 +97,8 @@ const Chart = props => {
       >
         <VictoryAxis
           orientation="left"
-                  padding={{ top: 20, left: 50, bottom: 20, right: 10 }}
-                  height={230}
+          padding={{ top: 20, left: 50, bottom: 20, right: 10 }}
+          height={230}
           tickValues={(() => {
             let max = 0;
             let min = 999;
@@ -136,7 +121,7 @@ const Chart = props => {
           })()}
         />
       </View>
-  </>
+    </>
   );
 };
 
@@ -200,9 +185,9 @@ const Content = props => (
           graph.scrollTo({ x: scrollAmount * ratio + 10 });
         }
       }}
-          onMomentumScrollBegin={() => (issectionList = true)}
+      onMomentumScrollBegin={() => (issectionList = true)}
       onMomentumScrollEnd={() => (issectionList = false)}
-          sections={[
+      sections={[
         {
           title: moment().format("MMMM"),
           data: [...props.health]
@@ -222,7 +207,7 @@ const Content = props => (
 
         return (
           <Swipeout
-                      autoClose
+            autoClose
             backgroundColor="red"
             right={[
               {
@@ -245,13 +230,20 @@ const Content = props => (
                 })
               }
               style={{ height: 50, backgroundColor: "lightgrey" }}
-                          title={moment(item.date.toDate()).format("YYYY/MM/DD")}
-                          topDivider
-              rightTitle={(
-                    <View style={{ flexDirection: "row" }}>
-  <Text style={{ color: "#666", fontSize: 18 }}>{`${item.weight}kg`}</Text>
-  <ShapeIcon style={{ width: 25, marginLeft: 16, textAlign: "center" }} size={20} color={weightStatusIcon.color} name={weightStatusIcon.name} />
-</View>
+              title={moment(item.date.toDate()).format("YYYY/MM/DD")}
+              topDivider
+              rightTitle={
+                <View style={{ flexDirection: "row" }}>
+                  <Text
+                    style={{ color: "#666", fontSize: 18 }}
+                  >{`${item.weight}kg`}</Text>
+                  <ShapeIcon
+                    style={{ width: 25, marginLeft: 16, textAlign: "center" }}
+                    size={20}
+                    color={weightStatusIcon.color}
+                    name={weightStatusIcon.name}
+                  />
+                </View>
               }
             />
           </Swipeout>
@@ -286,17 +278,17 @@ const Empty = props => (
       }}
     >
       今日の体重を記録しよう！
-            </Text>
+    </Text>
     <Icon
-          type="material-community"
+      type="material-community"
       size={60}
-          color="black"
+      color="black"
       name="scale-bathroom"
       containerStyle={{
         marginVertical: 40
       }}
     />
-      <Button
+    <Button
       title="計測"
       onPress={() => props.navigation.navigate("Scale", { type: "create" })}
     />
@@ -320,28 +312,32 @@ const HomeScreen = props => {
   }, []);
 
   return (
-      <View style={{ flex: 1 }}>
-        <Header
-    containerStyle={{ zIndex: 200 }}
-          centerComponent={
+    <View style={{ flex: 1 }}>
+      <Header
+        containerStyle={{ zIndex: 200 }}
+        centerComponent={
           <Text style={{ fontSize: 18, color: BLACK }}>体重記録</Text>
         }
-    rightComponent={
-                    <TouchableOpacity
+        rightComponent={
+          <TouchableOpacity
             onPress={() => {
               props.navigation.navigate("Scale", { type: "create" });
             }}
->
-  <Text style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}>追加</Text>
+          >
+            <Text
+              style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}
+            >
+              追加
+            </Text>
           </TouchableOpacity>
         }
-    containerStyle={{
+        containerStyle={{
           backgroundColor: "white"
         }}
-  />
+      />
 
-    <Container {...props} />
-  </View>
+      <Container {...props} />
+    </View>
   );
 };
 

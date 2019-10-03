@@ -1,18 +1,16 @@
 import React from "react";
-import { NavigationScreenProp } from "react-navigation";
 import { ImageBackground, PixelRatio, View, StyleSheet } from "react-native";
 import DeviceInfo from "react-native-device-info";
 import { AppTitle, Button } from "../components/common";
-
-type INavigation = NavigationScreenProp<any, any>;
+import { Navigation } from "../types";
 
 interface Props {
-  navigation: INavigation;
+  navigation: Navigation;
 }
 
 const hasNotch = DeviceInfo.hasNotch();
 
-const goToLogin = (navigation: INavigation) => navigation.navigate("Login");
+const goToLogin = (navigation: Navigation) => navigation.navigate("Login");
 
 const Title = () => (
   <View style={styles.title}>

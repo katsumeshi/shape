@@ -1,26 +1,22 @@
-import moment from 'moment';
-import React, { useState, useEffect } from 'react';
+import moment from "moment";
+import React, { useState, useEffect } from "react";
 import {
   SectionList,
-  Dimensions,
   Alert,
-  KeyboardAvoidingView,
   Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
   DatePickerIOS,
   Switch
-} from 'react-native';
-import { Header, Icon, ListItem } from 'react-native-elements';
-import { BLACK, THEME_COLOR } from '../constants';
-import { Button } from '../components/common';
-import firebase from 'react-native-firebase';
-import DeviceInfo from 'react-native-device-info';
-import AsyncStorage from '@react-native-community/async-storage';
-import { notificationSet } from '../utils/notificationUtils';
+} from "react-native";
+import { Header, ListItem } from "react-native-elements";
+import firebase from "react-native-firebase";
+import DeviceInfo from "react-native-device-info";
+import AsyncStorage from "@react-native-community/async-storage";
+import { connect } from "react-redux";
+import { notificationSet } from "../utils/notificationUtils";
 
-import { connect } from 'react-redux';
+import { Button } from "../components/common";
+import { BLACK } from "../constants";
 
 const SettingList = () => {
   const [showPicker, onShowPicker] = useState(false);
@@ -30,7 +26,7 @@ const SettingList = () => {
   useEffect(() => {
     async function didMount() {
       const notifUnixTime =
-        (await AsyncStorage.getItem('notifUnixTime')) || `${moment().unix()}`;
+        (await AsyncStorage.getItem("notifUnixTime")) || `${moment().unix()}`;
       const notifDate = moment.unix(parseInt(notifUnixTime)).toDate();
       onDateChange(notifDate);
     }
@@ -42,7 +38,7 @@ const SettingList = () => {
       const m = moment()
         .hour(moment(date).hour())
         .minute(moment(date).minute());
-      await AsyncStorage.setItem('notifUnixTime', `${m.unix()}`);
+      await AsyncStorage.setItem("notifUnixTime", `${m.unix()}`);
       notificationSet();
     }
     dateChanged();
@@ -50,7 +46,7 @@ const SettingList = () => {
 
   useEffect(() => {
     async function notifChanged() {
-      await AsyncStorage.setItem('notif', `${notification}`);
+      await AsyncStorage.setItem("notif", `${notification}`);
       notificationSet();
     }
     notifChanged();
@@ -58,11 +54,11 @@ const SettingList = () => {
 
   const data = [
     {
-      left: 'バージョン',
+      left: "バージョン",
       right: DeviceInfo.getVersion()
     },
     {
-      left: 'プッシュ通知',
+      left: "プッシュ通知",
       right: (
         <Switch value={notification} onValueChange={onChangeNotification} />
       )
@@ -71,8 +67,8 @@ const SettingList = () => {
 
   if (notification) {
     data.push({
-      left: '',
-      right: `${moment(date).format('LT')}`,
+      left: "",
+      right: `${moment(date).format("LT")}`,
       isDatePicker: true,
       onPress: () => onShowPicker(!showPicker)
     });
@@ -83,11 +79,11 @@ const SettingList = () => {
         <>
           <ListItem
             onPress={item.onPress}
-            style={{ height: 50, backgroundColor: 'lightgrey' }}
+            style={{ height: 50, backgroundColor: "lightgrey" }}
             title={item.left}
             bottomDivider
             rightElement={
-              <Text style={{ color: '#666', fontSize: 18 }}>{item.right}</Text>
+              <Text style={{ color: "#666", fontSize: 18 }}>{item.right}</Text>
             }
           />
           {item.isDatePicker && showPicker && (
@@ -101,8 +97,8 @@ const SettingList = () => {
       )}
       sections={[
         {
-          title: '設定',
-          data: data
+          title: "設定",
+          data
         }
       ]}
       keyExtractor={(item, index) => item + index}
@@ -112,18 +108,18 @@ const SettingList = () => {
 
 const LogoutButton = () => (
   <Button
-    title={'ログアウト'}
+    title="ログアウト"
     onPress={() => {
       Alert.alert(
-        '確認',
-        '本当にログアウトしますか？',
+        "確認",
+        "本当にログアウトしますか？",
         [
           {
-            text: 'キャンセル',
-            style: 'cancel'
+            text: "キャンセル",
+            style: "cancel"
           },
           {
-            text: 'ログアウト',
+            text: "ログアウト",
             onPress: () => {
               AsyncStorage.clear();
               firebase.auth().signOut();
@@ -139,7 +135,7 @@ const LogoutButton = () => (
 const ScaleScreen = props => {
   useEffect(() => {
     if (props.auth.isLoggedIn !== undefined) {
-      props.navigation.navigate(props.auth.isLoggedIn ? 'App' : 'Auth');
+      props.navigation.navigate(props.auth.isLoggedIn ? "App" : "Auth");
     }
   });
 
@@ -151,10 +147,10 @@ const ScaleScreen = props => {
           <Text style={{ fontSize: 18, color: BLACK }}>設定</Text>
         }
         containerStyle={{
-          backgroundColor: 'white'
+          backgroundColor: "white"
         }}
       />
-      <View style={{ borderColor: 'lightgrey', borderWidth: 1, height: 1 }} />
+      <View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
       <SettingList />
       <LogoutButton />
     </>

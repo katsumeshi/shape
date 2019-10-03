@@ -6,7 +6,9 @@
 		"@typescript-eslint/explicit-member-accessibility": "off",
 		"import/no-extraneous-dependencies": 0,
 		"react/jsx-filename-extension": ["error", { "extensions": [".jsx", ".tsx"] }],
-		"react/prop-types": [0]
+		"react/prop-types": [0],
+		"@typescript-eslint/no-use-before-define": ["error", { "variables": false }],
+		"global-require": 0
 	},
 	"extends": [
 		"airbnb",
