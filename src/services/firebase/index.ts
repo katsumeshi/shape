@@ -1,42 +1,37 @@
-import firebase, { RNFirebase } from 'react-native-firebase';
-import store from '../../redux/configureStore';
-import { requestLoginStatus } from '../../redux/modules/auth';
-import { successHealth } from '../../redux/modules/health';
-import Config from '../../,,/../../config';
+import firebase, { RNFirebase } from "react-native-firebase";
+import store from "../../redux/configureStore";
+import { requestLoginStatus } from "../../redux/modules/auth";
+import { successHealth } from "../../redux/modules/health";
+import Config from "../../../config";
 
-let authUser = firebase.auth().currentUser;
+// let authUser = firebase.auth().currentUser;
 
 export const observeAuthState = () => {
   firebase.auth().onAuthStateChanged(user => {
-    authUser = firebase.auth().currentUser;
+    // authUser = firebase.auth().currentUser;
     store.dispatch(requestLoginStatus(!!user));
   });
 };
 
-type Health = {
-  weight: number;
-  date?: RNFirebase.firestore.Timestamp;
-};
-
-export const getHealth = () => {
-  if (!authUser) return;
-  firebase
-    .firestore()
-    .collection('users')
-    .doc(authUser.uid)
-    .collection('health')
-    .get()
-    .then(querySnapshot => {
-      const arr: Array<Health> = [];
-      querySnapshot.forEach(doc => {
-        const v = doc.data() as Health;
-        if (v.date) {
-          arr.unshift(v);
-        }
-      });
-      store.dispatch(successHealth(arr));
-    });
-};
+// export const getHealth = () => {
+//   if (!authUser) return;
+//   firebase
+//     .firestore()
+//     .collection("users")
+//     .doc(authUser.uid)
+//     .collection("health")
+//     .get()
+//     .then(querySnapshot => {
+//       const arr: Array<Health> = [];
+//       querySnapshot.forEach(doc => {
+//         const v = doc.data() as Health;
+//         if (v.date) {
+//           arr.unshift(v);
+//         }
+//       });
+//       store.dispatch(successHealth(arr));
+//     });
+// };
 
 export const signInWithEmailAndPassword = async values => {
   const actionCodeSettings = {
@@ -48,7 +43,7 @@ export const signInWithEmailAndPassword = async values => {
     android: {
       packageName: Config.BUNDLE_ID,
       installApp: true,
-      minimumVersion: '12'
+      minimumVersion: "12"
     },
     dynamicLinkDomain: Config.DYNAMIC_LINK_DOMAIN
   };

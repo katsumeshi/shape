@@ -1,9 +1,9 @@
 import React from "react";
 import { DatePickerIOS, Dimensions, View } from "react-native";
-import { Button, Icon, Input } from "react-native-elements";
+import { Button } from "react-native-elements";
+
 const { height, width } = Dimensions.get("window");
 const margin = 8;
-const BUTTON_WIDTH = width / 3 - margin;
 
 const DatePickerPanel = ({ date, onCancel, onDone, onDateChange }) => (
   <View style={{ backgroundColor: "white" }}>
@@ -30,6 +30,7 @@ export default class DatePicker extends React.Component {
       date: props.date
     };
   }
+
   public render() {
     return (
       <View
