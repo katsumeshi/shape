@@ -3,9 +3,7 @@ const LOGIN_STATUS_REQUESTED = "redux-example/auth/LOGIN_STATUS_REQUESTED";
 const LOGIN_STATUS_LOGGED_IN = "redux-example/auth/LOGIN_STATUS_LOGGED_IN";
 const LOGIN_STATUS_LOGGED_OUT = "redux-example/auth/LOGIN_STATUS_LOGGED_OUT";
 
-const initialState = {
-  // loaded: false
-};
+const initialState = {};
 
 // reducer
 export default function reducer(state = initialState, action = {}) {

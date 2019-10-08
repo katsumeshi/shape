@@ -1,5 +1,6 @@
 import { takeEvery, call, put } from "redux-saga/effects";
 import firebase, { RNFirebase } from "react-native-firebase";
+import moment from "moment";
 
 // action
 const HEALTH_FETCH_REQUESTED = "redux-example/health/HEALTH_FETCH_REQUESTED";
@@ -7,6 +8,16 @@ const HEALTH_FETCH_SUCCEEDED = "redux-example/health/HEALTH_FETCH_SUCCEEDED";
 
 const initialState = {
   // loaded: false
+};
+
+const healthRef = () => {
+  const authUser = firebase.auth().currentUser;
+  if (!authUser) return null;
+  return firebase
+    .firestore()
+    .collection("users")
+    .doc(authUser.uid)
+    .collection("health");
 };
 
 // reducer
@@ -30,6 +41,15 @@ export function requestWeights() {
   };
 }
 
+export function updateWeight(date: Date, weight: number) {
+  const ref = healthRef();
+  if (!ref) return;
+  ref.doc(moment(date).format("YYYY-MM-DD")).set({ date, weight });
+  return {
+    type: ""
+  };
+}
+
 // sagas
 
 type Health = {
@@ -38,16 +58,9 @@ type Health = {
 };
 
 function* requestHealth() {
-  const authUser = firebase.auth().currentUser;
-  if (!authUser) return;
-  const querySnapshot = yield call(() =>
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(authUser.uid)
-      .collection("health")
-      .get()
-  );
+  const ref = healthRef();
+  if (!ref) return;
+  const querySnapshot = yield call(() => ref.get());
   const arr: Array<Health> = [];
   querySnapshot.forEach(doc => {
     const v = doc.data() as Health;

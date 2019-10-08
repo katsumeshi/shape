@@ -3,8 +3,5 @@ import { all, fork } from "redux-saga/effects";
 import { watchFetchProducts } from "./health";
 
 export default function* rootSaga() {
-  yield all([
-    // fork(incrementAsync)
-    fork(watchFetchProducts)
-  ]);
+  yield all([fork(watchFetchProducts)]);
 }

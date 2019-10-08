@@ -27,7 +27,7 @@ const SettingList = () => {
     async function didMount() {
       const notifUnixTime =
         (await AsyncStorage.getItem("notifUnixTime")) || `${moment().unix()}`;
-      const notifDate = moment.unix(parseInt(notifUnixTime)).toDate();
+      const notifDate = moment.unix(parseInt(notifUnixTime, 10)).toDate();
       onDateChange(notifDate);
     }
     didMount();
@@ -52,7 +52,7 @@ const SettingList = () => {
     notifChanged();
   }, [notification]);
 
-  const data = [
+  const sectionData = [
     {
       left: "バージョン",
       right: DeviceInfo.getVersion()
@@ -66,7 +66,7 @@ const SettingList = () => {
   ];
 
   if (notification) {
-    data.push({
+    sectionData.push({
       left: "",
       right: `${moment(date).format("LT")}`,
       isDatePicker: true,
@@ -75,7 +75,7 @@ const SettingList = () => {
   }
   return (
     <SectionList
-      renderItem={({ item, index, section }) => (
+      renderItem={({ item }) => (
         <>
           <ListItem
             onPress={item.onPress}
@@ -98,7 +98,7 @@ const SettingList = () => {
       sections={[
         {
           title: "設定",
-          data
+          data: sectionData
         }
       ]}
       keyExtractor={(item, index) => item + index}
@@ -142,13 +142,10 @@ const ScaleScreen = props => {
   return (
     <>
       <Header
-        containerStyle={{ zIndex: 200 }}
+        containerStyle={{ zIndex: 200, backgroundColor: "white" }}
         centerComponent={
           <Text style={{ fontSize: 18, color: BLACK }}>設定</Text>
         }
-        containerStyle={{
-          backgroundColor: "white"
-        }}
       />
       <View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
       <SettingList />

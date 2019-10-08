@@ -12,7 +12,7 @@ interface Props {
   style?: object;
   onPress?: () => void;
   iconComp?: JSX.Element;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 export const Button = (props: Props) => {
