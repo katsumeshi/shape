@@ -1,5 +1,10 @@
 import React from "react";
-import { createAppContainer, createStackNavigator, createSwitchNavigator, createBottomTabNavigator } from "react-navigation";
+import {
+  createAppContainer,
+  createStackNavigator,
+  createSwitchNavigator,
+  createBottomTabNavigator
+} from "react-navigation";
 import { Icon } from "react-native-elements";
 import AuthLoadingScreen from "./screens/authLoadingScreen";
 import HomeScreen from "./screens/homeScreen";
@@ -48,9 +53,13 @@ const TabNavigator = createBottomTabNavigator(
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         if (routeName === "Home") {
-          return <Icon type="Foundation" size={32} color={tintColor} name="home" />;
+          return (
+            <Icon type="Foundation" size={32} color={tintColor} name="home" />
+          );
         }
-        return <Icon type="font-awesome" size={28} color={tintColor} name="gear" />;
+        return (
+          <Icon type="font-awesome" size={28} color={tintColor} name="gear" />
+        );
       }
     })
   }

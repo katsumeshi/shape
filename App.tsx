@@ -5,7 +5,8 @@ import firebase from "react-native-firebase";
 import { Provider } from "react-redux";
 import { THEME_COLOR } from "./src/constants";
 import AppNavigator from "./src/navigation";
-import store from "./src/redux/configureStore";
+import store from "./src/state/store";
+
 firebase.crashlytics().enableCrashlyticsCollection();
 
 EStyleSheet.build();

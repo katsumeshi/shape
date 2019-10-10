@@ -11,7 +11,7 @@ import { BLACK, THEME_COLOR } from "../constants";
 
 import ShapeIcon from "../../fonts/icon";
 
-import { requestWeights } from "../redux/modules/health";
+import { fetchWeights } from "../state/modules/health/actions";
 
 const { width } = Dimensions.get("window");
 
@@ -205,7 +205,7 @@ const Container = props => {
 
 const HomeScreen = props => {
   useEffect(() => {
-    props.requestWeights();
+    props.fetchWeights();
   }, []);
 
   return (
@@ -237,5 +237,5 @@ const HomeScreen = props => {
 
 export default connect(
   state => ({ auth: state.auth, health: state.health.data }),
-  { requestWeights }
+  { fetchWeights }
 )(HomeScreen);

@@ -15,7 +15,7 @@ import { Button, Header, Icon, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import DatePicker from "../components/datePicker";
 import { BLACK, THEME_COLOR } from "../constants";
-import { updateWeight } from "../redux/modules/health";
+import { updateWeight } from "../state/modules/health/health";
 
 const margin = 8;
 

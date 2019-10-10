@@ -1,7 +1,7 @@
 import firebase, { RNFirebase } from "react-native-firebase";
-import store from "../../redux/configureStore";
-import { requestLoginStatus } from "../../redux/modules/auth";
-import { successHealth } from "../../redux/modules/health";
+import store from "../../state/store";
+import { requestLoginStatus } from "../../state/modules/auth/auth";
+// import { successHealth } from "../../state/modules/health";
 import Config from "../../../config";
 
 // let authUser = firebase.auth().currentUser;
