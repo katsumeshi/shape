@@ -1,6 +1,13 @@
 import { Formik, FormikProps } from "formik";
 import React, { useEffect } from "react";
-import { Alert, Image, Text, View, TouchableOpacity } from "react-native";
+import {
+  Alert,
+  Image,
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet
+} from "react-native";
 import { Header, Icon, Input } from "react-native-elements";
 import { AccessToken, LoginManager } from "react-native-fbsdk";
 import firebase from "react-native-firebase";
@@ -67,6 +74,7 @@ const renderForm = ({
       autoCapitalize="none"
       autoCorrect={false}
       value={values.email}
+      containerStyle={styles.input}
       onChangeText={value => setFieldValue("email", value)}
       onBlur={() => setFieldTouched("email")}
       editable={!isSubmitting}
@@ -134,29 +142,10 @@ const googleSignIn = async () => {
 };
 
 const Separator = () => (
-  <View
-    style={{
-      flexDirection: "row",
-      marginVertical: 24
-    }}
-  >
-    <View
-      style={{
-        flex: 1,
-        borderBottomWidth: 1,
-        marginBottom: 8,
-        borderColor: "rgba(0, 0, 0, 0.3)"
-      }}
-    />
-    <Text style={{ marginHorizontal: 8, color: "rgba(0, 0, 0, 0.3)" }}>OR</Text>
-    <View
-      style={{
-        flex: 1,
-        borderBottomWidth: 1,
-        marginBottom: 8,
-        borderColor: "rgba(0, 0, 0, 0.3)"
-      }}
-    />
+  <View style={styles.separatorContainer}>
+    <View style={styles.separatorLine} />
+    <Text style={styles.separatorText}>OR</Text>
+    <View style={styles.separatorLine} />
   </View>
 );
 
@@ -167,6 +156,7 @@ const GoogleLoginButton = () => (
     color="#757575"
     borderColor="#E0E0E0"
     onPress={googleSignIn}
+    style={styles.button}
     iconComp={<Image source={require("../../images/logoGoogle.png")} />}
   />
 );
@@ -184,16 +174,12 @@ const LoginScreenHeader = (props: Props) => (
   <Header
     leftComponent={
       <TouchableOpacity
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center"
-        }}
+        style={styles.headerLeft}
         onPress={() => {
           props.navigation.goBack();
         }}
       >
-        <View style={{ top: -3, marginRight: 8 }}>
+        <View style={styles.headerLeftIcon}>
           <Icon
             type="font-awesome"
             size={40}
@@ -201,11 +187,11 @@ const LoginScreenHeader = (props: Props) => (
             name="angle-left"
           />
         </View>
-        <Text style={{ fontSize: 18, color: THEME_COLOR }}>戻る</Text>
+        <Text style={styles.headerLeftText}>戻る</Text>
       </TouchableOpacity>
     }
     centerComponent={
-      <Text style={{ fontSize: 18, color: "black" }}>新規作成 or ログイン</Text>
+      <Text style={styles.headerTitle}>新規作成 or ログイン</Text>
     }
     containerStyle={{
       backgroundColor: "white"
@@ -231,5 +217,33 @@ const LoginScreen = (props: Props) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    marginBottom: 16
+  },
+  input: {
+    marginBottom: 16
+  },
+  separatorContainer: {
+    flexDirection: "row",
+    marginVertical: 24
+  },
+  separatorLine: {
+    flex: 1,
+    borderBottomWidth: 1,
+    marginBottom: 8,
+    borderColor: "rgba(0, 0, 0, 0.3)"
+  },
+  separatorText: { marginHorizontal: 8, color: "rgba(0, 0, 0, 0.3)" },
+  headerLeft: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  headerLeftIcon: { top: -3, marginRight: 8 },
+  headerLeftText: { fontSize: 18, color: THEME_COLOR },
+  headerTitle: { fontSize: 18, color: "black" }
+});
 
 export default connect(state => ({ auth: state.auth }))(LoginScreen);
