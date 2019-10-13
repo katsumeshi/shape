@@ -1,6 +1,12 @@
 import moment from "moment";
 import React, { useEffect } from "react";
-import { SectionList, TouchableOpacity, View, Dimensions } from "react-native";
+import {
+  SectionList,
+  TouchableOpacity,
+  View,
+  Dimensions,
+  StyleSheet
+} from "react-native";
 import { Header, Icon, ListItem, Text } from "react-native-elements";
 import Swipeout from "react-native-swipeout";
 import DeviceInfo from "react-native-device-info";
@@ -38,39 +44,25 @@ const STATUS_ICON = {
 };
 
 const Empty = props => (
-  <View
-    style={{
-      flex: 1,
-      justifyContent: "center"
-    }}
-  >
-    <Text
-      style={{
-        alignItems: "center",
-        textAlign: "center",
-        fontSize: 20
-      }}
-    >
-      今日の体重を記録しよう！
-    </Text>
+  <View style={styles.emptyContainer}>
+    <Text style={styles.title}>今日の体重を記録しよう！</Text>
     <Icon
       type="material-community"
       size={60}
       color="black"
       name="scale-bathroom"
-      containerStyle={{
-        marginVertical: 40
-      }}
+      containerStyle={styles.emptyIcon}
     />
     <Button
       title="計測"
+      style={styles.button}
       onPress={() => props.navigation.navigate("Scale", { type: "create" })}
     />
   </View>
 );
 const Content = props => (
   <>
-    <View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
+    <View style={styles.contentContainer} />
     <Chart
       {...props}
       graphRef={ref => {
@@ -89,13 +81,7 @@ const Content = props => (
       ref={ref => {
         list = ref;
       }}
-      style={{
-        position: "absolute",
-        top: hasNotch ? 360 : 340,
-        left: 0,
-        right: 0,
-        bottom: 0
-      }}
+      style={styles.sectionList}
       getItemLayout={(data, index) => ({
         length: 50,
         offset: 50 * index,
@@ -158,16 +144,16 @@ const Content = props => (
                   weight: `${item.weight}`
                 })
               }
-              style={{ height: 50, backgroundColor: "lightgrey" }}
+              style={styles.listItem}
               title={moment(item.date.toDate()).format("YYYY/MM/DD")}
               topDivider
               rightTitle={
                 <View style={{ flexDirection: "row" }}>
                   <Text
-                    style={{ color: "#666", fontSize: 18 }}
+                    style={styles.rightTitleText}
                   >{`${item.weight}kg`}</Text>
                   <ShapeIcon
-                    style={{ width: 25, marginLeft: 16, textAlign: "center" }}
+                    style={styles.icon}
                     size={20}
                     color={weightStatusIcon.color}
                     name={weightStatusIcon.name}
@@ -179,13 +165,7 @@ const Content = props => (
         );
       }}
       renderSectionHeader={({ section: { title } }) => (
-        <View
-          style={{
-            fontWeight: "bold",
-            backgroundColor: "lightgrey",
-            height: 10
-          }}
-        />
+        <View style={styles.sectionHeader} />
       )}
       keyExtractor={(item, index) => item + index}
     />
@@ -217,21 +197,15 @@ const HomeScreen = props => {
   return (
     <View style={{ flex: 1 }}>
       <Header
-        containerStyle={{ zIndex: 200, backgroundColor: "white" }}
-        centerComponent={
-          <Text style={{ fontSize: 18, color: BLACK }}>体重記録</Text>
-        }
+        containerStyle={styles.headerContainer}
+        centerComponent={<Text style={styles.headerTitle}>体重記録</Text>}
         rightComponent={
           <TouchableOpacity
             onPress={() => {
               props.navigation.navigate("Scale", { type: "create" });
             }}
           >
-            <Text
-              style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}
-            >
-              追加
-            </Text>
+            <Text style={styles.headerButtonText}>追加</Text>
           </TouchableOpacity>
         }
       />
@@ -240,6 +214,46 @@ const HomeScreen = props => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  headerContainer: { zIndex: 200, backgroundColor: "white" },
+  headerTitle: { fontSize: 18, color: BLACK },
+  headerButtonText: { fontSize: 18, fontWeight: "bold", color: THEME_COLOR },
+  icon: {
+    width: 25,
+    marginLeft: 16,
+    textAlign: "center"
+  },
+  sectionList: {
+    position: "absolute",
+    top: hasNotch ? 360 : 340,
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
+  button: {
+    marginHorizontal: 16
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  title: {
+    alignItems: "center",
+    textAlign: "center",
+    fontSize: 20
+  },
+  emptyIcon: {
+    marginVertical: 40
+  },
+  listItem: { height: 50, backgroundColor: "lightgrey" },
+  contentContainer: { borderColor: "lightgrey", borderWidth: 1, height: 1 },
+  sectionHeader: {
+    backgroundColor: "lightgrey",
+    height: 10
+  },
+  rightTitleText: { color: "#666", fontSize: 18 }
+});
 
 export default connect(
   state => ({ auth: state.auth, health: state.health.data }),
