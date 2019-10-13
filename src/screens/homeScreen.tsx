@@ -206,6 +206,12 @@ const Container = props => {
 const HomeScreen = props => {
   useEffect(() => {
     props.fetchWeights();
+    const subscription = props.navigation.addListener("willFocus", () => {
+      props.fetchWeights();
+    });
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   return (

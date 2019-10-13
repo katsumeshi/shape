@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DatePickerAndroid,
   Keyboard,
@@ -160,6 +160,7 @@ const ScaleScreen = props => {
   const [weight, onWeightChange] = useState(defaultWeight);
 
   const [showDatePicker, onShowDatePicker] = useState(false);
+
   return (
     <>
       <ScaleScreenHeader {...props} date={date} weight={parseFloat(weight)} />
