@@ -6,7 +6,8 @@ import {
   Text,
   View,
   DatePickerIOS,
-  Switch
+  Switch,
+  StyleSheet
 } from "react-native";
 import { Header, ListItem } from "react-native-elements";
 import firebase from "react-native-firebase";
@@ -79,11 +80,11 @@ const SettingList = () => {
         <>
           <ListItem
             onPress={item.onPress}
-            style={{ height: 50, backgroundColor: "lightgrey" }}
+            style={styles.listItem}
             title={item.left}
             bottomDivider
             rightElement={
-              <Text style={{ color: "#666", fontSize: 18 }}>{item.right}</Text>
+              <Text style={styles.listItemRightText}>{item.right}</Text>
             }
           />
           {item.isDatePicker && showPicker && (
@@ -109,6 +110,7 @@ const SettingList = () => {
 const LogoutButton = () => (
   <Button
     title="ログアウト"
+    style={styles.button}
     onPress={() => {
       Alert.alert(
         "確認",
@@ -132,6 +134,16 @@ const LogoutButton = () => (
   />
 );
 
+const ScaleScreenHeader = () => (
+  <>
+    <Header
+      containerStyle={styles.headerContainer}
+      centerComponent={<Text style={styles.headerTitle}>設定</Text>}
+    />
+    <View style={styles.headerDivider} />
+  </>
+);
+
 const ScaleScreen = props => {
   useEffect(() => {
     if (props.auth.isLoggedIn !== undefined) {
@@ -141,17 +153,23 @@ const ScaleScreen = props => {
 
   return (
     <>
-      <Header
-        containerStyle={{ zIndex: 200, backgroundColor: "white" }}
-        centerComponent={
-          <Text style={{ fontSize: 18, color: BLACK }}>設定</Text>
-        }
-      />
-      <View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
+      <ScaleScreenHeader />
       <SettingList />
       <LogoutButton />
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    marginHorizontal: 16,
+    marginBottom: 16
+  },
+  headerDivider: { borderColor: "lightgrey", borderWidth: 1, height: 1 },
+  headerTitle: { fontSize: 18, color: BLACK },
+  headerContainer: { zIndex: 100, backgroundColor: "white" },
+  listItem: { height: 50, backgroundColor: "lightgrey" },
+  listItemRightText: { color: "#666", fontSize: 18 }
+});
 
 export default connect(state => ({ auth: state.auth }))(ScaleScreen);
