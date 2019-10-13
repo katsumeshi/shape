@@ -1,9 +1,6 @@
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
-// import { IMetaAction } from "..";
-// import apiCaller from "../../utils/apiCaller";
 
 import firebase, { RNFirebase } from "react-native-firebase";
-import { fetchWeightsError, fetchWeightsSuccess } from "./actions";
 import { PostRaw, HelthActionTypes } from "./types";
 
 const healthRef = () => {

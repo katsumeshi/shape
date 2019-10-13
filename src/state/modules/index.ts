@@ -7,9 +7,8 @@ import {
   TypeConstant
 } from "typesafe-actions";
 import { healthReducer } from "./health/reducers";
-import auth from "./auth/auth";
+import { authReducer } from "./auth/reducers";
 import healthSaga from "./health/sagas";
-import { IPostState } from "./post/types";
 // The top-level state object
 export interface IApplicationState {
   post: IPostState;
@@ -20,7 +19,7 @@ export interface IReducerAction<TPayload>
     PayloadAction<TypeConstant, TPayload> {}
 export const rootReducer = combineReducers<IApplicationState>({
   health: healthReducer,
-  auth
+  auth: authReducer
 });
 export function* rootSaga() {
   yield all([fork(healthSaga)]);

@@ -19,9 +19,7 @@ export const healthReducer = (
       return { ...initialState, data: action.payload };
     }
     case HelthActionTypes.HEALTH_FETCH_ERROR: {
-      return {
-        ...state
-      };
+      return { ...state };
     }
     default:
       return state;

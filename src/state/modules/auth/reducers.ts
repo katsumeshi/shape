@@ -1,31 +1,18 @@
-// import { PostActionTypes } from "./types";
+import { Action, PayloadAction, TypeConstant } from "typesafe-actions";
+import { AuthActionTypes } from "./types";
 
-// export const initialState: IPostState = {
-//   data: [],
-//   errors: [],
-//   loading: false
-// };
+const initialState = {};
 
-// export default function reducer(state = initialState, action = {}) {
-//   switch (action.type) {
-//     case LOGIN_STATUS_REQUESTED:
-//       return {
-//         ...state,
-//         loading: true
-//       };
-//     case LOGIN_STATUS_LOGGED_IN:
-//       return {
-//         ...state,
-//         loading: false,
-//         isLoggedIn: true
-//       };
-//     case LOGIN_STATUS_LOGGED_OUT:
-//       return {
-//         ...state,
-//         loading: false,
-//         isLoggedIn: false
-//       };
-//     default:
-//       return state;
-//   }
-// }
+// reducer
+export const authReducer = (state = initialState, action = {}) => {
+  switch (action.type) {
+    case AuthActionTypes.AUTH_LOGIN:
+      return { ...state, loading: true, isLoggedIn: true };
+    case AuthActionTypes.AUTH_LOGOUT:
+      return { ...initialState, isLoggedIn: false };
+    case AuthActionTypes.AUTH_FETCH_ERROR:
+      return { ...state };
+    default:
+      return state;
+  }
+};
