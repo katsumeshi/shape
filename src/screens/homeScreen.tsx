@@ -64,7 +64,7 @@ const Content = props => (
   <>
     <View style={styles.contentContainer} />
     <Chart
-      {...props}
+      health={props.health.data}
       graphRef={ref => {
         graph = ref;
       }}
@@ -91,7 +91,7 @@ const Content = props => (
         sectionHeight = h;
       }}
       onScroll={e => {
-        const len = props.health.length;
+        const len = props.health.data.length;
         const chartWidth = Math.max(width, len * 50);
         const scrollAmount =
           sectionHeight - (e.nativeEvent.contentOffset.y + 343.5);
@@ -105,14 +105,15 @@ const Content = props => (
       sections={[
         {
           title: moment().format("MMMM"),
-          data: [...props.health]
+          data: [...props.health.data]
         }
       ]}
       renderItem={({ item, index, section }) => {
         let weightStatusIcon = STATUS_ICON.EVEN;
-        if (props.health.length > index + 1) {
+        if (props.health.data.length > index + 1) {
           const diff =
-            props.health[index].weight - props.health[index + 1].weight;
+            props.health.data[index].weight -
+            props.health.data[index + 1].weight;
           if (diff > 0) {
             weightStatusIcon = STATUS_ICON.UP;
           } else if (diff < 0) {
@@ -173,14 +174,14 @@ const Content = props => (
 );
 
 const Container = props => {
-  if (props.health) {
-    return props.health.length > 0 ? (
-      <Content {...props} />
-    ) : (
-      <Empty {...props} />
-    );
+  if (props.health.loading) {
+    return <></>;
   }
-  return <></>;
+  return props.health.data.length ? (
+    <Content {...props} />
+  ) : (
+    <Empty {...props} />
+  );
 };
 
 const HomeScreen = props => {
@@ -256,6 +257,6 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-  state => ({ auth: state.auth, health: state.health.data }),
+  state => ({ auth: state.auth, health: state.health }),
   { fetchWeights }
 )(HomeScreen);

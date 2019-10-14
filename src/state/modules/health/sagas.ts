@@ -16,8 +16,8 @@ const healthRef = () => {
 function* handleFetch() {
   const ref = healthRef();
   if (!ref) return;
-  const querySnapshot = yield call(() => ref.get());
   const arr: Array<PostRaw> = [];
+  const querySnapshot = yield call(() => ref.get());
   querySnapshot.forEach(doc => {
     const v = doc.data() as PostRaw;
     if (v.date) {

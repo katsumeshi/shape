@@ -15,8 +15,9 @@ export const healthReducer = (
     case HelthActionTypes.HEALTH_FETCH: {
       return { ...state, loading: true };
     }
+
     case HelthActionTypes.HEALTH_FETCH_SUCCESS: {
-      return { ...initialState, data: action.payload };
+      return { ...initialState, data: action.payload, loading: false };
     }
     case HelthActionTypes.HEALTH_FETCH_ERROR: {
       return { ...state };
