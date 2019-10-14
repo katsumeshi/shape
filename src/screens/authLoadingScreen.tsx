@@ -3,17 +3,6 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { connect } from "react-redux";
 import * as firebaseService from "../services/firebase";
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center"
-  },
-  horizontal: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    padding: 10
-  }
-});
 
 const AuthLoadingScreen = props => {
   useEffect(() => {
@@ -32,5 +21,18 @@ const AuthLoadingScreen = props => {
     </View>
   );
 };
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
+  }
+});
 
 export default connect(state => ({ auth: state.auth }))(AuthLoadingScreen);

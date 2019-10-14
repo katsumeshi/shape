@@ -1,17 +1,7 @@
 import { action } from "typesafe-actions";
 import moment from "moment";
-import firebase from "react-native-firebase";
+import { healthRef } from "../../../services/firebase";
 import { HelthActionTypes } from "./types";
-
-const healthRef = () => {
-  const authUser = firebase.auth().currentUser;
-  if (!authUser) return null;
-  return firebase
-    .firestore()
-    .collection("users")
-    .doc(authUser.uid)
-    .collection("health");
-};
 
 export const fetchWeights = () => action(HelthActionTypes.HEALTH_FETCH, []);
 

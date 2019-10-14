@@ -32,3 +32,16 @@ export const signInWithEmailAndPassword = async values => {
     console.warn(err);
   }
 };
+
+const usersRef = () => {
+  const authUser = firebase.auth().currentUser;
+  if (!authUser) return null;
+  return firebase
+    .firestore()
+    .collection("users")
+    .doc(authUser.uid);
+};
+
+export const healthRef = () => {
+  return usersRef().collection("health");
+};

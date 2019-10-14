@@ -1,17 +1,6 @@
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
-
-import firebase, { RNFirebase } from "react-native-firebase";
 import { PostRaw, HelthActionTypes } from "./types";
-
-const healthRef = () => {
-  const authUser = firebase.auth().currentUser;
-  if (!authUser) return null;
-  return firebase
-    .firestore()
-    .collection("users")
-    .doc(authUser.uid)
-    .collection("health");
-};
+import { healthRef } from "../../../services/firebase";
 
 function* handleFetch() {
   const ref = healthRef();

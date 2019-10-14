@@ -149,7 +149,6 @@ const ScaleScreenHeader = props => (
 );
 
 const ScaleScreen = props => {
-  // const [isPickerShowing, onPicker] = useState(false);
   const type = props.navigation.getParam("type");
   const defaultDate =
     type === "create" ? new Date() : props.navigation.getParam("date");
@@ -197,7 +196,6 @@ const ScaleScreen = props => {
     </>
   );
 };
-// }
 
 const styles = StyleSheet.create({
   container: {
