@@ -132,7 +132,7 @@ const Content = props => (
                 color: "white",
                 underlayColor: "red",
                 onPress: () => {
-                  deleteWeight(item.date.toDate());
+                  props.deleteWeight(item.date.toDate());
                 }
               }
             ]}
@@ -252,5 +252,5 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({ auth: state.auth, health: state.health }),
-  { fetchWeights }
+  { fetchWeights, deleteWeight }
 )(HomeScreen);

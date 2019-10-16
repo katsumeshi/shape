@@ -4,7 +4,7 @@ import firebase, { RNFirebase } from "react-native-firebase";
 import moment from "moment";
 import { HelthActionTypes } from "./types";
 import { healthRef } from "../../../services/firebase";
-import { updateWeightSuccess } from "./actions";
+import { updateWeightSuccess, deleteWeightSuccess } from "./actions";
 
 class HealthModel {
   date: RNFirebase.firestore.Timestamp;
@@ -77,6 +77,28 @@ export function* watchUpdateWeight() {
   yield takeEvery(HelthActionTypes.HEALTH_UPDATE, handleUpdateWeight);
 }
 
+function* handleDeleteWeight({ payload: { date } }) {
+  try {
+    healthRef()
+      .doc(moment(date).format("YYYY-MM-DD"))
+      .delete();
+    deleteWeightSuccess();
+  } catch (error) {
+    yield put({
+      type: HelthActionTypes.HEALTH_DELETE_ERROR,
+      error
+    });
+  }
+}
+
+export function* watchDeleteWeight() {
+  yield takeEvery(HelthActionTypes.HEALTH_DELETE, handleDeleteWeight);
+}
+
 export default function* healthSaga() {
-  yield all([fork(watchFetchRequest), fork(watchUpdateWeight)]);
+  yield all([
+    fork(watchFetchRequest),
+    fork(watchUpdateWeight),
+    fork(watchDeleteWeight)
+  ]);
 }

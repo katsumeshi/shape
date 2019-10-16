@@ -1,6 +1,4 @@
 import { action } from "typesafe-actions";
-import moment from "moment";
-import { healthRef } from "../../../services/firebase";
 import { HelthActionTypes } from "./types";
 
 export const fetchWeights = () => action(HelthActionTypes.HEALTH_FETCH, []);
@@ -11,19 +9,19 @@ export const fetchWeightsError = (message: string) =>
   action(HelthActionTypes.HEALTH_FETCH_ERROR, message);
 
 export const updateWeight = (date: Date, weight: number) =>
-  action(HelthActionTypes.HEALTH_UPDATE, { date, weight }, { date, weight });
+  action(HelthActionTypes.HEALTH_UPDATE, { date, weight });
 
 export const updateWeightSuccess = () =>
-  action(HelthActionTypes.HEALTH_FETCH_SUCCESS);
+  action(HelthActionTypes.HEALTH_UPDATE_SUCCESS);
 
-// export function updateWeight(date: Date, weight: number) {
+export const deleteWeight = (date: Date) =>
+  action(HelthActionTypes.HEALTH_DELETE, { date });
+
+export const deleteWeightSuccess = () =>
+  action(HelthActionTypes.HEALTH_DELETE_SUCCESS);
+
+// export function deleteWeight(date: Date, weight: number) {
 //   const ref = healthRef();
 //   if (!ref) return;
-//   ref.doc(moment(date).format("YYYY-MM-DD")).set({ date, weight });
+//   ref.doc(moment(date).format("YYYY-MM-DD")).delete();
 // }
-
-export function deleteWeight(date: Date, weight: number) {
-  const ref = healthRef();
-  if (!ref) return;
-  ref.doc(moment(date).format("YYYY-MM-DD")).delete();
-}
