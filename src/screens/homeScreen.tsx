@@ -17,7 +17,7 @@ import { BLACK, THEME_COLOR } from "../constants";
 
 import ShapeIcon from "../../fonts/icon";
 
-import { fetchWeights } from "../state/modules/health/actions";
+import { fetchWeights, deleteWeight } from "../state/modules/health/actions";
 
 const { width } = Dimensions.get("window");
 
@@ -132,7 +132,7 @@ const Content = props => (
                 color: "white",
                 underlayColor: "red",
                 onPress: () => {
-                  props.delete(item.date.toDate());
+                  deleteWeight(item.date.toDate());
                 }
               }
             ]}
@@ -187,12 +187,6 @@ const Container = props => {
 const HomeScreen = props => {
   useEffect(() => {
     props.fetchWeights();
-    const subscription = props.navigation.addListener("willFocus", () => {
-      props.fetchWeights();
-    });
-    return () => {
-      subscription.remove();
-    };
   }, []);
 
   return (

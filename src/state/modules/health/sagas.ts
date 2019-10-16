@@ -1,27 +1,82 @@
-import { all, call, fork, put, takeEvery } from "redux-saga/effects";
-import { PostRaw, HelthActionTypes } from "./types";
+import { all, call, fork, put, take, takeEvery } from "redux-saga/effects";
+import { eventChannel } from "redux-saga";
+import firebase, { RNFirebase } from "react-native-firebase";
+import moment from "moment";
+import { HelthActionTypes } from "./types";
 import { healthRef } from "../../../services/firebase";
+import { updateWeightSuccess } from "./actions";
 
+class HealthModel {
+  date: RNFirebase.firestore.Timestamp;
+
+  weight: number;
+
+  constructor(data: object | void) {
+    this.date = data.date || firebase.firestore.Timestamp.fromMillis(0);
+    this.weight = data.weight;
+  }
+}
+const map: { [id: string]: HealthModel } = {};
 function* handleFetch() {
-  const ref = healthRef();
-  if (!ref) return;
-  const arr: Array<PostRaw> = [];
-  const querySnapshot = yield call(() => ref.get());
-  querySnapshot.forEach(doc => {
-    const v = doc.data() as PostRaw;
-    if (v.date) {
-      arr.unshift(v);
+  const channel = eventChannel(emit =>
+    healthRef().onSnapshot(snapshot => {
+      snapshot.docChanges.forEach(change => {
+        const data = change.doc.data();
+        const key = change.doc.id;
+        switch (change.type) {
+          case "added":
+          case "modified":
+            map[key] = new HealthModel(data);
+            break;
+          case "removed":
+            delete map[key];
+            break;
+          default:
+            console.log("No such day exists!");
+            break;
+        }
+      });
+      emit(
+        Object.keys(map)
+          .sort((a, b) => b.localeCompare(a))
+          .map(key => map[key])
+      );
+    })
+  );
+  try {
+    while (true) {
+      const data = yield take(channel);
+      yield put({
+        type: HelthActionTypes.HEALTH_FETCH_SUCCESS,
+        payload: data
+      });
     }
-  });
-  yield put({
-    type: HelthActionTypes.HEALTH_FETCH_SUCCESS,
-    payload: arr
-  });
+  } catch (err) {
+    console.warn(err);
+  }
 }
 export function* watchFetchRequest() {
   yield takeEvery(HelthActionTypes.HEALTH_FETCH, handleFetch);
 }
 
+function* handleUpdateWeight({ payload: { date, weight } }) {
+  try {
+    healthRef()
+      .doc(moment(date).format("YYYY-MM-DD"))
+      .set({ date, weight });
+    updateWeightSuccess();
+  } catch (error) {
+    yield put({
+      type: HelthActionTypes.HEALTH_UPDATE_ERROR,
+      error
+    });
+  }
+}
+
+export function* watchUpdateWeight() {
+  yield takeEvery(HelthActionTypes.HEALTH_UPDATE, handleUpdateWeight);
+}
+
 export default function* healthSaga() {
-  yield all([fork(watchFetchRequest)]);
+  yield all([fork(watchFetchRequest), fork(watchUpdateWeight)]);
 }
