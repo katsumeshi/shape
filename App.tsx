@@ -1,6 +1,5 @@
 import React from "react";
 import { ThemeProvider } from "react-native-elements";
-import EStyleSheet from "react-native-extended-stylesheet";
 import firebase from "react-native-firebase";
 import { Provider } from "react-redux";
 import { THEME_COLOR } from "./src/constants";
@@ -8,8 +7,6 @@ import AppNavigator from "./src/navigation";
 import store from "./src/state/store";
 
 firebase.crashlytics().enableCrashlyticsCollection();
-
-EStyleSheet.build();
 
 const theme = {
   Button: {
@@ -38,14 +35,12 @@ const theme = {
   }
 };
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <AppNavigator />
-        </ThemeProvider>
-      </Provider>
-    );
-  }
-}
+const App = () => (
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <AppNavigator />
+    </ThemeProvider>
+  </Provider>
+);
+
+export default App;
