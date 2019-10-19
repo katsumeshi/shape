@@ -1,25 +1,53 @@
-import { Formik, FormikProps } from "formik";
-import React, { useEffect } from "react";
+import { Formik, FormikProps } from 'formik';
+import React, { useEffect } from 'react';
 import {
   Alert,
   Image,
   Text,
   View,
   TouchableOpacity,
-  StyleSheet
-} from "react-native";
-import { Header, Icon, Input } from "react-native-elements";
-import { AccessToken, LoginManager } from "react-native-fbsdk";
-import firebase from "react-native-firebase";
-import { GoogleSignin } from "react-native-google-signin";
-import { connect } from "react-redux";
-import * as Yup from "yup";
-import { NavigationScreenProp, NavigationState } from "react-navigation";
-import { Button } from "../components/common";
-import Config from "../../config";
-import { THEME_COLOR } from "../constants";
+  StyleSheet,
+} from 'react-native';
+import { Header, Icon, Input } from 'react-native-elements';
+import { AccessToken, LoginManager } from 'react-native-fbsdk';
+import firebase from 'react-native-firebase';
+import { GoogleSignin } from 'react-native-google-signin';
+import { connect } from 'react-redux';
+import * as Yup from 'yup';
+import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import { Button } from '../components/common';
+import Config from '../../config';
+import { THEME_COLOR } from '../constants';
 
-import { signInWithEmailAndPassword } from "../services/firebase";
+import { signInWithEmailAndPassword } from '../services/firebase';
+
+const styles = StyleSheet.create({
+  button: {
+    marginBottom: 16,
+  },
+  input: {
+    marginBottom: 16,
+  },
+  separatorContainer: {
+    flexDirection: 'row',
+    marginVertical: 24,
+  },
+  separatorLine: {
+    flex: 1,
+    borderBottomWidth: 1,
+    marginBottom: 8,
+    borderColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  separatorText: { marginHorizontal: 8, color: 'rgba(0, 0, 0, 0.3)' },
+  headerLeft: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerLeftIcon: { top: -3, marginRight: 8 },
+  headerLeftText: { fontSize: 18, color: THEME_COLOR },
+  headerTitle: { fontSize: 18, color: 'black' },
+});
 
 interface Props {
   navigation: NavigationScreenProp<NavigationState>;
@@ -28,7 +56,7 @@ interface Props {
 GoogleSignin.configure({
   offlineAccess: false,
   webClientId: Config.WEB_API_KEY,
-  iosClientId: Config.IOS_API_KEY
+  iosClientId: Config.IOS_API_KEY,
 });
 
 interface FormValues {
@@ -36,25 +64,9 @@ interface FormValues {
 }
 const SignupSchema = Yup.object().shape({
   email: Yup.string()
-    .email("正しいEメールを入力してください。")
-    .required("Eメールを入力してください。")
+    .email('正しいEメールを入力してください。')
+    .required('Eメールを入力してください。'),
 });
-
-const EmailField = () => (
-  <Formik
-    initialValues={{ email: "" }}
-    onSubmit={async props => {
-      await signInWithEmailAndPassword(props);
-      Alert.alert("確認", "認証メールを送信しました。メールをご確認下さい。", [
-        {
-          text: "OK"
-        }
-      ]);
-    }}
-    validationSchema={SignupSchema}
-    render={(formikBag: FormikProps<FormValues>) => renderForm(formikBag)}
-  />
-);
 
 const renderForm = ({
   values,
@@ -64,7 +76,7 @@ const renderForm = ({
   errors,
   setFieldTouched,
   isSubmitting,
-  setSubmitting
+  setSubmitting,
 }: FormikProps<FormValues>) => (
   <>
     <Input
@@ -74,8 +86,8 @@ const renderForm = ({
       autoCorrect={false}
       value={values.email}
       containerStyle={styles.input}
-      onChangeText={value => setFieldValue("email", value)}
-      onBlur={() => setFieldTouched("email")}
+      onChangeText={(value) => setFieldValue('email', value)}
+      onBlur={() => setFieldTouched('email')}
       editable={!isSubmitting}
       errorMessage={touched.email && errors.email ? errors.email : undefined}
     />
@@ -91,36 +103,52 @@ const renderForm = ({
   </>
 );
 
+const EmailField = () => (
+  <Formik
+    initialValues={{ email: '' }}
+    onSubmit={async (props) => {
+      await signInWithEmailAndPassword(props);
+      Alert.alert('確認', '認証メールを送信しました。メールをご確認下さい。', [
+        {
+          text: 'OK',
+        },
+      ]);
+    }}
+    validationSchema={SignupSchema}
+    render={(formikBag: FormikProps<FormValues>) => renderForm(formikBag)}
+  />
+);
+
 const facebookLogin = async () => {
   try {
     const result = await LoginManager.logInWithPermissions([
-      "public_profile",
-      "email"
+      'public_profile',
+      'email',
     ]);
 
     if (result.isCancelled) {
-      throw new Error("User cancelled request");
+      throw new Error('User cancelled request');
     }
 
     const data = await AccessToken.getCurrentAccessToken();
 
     if (!data) {
-      throw new Error("Something went wrong obtaining the users access token");
+      throw new Error('Something went wrong obtaining the users access token');
     }
     const credential = firebase.auth.FacebookAuthProvider.credential(
-      data.accessToken
+      data.accessToken,
     );
     await firebase.auth().signInWithCredential(credential);
   } catch (e) {
-    if (e.code === "auth/account-exists-with-different-credential") {
+    if (e.code === 'auth/account-exists-with-different-credential') {
       Alert.alert(
-        "確認",
-        "別の認証方法で登録されています。他の認証方法でログインして下さい。",
+        '確認',
+        '別の認証方法で登録されています。他の認証方法でログインして下さい。',
         [
           {
-            text: "OK"
-          }
-        ]
+            text: 'OK',
+          },
+        ],
       );
     }
   }
@@ -132,7 +160,7 @@ const googleSignIn = async () => {
     const data = await GoogleSignin.signIn();
     const credential = firebase.auth.GoogleAuthProvider.credential(
       data.idToken,
-      data.accessToken
+      data.accessToken,
     );
     await firebase.auth().signInWithCredential(credential);
   } catch (error) {
@@ -156,7 +184,7 @@ const GoogleLoginButton = () => (
     borderColor="#E0E0E0"
     onPress={googleSignIn}
     style={styles.button}
-    iconComp={<Image source={require("../../images/logoGoogle.png")} />}
+    iconComp={<Image source={require('../../images/logoGoogle.png')} />}
   />
 );
 
@@ -169,9 +197,9 @@ const FacebookLoginButton = () => (
   />
 );
 
-const LoginScreenHeader = ({ navigation }) => (
+const LoginScreenHeader = ({ navigation }: {navigation: NavigationScreenProp<NavigationState>}) => (
   <Header
-    leftComponent={
+    leftComponent={(
       <TouchableOpacity
         style={styles.headerLeft}
         onPress={() => {
@@ -188,12 +216,12 @@ const LoginScreenHeader = ({ navigation }) => (
         </View>
         <Text style={styles.headerLeftText}>戻る</Text>
       </TouchableOpacity>
-    }
+    )}
     centerComponent={
       <Text style={styles.headerTitle}>新規作成 or ログイン</Text>
     }
     containerStyle={{
-      backgroundColor: "white"
+      backgroundColor: 'white',
     }}
   />
 );
@@ -201,7 +229,7 @@ const LoginScreenHeader = ({ navigation }) => (
 const LoginScreen = (props: Props) => {
   useEffect(() => {}, []);
   useEffect(() => {
-    props.navigation.navigate(props.auth.isLoggedIn ? "App" : "Auth");
+    props.navigation.navigate(props.auth.isLoggedIn ? 'App' : 'Auth');
   });
   const { navigation } = props;
   return (
@@ -219,32 +247,4 @@ const LoginScreen = (props: Props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    marginBottom: 16
-  },
-  input: {
-    marginBottom: 16
-  },
-  separatorContainer: {
-    flexDirection: "row",
-    marginVertical: 24
-  },
-  separatorLine: {
-    flex: 1,
-    borderBottomWidth: 1,
-    marginBottom: 8,
-    borderColor: "rgba(0, 0, 0, 0.3)"
-  },
-  separatorText: { marginHorizontal: 8, color: "rgba(0, 0, 0, 0.3)" },
-  headerLeft: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  headerLeftIcon: { top: -3, marginRight: 8 },
-  headerLeftText: { fontSize: 18, color: THEME_COLOR },
-  headerTitle: { fontSize: 18, color: "black" }
-});
-
-export default connect(state => ({ auth: state.auth.data }))(LoginScreen);
+export default connect((state) => ({ auth: state.auth.data }))(LoginScreen);
