@@ -3,11 +3,11 @@ import { eventChannel } from "redux-saga";
 // import firebase, { RNFirebase } from "react-native-firebase";
 import { HelthActionTypes } from "./types";
 import {
-  updateWeight,
-  deleteWeight,
+  // updateWeight,
+  // deleteWeight,
   healthChanged
 } from "../../../services/firebase";
-import { updateWeightSuccess, deleteWeightSuccess } from "./actions";
+// import { updateWeightSuccess, deleteWeightSuccess } from "./actions";
 
 // class HealthModel {
 //   date: RNFirebase.firestore.Timestamp;
@@ -37,42 +37,42 @@ export function* watchFetchRequest() {
   yield takeEvery(HelthActionTypes.HEALTH_FETCH, handleFetch);
 }
 
-function* handleUpdateWeight({ payload: { date, weight } }) {
-  try {
-    updateWeight(date, weight);
-    updateWeightSuccess();
-  } catch (error) {
-    yield put({
-      type: HelthActionTypes.HEALTH_UPDATE_ERROR,
-      error
-    });
-  }
-}
+// function* handleUpdateWeight({ payload: { date, weight } }) {
+//   try {
+//     updateWeight(date, weight);
+//     updateWeightSuccess();
+//   } catch (error) {
+//     yield put({
+//       type: HelthActionTypes.HEALTH_UPDATE_ERROR,
+//       error
+//     });
+//   }
+// }
 
-export function* watchUpdateWeight() {
-  yield takeEvery(HelthActionTypes.HEALTH_UPDATE, handleUpdateWeight);
-}
+// export function* watchUpdateWeight() {
+//   yield takeEvery(HelthActionTypes.HEALTH_UPDATE, handleUpdateWeight);
+// }
 
-function* handleDeleteWeight({ payload: { date } }) {
-  try {
-    deleteWeight(date);
-    deleteWeightSuccess();
-  } catch (error) {
-    yield put({
-      type: HelthActionTypes.HEALTH_DELETE_ERROR,
-      error
-    });
-  }
-}
+// function* handleDeleteWeight({ payload: { date } }) {
+//   try {
+//     deleteWeight(date);
+//     deleteWeightSuccess();
+//   } catch (error) {
+//     yield put({
+//       type: HelthActionTypes.HEALTH_DELETE_ERROR,
+//       error
+//     });
+//   }
+// }
 
-export function* watchDeleteWeight() {
-  yield takeEvery(HelthActionTypes.HEALTH_DELETE, handleDeleteWeight);
-}
+// export function* watchDeleteWeight() {
+//   yield takeEvery(HelthActionTypes.HEALTH_DELETE, handleDeleteWeight);
+// }
 
 export default function* healthSaga() {
   yield all([
-    fork(watchFetchRequest),
-    fork(watchUpdateWeight),
-    fork(watchDeleteWeight)
+    fork(watchFetchRequest)
+    // fork(watchUpdateWeight),
+    // fork(watchDeleteWeight)
   ]);
 }

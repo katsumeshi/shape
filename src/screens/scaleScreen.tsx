@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   DatePickerAndroid,
   Keyboard,
@@ -15,7 +15,7 @@ import { Button, Header, Icon, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import DatePicker from "../components/datePicker";
 import { BLACK, THEME_COLOR } from "../constants";
-import { updateWeight } from "../state/modules/health/actions";
+import { updateWeight } from "../services/firebase";
 
 const margin = 8;
 
@@ -28,17 +28,17 @@ const limitWeight = text => {
   return weight;
 };
 
-const add = (weight, add) => {
+const addWeight = (weight, add) => {
   const result = (weight * 10 + add * 10) / 10;
   return `${result > 0 ? result : 0}`;
 };
 
-const ScaleRow = props => (
+const ScaleRow = ({ weight, onWeightChange }) => (
   <View style={{ flexDirection: "row" }}>
     <Button
       buttonStyle={styles.button}
       onPress={() => {
-        props.onWeightChange(add(props.weight, -0.1));
+        onWeightChange(addWeight(weight, -0.1));
       }}
       icon={{ type: "feather", color: "white", name: "minus" }}
     />
@@ -56,13 +56,13 @@ const ScaleRow = props => (
       keyboardType="numeric"
       placeholder="00.00"
       onSubmitEditing={() => {
-        props.onWeightChange(`${props.weight}`);
+        onWeightChange(`${weight}`);
       }}
       onChangeText={text => {
-        props.onWeightChange(limitWeight(text));
+        onWeightChange(limitWeight(text));
       }}
       maxLength={5}
-      value={props.weight}
+      value={weight}
     />
     <View style={{ justifyContent: "center", alignItems: "center" }}>
       <Text style={{ fontSize: 20 }}>kg</Text>
@@ -70,14 +70,14 @@ const ScaleRow = props => (
     <Button
       buttonStyle={styles.button}
       onPress={() => {
-        props.onWeightChange(add(props.weight, 0.1));
+        onWeightChange(addWeight(weight, 0.1));
       }}
       icon={{ type: "feather", color: "white", name: "plus" }}
     />
   </View>
 );
 
-const DateRow = props => (
+const DateRow = ({ date, onShowDatePicker, onDateChange }) => (
   <Button
     buttonStyle={{
       marginHorizontal: 16,
@@ -85,19 +85,19 @@ const DateRow = props => (
       backgroundColor: "white"
     }}
     type="outline"
-    title={`${moment(props.date).format("YYYY/MM/DD")}`}
+    title={`${moment(date).format("YYYY/MM/DD")}`}
     onPress={async () => {
       if (Platform.OS === "ios") {
-        props.onShowDatePicker(true);
+        onShowDatePicker(true);
       } else {
         try {
           const { action, year, month, day } = await DatePickerAndroid.open({
             date
           });
           if (action !== DatePickerAndroid.dismissedAction) {
-            props.onDateChange(new Date(year, month, day));
+            onDateChange(new Date(year, month, day));
           } else {
-            props.onDateChange(props.date);
+            onDateChange(date);
           }
         } catch ({ code, message }) {
           console.warn("Cannot open date picker", message);
@@ -107,13 +107,13 @@ const DateRow = props => (
   />
 );
 
-const ScaleScreenHeader = props => (
+const ScaleScreenHeader = ({ navigation, weight, date }) => (
   <Header
     leftComponent={
       <TouchableOpacity
         style={styles.headerLeft}
         onPress={() => {
-          props.navigation.goBack();
+          navigation.goBack();
         }}
       >
         <View style={{ top: -3 }}>
@@ -133,8 +133,8 @@ const ScaleScreenHeader = props => (
     rightComponent={
       <TouchableOpacity
         onPress={() => {
-          props.updateWeight(props.date, props.weight);
-          props.navigation.goBack();
+          updateWeight(date, weight);
+          navigation.goBack();
         }}
       >
         <Text style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}>
@@ -148,27 +148,31 @@ const ScaleScreenHeader = props => (
   />
 );
 
-const ScaleScreen = props => {
-  const type = props.navigation.getParam("type");
+const ScaleScreen = ({ navigation, weight }) => {
+  const type = navigation.getParam("type");
   const defaultDate =
-    type === "create" ? new Date() : props.navigation.getParam("date");
+    type === "create" ? new Date() : navigation.getParam("date");
   const [date, onDateChange] = useState(defaultDate);
   const defaultWeight =
-    type === "create" ? `${props.weight}` : props.navigation.getParam("weight");
+    type === "create" ? `${weight}` : navigation.getParam("weight");
 
-  const [weight, onWeightChange] = useState(defaultWeight);
+  const [_weight, onWeightChange] = useState(defaultWeight);
 
   const [showDatePicker, onShowDatePicker] = useState(false);
 
   return (
     <>
-      <ScaleScreenHeader {...props} date={date} weight={parseFloat(weight)} />
+      <ScaleScreenHeader
+        navigation={navigation}
+        date={date}
+        weight={parseFloat(_weight)}
+      />
       <View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <TouchableWithoutFeedback
           onPress={() => {
             Keyboard.dismiss();
-            onWeightChange(`${weight}`);
+            onWeightChange(`${_weight}`);
           }}
           accessible={false}
         >
@@ -178,7 +182,7 @@ const ScaleScreen = props => {
               onDateChange={onDateChange}
               onShowDatePicker={onShowDatePicker}
             />
-            <ScaleRow weight={weight} onWeightChange={onWeightChange} />
+            <ScaleRow weight={_weight} onWeightChange={onWeightChange} />
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -188,8 +192,8 @@ const ScaleScreen = props => {
         onCancel={() => {
           onShowDatePicker(false);
         }}
-        onDone={date => {
-          onDateChange(date);
+        onDone={newDate => {
+          onDateChange(newDate);
           onShowDatePicker(false);
         }}
       />
@@ -221,8 +225,8 @@ export default connect(
   state => ({
     auth: state.auth,
     ...state.health.data[0]
-  }),
-  {
-    updateWeight
-  }
+  })
+  // {
+  //   updateWeight
+  // }
 )(ScaleScreen);

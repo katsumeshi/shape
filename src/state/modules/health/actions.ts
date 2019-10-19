@@ -8,17 +8,17 @@ export const fetchWeightsSuccess = (data: IPostRaw[]) =>
 export const fetchWeightsError = (message: string) =>
   action(HelthActionTypes.HEALTH_FETCH_ERROR, message);
 
-export const updateWeight = (date: Date, weight: number) =>
-  action(HelthActionTypes.HEALTH_UPDATE, { date, weight });
+// export const updateWeight = (date: Date, weight: number) =>
+//   action(HelthActionTypes.HEALTH_UPDATE, { date, weight });
 
-export const updateWeightSuccess = () =>
-  action(HelthActionTypes.HEALTH_UPDATE_SUCCESS);
+// export const updateWeightSuccess = () =>
+//   action(HelthActionTypes.HEALTH_UPDATE_SUCCESS);
 
-export const deleteWeight = (date: Date) =>
-  action(HelthActionTypes.HEALTH_DELETE, { date });
+// export const deleteWeight = (date: Date) =>
+//   action(HelthActionTypes.HEALTH_DELETE, { date });
 
-export const deleteWeightSuccess = () =>
-  action(HelthActionTypes.HEALTH_DELETE_SUCCESS);
+// export const deleteWeightSuccess = () =>
+//   action(HelthActionTypes.HEALTH_DELETE_SUCCESS);
 
 // export function deleteWeight(date: Date, weight: number) {
 //   const ref = healthRef();
