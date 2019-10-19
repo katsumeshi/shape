@@ -1,8 +1,5 @@
 import { action } from "typesafe-actions";
-import { AuthActionTypes } from "./types";
+import AuthActionTypes from "./types";
 
-export const requestLoginStatus = (isLoggedIn: boolean) =>
-  action(
-    isLoggedIn ? AuthActionTypes.AUTH_LOGIN : AuthActionTypes.AUTH_LOGOUT,
-    isLoggedIn
-  );
+const fetchAuthStatus = () => action(AuthActionTypes.AUTH_FETCH);
+export default fetchAuthStatus;

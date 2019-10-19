@@ -87,7 +87,9 @@
                                                       sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
                                                              annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
                   ];
-  handled = [[RNFirebaseLinks instance] application:app openURL:url options:options];
+  if (!handled) {
+    handled = [[RNFirebaseLinks instance] application:app openURL:url options:options];
+  }
   
     return handled;
 }

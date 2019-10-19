@@ -1,16 +1,15 @@
 import React, { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { connect } from "react-redux";
-import * as firebaseService from "../services/firebase";
-
+import fetchAuthStatus from "../state/modules/auth/actions";
 
 const AuthLoadingScreen = props => {
   useEffect(() => {
-    firebaseService.observeAuthState();
+    props.fetchAuthStatus();
   }, []);
 
   useEffect(() => {
-    if (props.auth.isLoggedIn !== undefined) {
+    if (props.auth && props.auth.isLoggedIn !== undefined) {
       props.navigation.navigate(props.auth.isLoggedIn ? "App" : "Auth");
     }
   });
@@ -21,7 +20,6 @@ const AuthLoadingScreen = props => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -35,4 +33,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(state => ({ auth: state.auth }))(AuthLoadingScreen);
+export default connect(
+  state => ({ auth: state.auth.data }),
+  { fetchAuthStatus }
+)(AuthLoadingScreen);

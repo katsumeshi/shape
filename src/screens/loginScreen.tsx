@@ -14,16 +14,15 @@ import firebase from "react-native-firebase";
 import { GoogleSignin } from "react-native-google-signin";
 import { connect } from "react-redux";
 import * as Yup from "yup";
+import { NavigationScreenProp, NavigationState } from "react-navigation";
 import { Button } from "../components/common";
 import Config from "../../config";
 import { THEME_COLOR } from "../constants";
 
 import { signInWithEmailAndPassword } from "../services/firebase";
 
-import { Navigation } from "../types";
-
 interface Props {
-  navigation: Navigation;
+  navigation: NavigationScreenProp<NavigationState>;
 }
 
 GoogleSignin.configure({
@@ -170,13 +169,13 @@ const FacebookLoginButton = () => (
   />
 );
 
-const LoginScreenHeader = (props: Props) => (
+const LoginScreenHeader = ({ navigation }) => (
   <Header
     leftComponent={
       <TouchableOpacity
         style={styles.headerLeft}
         onPress={() => {
-          props.navigation.goBack();
+          navigation.goBack();
         }}
       >
         <View style={styles.headerLeftIcon}>
@@ -200,12 +199,14 @@ const LoginScreenHeader = (props: Props) => (
 );
 
 const LoginScreen = (props: Props) => {
+  useEffect(() => {}, []);
   useEffect(() => {
     props.navigation.navigate(props.auth.isLoggedIn ? "App" : "Auth");
   });
+  const { navigation } = props;
   return (
     <View style={{ flex: 1 }}>
-      <LoginScreenHeader {...props} />
+      <LoginScreenHeader navigation={navigation} />
       <View style={{ flex: 1, marginHorizontal: 16 }}>
         <View style={{ flex: 1 }} />
         <EmailField />
@@ -246,4 +247,4 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 18, color: "black" }
 });
 
-export default connect(state => ({ auth: state.auth }))(LoginScreen);
+export default connect(state => ({ auth: state.auth.data }))(LoginScreen);

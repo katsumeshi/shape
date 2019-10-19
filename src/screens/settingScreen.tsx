@@ -172,4 +172,4 @@ const styles = StyleSheet.create({
   listItemRightText: { color: "#666", fontSize: 18 }
 });
 
-export default connect(state => ({ auth: state.auth }))(ScaleScreen);
+export default connect(state => ({ auth: state.auth.data }))(ScaleScreen);

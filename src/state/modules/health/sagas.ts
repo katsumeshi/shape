@@ -1,48 +1,26 @@
-import { all, call, fork, put, take, takeEvery } from "redux-saga/effects";
+import { all, fork, put, take, takeEvery } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
-import firebase, { RNFirebase } from "react-native-firebase";
-import moment from "moment";
+// import firebase, { RNFirebase } from "react-native-firebase";
 import { HelthActionTypes } from "./types";
-import { healthRef } from "../../../services/firebase";
+import {
+  updateWeight,
+  deleteWeight,
+  healthChanged
+} from "../../../services/firebase";
 import { updateWeightSuccess, deleteWeightSuccess } from "./actions";
 
-class HealthModel {
-  date: RNFirebase.firestore.Timestamp;
+// class HealthModel {
+//   date: RNFirebase.firestore.Timestamp;
 
-  weight: number;
+//   weight: number;
 
-  constructor(data: object | void) {
-    this.date = data.date || firebase.firestore.Timestamp.fromMillis(0);
-    this.weight = data.weight;
-  }
-}
-const map: { [id: string]: HealthModel } = {};
+//   constructor(data: object | void) {
+//     this.date = data.date || firebase.firestore.Timestamp.fromMillis(0);
+//     this.weight = data.weight;
+//   }
+// }
 function* handleFetch() {
-  const channel = eventChannel(emit =>
-    healthRef().onSnapshot(snapshot => {
-      snapshot.docChanges.forEach(change => {
-        const data = change.doc.data();
-        const key = change.doc.id;
-        switch (change.type) {
-          case "added":
-          case "modified":
-            map[key] = new HealthModel(data);
-            break;
-          case "removed":
-            delete map[key];
-            break;
-          default:
-            console.log("No such day exists!");
-            break;
-        }
-      });
-      emit(
-        Object.keys(map)
-          .sort((a, b) => b.localeCompare(a))
-          .map(key => map[key])
-      );
-    })
-  );
+  const channel = eventChannel(emit => healthChanged(weights => emit(weights)));
   try {
     while (true) {
       const data = yield take(channel);
@@ -61,9 +39,7 @@ export function* watchFetchRequest() {
 
 function* handleUpdateWeight({ payload: { date, weight } }) {
   try {
-    healthRef()
-      .doc(moment(date).format("YYYY-MM-DD"))
-      .set({ date, weight });
+    updateWeight(date, weight);
     updateWeightSuccess();
   } catch (error) {
     yield put({
@@ -79,9 +55,7 @@ export function* watchUpdateWeight() {
 
 function* handleDeleteWeight({ payload: { date } }) {
   try {
-    healthRef()
-      .doc(moment(date).format("YYYY-MM-DD"))
-      .delete();
+    deleteWeight(date);
     deleteWeightSuccess();
   } catch (error) {
     yield put({
