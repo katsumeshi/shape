@@ -5,7 +5,7 @@ import { authChanged } from "../../../services/firebase";
 
 function* handleAuthFetch() {
   const channel = eventChannel(emit =>
-    authChanged(isLoggedIn => emit(isLoggedIn))
+    authChanged((isLoggedIn: boolean) => emit(isLoggedIn))
   );
   try {
     while (true) {

@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
-  StyleSheet
+  StyleSheet,
+  ScrollView
 } from "react-native";
 import { Header, Icon, ListItem, Text } from "react-native-elements";
 import Swipeout from "react-native-swipeout";
@@ -19,8 +20,9 @@ import { BLACK, THEME_COLOR } from "../constants";
 import ShapeIcon from "../../fonts/icon";
 
 import { fetchWeights } from "../state/modules/health/actions";
-import { HealthModel } from "../state/modules/health/types";
+import { HealthModel, HealthState } from "../state/modules/health/types";
 import { deleteWeight } from "../services/firebase";
+import { AuthState } from "../state/modules/auth/types";
 
 const { width } = Dimensions.get("window");
 
@@ -66,10 +68,10 @@ const styles = StyleSheet.create({
   rightTitleText: { color: "#666", fontSize: 18 }
 });
 
-let graph;
-let list;
-let sectionHeight;
-let issectionList;
+let graphRef: ScrollView | null;
+let listRef: any;
+let sectionHeight: number;
+let isSectionList: boolean;
 
 const STATUS_ICON = {
   UP: {
@@ -111,7 +113,7 @@ const Content = ({
   health,
   navigation
 }: {
-  health: HealthModel;
+  health: HealthModel[];
   navigation: NavigationScreenProp<NavigationState>;
 }) => (
   <>
@@ -119,10 +121,10 @@ const Content = ({
     <Chart
       health={health}
       graphRef={ref => {
-        graph = ref;
+        graphRef = ref;
       }}
       scrollListToLocation={ratio =>
-        list.scrollToLocation({
+        listRef.scrollToLocation({
           animated: true,
           sectionIndex: 0,
           itemIndex: ratio,
@@ -132,7 +134,7 @@ const Content = ({
     />
     <SectionList
       ref={ref => {
-        list = ref;
+        listRef = ref;
       }}
       style={styles.sectionList}
       getItemLayout={(data, index) => ({
@@ -149,15 +151,15 @@ const Content = ({
         const scrollAmount =
           sectionHeight - (e.nativeEvent.contentOffset.y + 343.5);
         const ratio = chartWidth / sectionHeight;
-        if (issectionList) {
-          graph.scrollTo({ x: scrollAmount * ratio + 10 });
+        if (isSectionList && graphRef) {
+          graphRef.scrollTo({ x: scrollAmount * ratio + 10 });
         }
       }}
       onMomentumScrollBegin={() => {
-        issectionList = true;
+        isSectionList = true;
       }}
       onMomentumScrollEnd={() => {
-        issectionList = false;
+        isSectionList = false;
       }}
       sections={[
         {
@@ -200,7 +202,7 @@ const Content = ({
                   weight: `${item.weight}`
                 })
               }
-              style={styles.listItem}
+              containerStyle={styles.listItem}
               title={moment(item.date.toDate()).format("YYYY/MM/DD")}
               topDivider
               rightTitle={
@@ -230,14 +232,14 @@ const Container = ({
   health,
   navigation
 }: {
-  health: HealthModel;
+  health: HealthState;
   navigation: NavigationScreenProp<NavigationState>;
 }) => {
   if (health.loading) {
     return <></>;
   }
-  return health.length ? (
-    <Content health={health} navigation={navigation} />
+  return health.data.length ? (
+    <Content health={health.data} navigation={navigation} />
   ) : (
     <Empty navigation={navigation} />
   );
@@ -248,7 +250,7 @@ const HomeScreen = ({
   navigation,
   handleFetchWeights
 }: {
-  health: HealthModel;
+  health: HealthState;
   navigation: NavigationScreenProp<NavigationState>;
   handleFetchWeights: () => void;
 }) => {
@@ -278,6 +280,9 @@ const HomeScreen = ({
 };
 
 export default connect(
-  state => ({ auth: state.auth, health: state.health.data }),
+  ({ auth, health }: { auth: AuthState; health: HealthState }) => ({
+    auth,
+    health
+  }),
   { handleFetchWeights: fetchWeights }
 )(HomeScreen);

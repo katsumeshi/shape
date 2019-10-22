@@ -9,21 +9,30 @@ import { ScrollView, View, Dimensions } from "react-native";
 import React from "react";
 import DeviceInfo from "react-native-device-info";
 import { THEME_COLOR } from "../constants";
+import { HealthModel } from "../state/modules/health/types";
 
 const { width } = Dimensions.get("window");
 const hasNotch = DeviceInfo.hasNotch();
-let graph;
+let graph: ScrollView | null;
 let isGraphScroll = false;
 
-const Chart = props => {
-  const len = props.health.length;
+const Chart = ({
+  health,
+  graphRef,
+  scrollListToLocation
+}: {
+  health: HealthModel[];
+  graphRef: (ref: ScrollView | null) => void;
+  scrollListToLocation: (ratio: number) => void;
+}) => {
+  const len = health.length;
   const chartWidth = Math.max(width, len * 50);
   return (
     <>
       <ScrollView
         ref={ref => {
           graph = ref;
-          props.graphRef(ref);
+          graphRef(ref);
         }}
         onScroll={e => {
           let ratio =
@@ -32,7 +41,7 @@ const Chart = props => {
             ratio = 0;
           }
           if (isGraphScroll) {
-            props.scrollListToLocation(ratio);
+            scrollListToLocation(ratio);
           }
         }}
         onScrollBeginDrag={() => {
@@ -47,7 +56,9 @@ const Chart = props => {
         onMomentumScrollEnd={() => {
           isGraphScroll = false;
         }}
-        onContentSizeChange={() => graph.scrollToEnd({ animated: false })}
+        onContentSizeChange={() => {
+          if (graph) graph.scrollToEnd({ animated: false });
+        }}
         style={{ height: 500 }}
         contentContainerStyle={{ width: chartWidth }}
         alwaysBounceVertical={false}
@@ -61,13 +72,13 @@ const Chart = props => {
             height={250}
             width={chartWidth}
           >
-            {props.health.length > 1 && (
+            {health.length > 1 && (
               <VictoryLine
                 style={{
                   data: { stroke: THEME_COLOR },
                   parent: { border: "1px solid #ccc" }
                 }}
-                data={[...props.health].reverse().map(r => ({
+                data={[...health].reverse().map(r => ({
                   x: `${moment(r.date.toDate()).month() + 1}/${moment(
                     r.date.toDate()
                   ).date()}`,
@@ -76,7 +87,7 @@ const Chart = props => {
               />
             )}
             <VictoryAxis
-              tickValues={props.health.map(r => moment(r.date.toDate()).date())}
+              tickValues={health.map(r => moment(r.date.toDate()).date())}
             />
           </VictoryChart>
         </View>
@@ -97,7 +108,7 @@ const Chart = props => {
           tickValues={(() => {
             let max = 0;
             let min = 999;
-            props.health.forEach(r => {
+            health.forEach(r => {
               if (r.weight < min) {
                 min = r.weight;
               }
@@ -105,7 +116,7 @@ const Chart = props => {
                 max = r.weight;
               }
             });
-            const count = Math.min(props.health.length, 5);
+            const count = Math.min(health.length, 5);
             const avg = (max - min) / (count - 1);
             const d = [];
             for (let i = 0; i < count; i += 1) {

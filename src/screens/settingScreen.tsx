@@ -14,10 +14,24 @@ import firebase from "react-native-firebase";
 import DeviceInfo from "react-native-device-info";
 import AsyncStorage from "@react-native-community/async-storage";
 import { connect } from "react-redux";
-import { notificationSet } from "../utils/notificationUtils";
+import { NavigationScreenProp, NavigationState } from "react-navigation";
+import notificationSet from "../utils/notificationUtils";
 
 import { Button } from "../components/common";
 import { BLACK } from "../constants";
+import { AuthModel, AuthState } from "../state/modules/auth/types";
+
+const styles = StyleSheet.create({
+  button: {
+    marginHorizontal: 16,
+    marginBottom: 16
+  },
+  headerDivider: { borderColor: "lightgrey", borderWidth: 1, height: 1 },
+  headerTitle: { fontSize: 18, color: BLACK },
+  headerContainer: { zIndex: 100, backgroundColor: "white" },
+  listItem: { height: 50, backgroundColor: "lightgrey" },
+  listItemRightText: { color: "#666", fontSize: 18 }
+});
 
 const SettingList = () => {
   const [showPicker, onShowPicker] = useState(false);
@@ -56,13 +70,17 @@ const SettingList = () => {
   const sectionData = [
     {
       left: "バージョン",
-      right: DeviceInfo.getVersion()
+      right: DeviceInfo.getVersion(),
+      isDatePicker: false,
+      onPress: () => {}
     },
     {
       left: "プッシュ通知",
       right: (
         <Switch value={notification} onValueChange={onChangeNotification} />
-      )
+      ),
+      isDatePicker: false,
+      onPress: () => {}
     }
   ];
 
@@ -80,7 +98,7 @@ const SettingList = () => {
         <>
           <ListItem
             onPress={item.onPress}
-            style={styles.listItem}
+            containerStyle={styles.listItem}
             title={item.left}
             bottomDivider
             rightElement={
@@ -144,10 +162,16 @@ const ScaleScreenHeader = () => (
   </>
 );
 
-const ScaleScreen = props => {
+const ScaleScreen = ({
+  auth,
+  navigation
+}: {
+  auth: AuthModel;
+  navigation: NavigationScreenProp<NavigationState>;
+}) => {
   useEffect(() => {
-    if (props.auth.isLoggedIn !== undefined) {
-      props.navigation.navigate(props.auth.isLoggedIn ? "App" : "Auth");
+    if (auth.isLoggedIn !== undefined) {
+      navigation.navigate(auth.isLoggedIn ? "App" : "Auth");
     }
   });
 
@@ -160,16 +184,6 @@ const ScaleScreen = props => {
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    marginHorizontal: 16,
-    marginBottom: 16
-  },
-  headerDivider: { borderColor: "lightgrey", borderWidth: 1, height: 1 },
-  headerTitle: { fontSize: 18, color: BLACK },
-  headerContainer: { zIndex: 100, backgroundColor: "white" },
-  listItem: { height: 50, backgroundColor: "lightgrey" },
-  listItemRightText: { color: "#666", fontSize: 18 }
-});
-
-export default connect(state => ({ auth: state.auth.data }))(ScaleScreen);
+export default connect(({ auth }: { auth: AuthState }) => ({
+  auth: auth.data
+}))(ScaleScreen);

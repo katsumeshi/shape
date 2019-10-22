@@ -1,7 +1,7 @@
 import { all, fork, put, take, takeEvery } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
 // import firebase, { RNFirebase } from "react-native-firebase";
-import { HelthActionTypes } from "./types";
+import HelthActionTypes, { HealthModel } from "./types";
 import {
   // updateWeight,
   // deleteWeight,
@@ -20,7 +20,9 @@ import {
 //   }
 // }
 function* handleFetch() {
-  const channel = eventChannel(emit => healthChanged(weights => emit(weights)));
+  const channel = eventChannel(emit =>
+    healthChanged((weights: HealthModel[]) => emit(weights))
+  );
   try {
     while (true) {
       const data = yield take(channel);

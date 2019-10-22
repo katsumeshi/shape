@@ -1,5 +1,5 @@
 import { Action, PayloadAction, TypeConstant } from "typesafe-actions";
-import HelthActionTypes, { HealthState } from "./types";
+import HelthActionTypes, { HealthState, HealthModel } from "./types";
 
 export const initialState: HealthState = {
   data: [],
@@ -9,7 +9,7 @@ export const initialState: HealthState = {
 
 export const healthReducer = (
   state: HealthState = initialState,
-  action: Action<TypeConstant> & PayloadAction<TypeConstant, PostRaw[]>
+  action: Action<TypeConstant> & PayloadAction<TypeConstant, HealthModel[]>
 ): HealthState => {
   switch (action.type) {
     case HelthActionTypes.HEALTH_FETCH: {

@@ -1,17 +1,7 @@
-import firebase, { RNFirebase } from "react-native-firebase";
 import moment from "moment";
+import firebase, { RNFirebase } from "react-native-firebase";
 import Config from "../../config";
-
-class HealthModel {
-  date: RNFirebase.firestore.Timestamp;
-
-  weight: number;
-
-  constructor(data: object | void) {
-    this.date = data.date || firebase.firestore.Timestamp.fromMillis(0);
-    this.weight = data.weight;
-  }
-}
+import { HealthModel } from "../state/modules/health/types";
 
 let unsubscribe = () => {};
 
@@ -33,7 +23,7 @@ export const subscribeDynamicLink = (email: string) => {
 let subscription = () => {};
 
 let map: { [id: string]: HealthModel } = {};
-export const authChanged = callback => {
+export const authChanged = (callback: (isLoggedIn: boolean) => void) => {
   const unsubscribeAuth = firebase.auth().onAuthStateChanged(user => {
     const isLoggedIn = !!user;
     if (!isLoggedIn && subscription) {
@@ -45,7 +35,11 @@ export const authChanged = callback => {
   return unsubscribeAuth;
 };
 
-export const signInWithEmailAndPassword = async values => {
+export const signInWithEmailAndPassword = async ({
+  email
+}: {
+  email: string;
+}) => {
   const actionCodeSettings = {
     url: Config.FIREBASE_URL,
     handleCodeInApp: true, // must always be true for sendSignInLinkToEmail
@@ -60,64 +54,62 @@ export const signInWithEmailAndPassword = async values => {
     dynamicLinkDomain: Config.DYNAMIC_LINK_DOMAIN
   };
 
-  console.warn(actionCodeSettings);
-
   try {
-    await firebase
-      .auth()
-      .sendSignInLinkToEmail(values.email, actionCodeSettings);
+    await firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings);
     unsubscribeDynamicLink();
-    subscribeDynamicLink(values.email);
+    subscribeDynamicLink(email);
   } catch (err) {
     console.warn(err);
   }
 };
 
 const usersRef = () => {
-  const authUser = firebase.auth().currentUser;
-  if (!authUser) return null;
+  const user = firebase.auth().currentUser;
+  const userId = user ? user.uid : "";
   return firebase
     .firestore()
     .collection("users")
-    .doc(authUser.uid);
+    .doc(userId);
 };
 
 export const healthRef = () => usersRef().collection("health");
 
-export const updateWeight = (date, weight) => {
+export const updateWeight = (date: Date, weight: number) => {
   healthRef()
     .doc(moment(date).format("YYYY-MM-DD"))
     .set({ date, weight });
 };
 
-export const deleteWeight = date => {
+export const deleteWeight = (date: Date) => {
   healthRef()
     .doc(moment(date).format("YYYY-MM-DD"))
     .delete();
 };
 
-export const healthChanged = callback => {
-  subscription = healthRef().onSnapshot(snapshot => {
-    snapshot.docChanges.forEach(change => {
-      const data = change.doc.data();
-      const key = change.doc.id;
-      switch (change.type) {
-        case "added":
-        case "modified":
-          map[key] = new HealthModel(data);
-          break;
-        case "removed":
-          delete map[key];
-          break;
-        default:
-          console.log("No such day exists!");
-          break;
-      }
-    });
-    const weights = Object.keys(map)
-      .sort((a, b) => b.localeCompare(a))
-      .map(key => map[key]);
-    callback(weights);
-  });
+export const healthChanged = (callback: (weights: HealthModel[]) => void) => {
+  subscription = healthRef().onSnapshot(
+    (snapshot: RNFirebase.firestore.QuerySnapshot) => {
+      snapshot.docChanges.forEach(change => {
+        const data = change.doc.data() as HealthModel;
+        const key = change.doc.id;
+        switch (change.type) {
+          case "added":
+          case "modified":
+            map[key] = new HealthModel(data);
+            break;
+          case "removed":
+            delete map[key];
+            break;
+          default:
+            console.log("No such day exists!");
+            break;
+        }
+      });
+      const weights = Object.keys(map)
+        .sort((a, b) => b.localeCompare(a))
+        .map(key => map[key]);
+      callback(weights);
+    }
+  );
   return subscription;
 };

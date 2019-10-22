@@ -13,13 +13,36 @@ import {
 } from "react-native";
 import { Button, Header, Icon, Input } from "react-native-elements";
 import { connect } from "react-redux";
+import { NavigationScreenProp, NavigationState } from "react-navigation";
 import DatePicker from "../components/datePicker";
 import { BLACK, THEME_COLOR } from "../constants";
 import { updateWeight } from "../services/firebase";
+import { AuthState } from "../state/modules/auth/types";
+import { HealthState } from "../state/modules/health/types";
 
 const margin = 8;
 
-const limitWeight = text => {
+const styles = StyleSheet.create({
+  container: {
+    marginHorizontal: margin,
+    flex: 2,
+    justifyContent: "center"
+  },
+  button: {
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    marginHorizontal: 16,
+    backgroundColor: THEME_COLOR
+  },
+  headerLeft: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  }
+});
+
+const limitWeight = (text: string) => {
   const arr = text.split(".");
   let weight = arr[0];
   if (arr.length > 1) {
@@ -28,12 +51,18 @@ const limitWeight = text => {
   return weight;
 };
 
-const addWeight = (weight, add) => {
+const addWeight = (weight: number, add: number) => {
   const result = (weight * 10 + add * 10) / 10;
   return `${result > 0 ? result : 0}`;
 };
 
-const ScaleRow = ({ weight, onWeightChange }) => (
+const ScaleRow = ({
+  weight,
+  onWeightChange
+}: {
+  weight: number;
+  onWeightChange: (weight: string) => void;
+}) => (
   <View style={{ flexDirection: "row" }}>
     <Button
       buttonStyle={styles.button}
@@ -62,7 +91,7 @@ const ScaleRow = ({ weight, onWeightChange }) => (
         onWeightChange(limitWeight(text));
       }}
       maxLength={5}
-      value={weight}
+      value={`${weight}`}
     />
     <View style={{ justifyContent: "center", alignItems: "center" }}>
       <Text style={{ fontSize: 20 }}>kg</Text>
@@ -77,7 +106,15 @@ const ScaleRow = ({ weight, onWeightChange }) => (
   </View>
 );
 
-const DateRow = ({ date, onShowDatePicker, onDateChange }) => (
+const DateRow = ({
+  date,
+  onShowDatePicker,
+  onDateChange
+}: {
+  date: Date;
+  onShowDatePicker: (show: boolean) => void;
+  onDateChange: (date: Date) => void;
+}) => (
   <Button
     buttonStyle={{
       marginHorizontal: 16,
@@ -91,10 +128,11 @@ const DateRow = ({ date, onShowDatePicker, onDateChange }) => (
         onShowDatePicker(true);
       } else {
         try {
-          const { action, year, month, day } = await DatePickerAndroid.open({
+          const result = await DatePickerAndroid.open({
             date
           });
-          if (action !== DatePickerAndroid.dismissedAction) {
+          if (result.action !== DatePickerAndroid.dismissedAction) {
+            const { year, month, day } = result;
             onDateChange(new Date(year, month, day));
           } else {
             onDateChange(date);
@@ -107,7 +145,15 @@ const DateRow = ({ date, onShowDatePicker, onDateChange }) => (
   />
 );
 
-const ScaleScreenHeader = ({ navigation, weight, date }) => (
+const ScaleScreenHeader = ({
+  navigation,
+  weight,
+  date
+}: {
+  navigation: NavigationScreenProp<NavigationState>;
+  weight: number;
+  date: Date;
+}) => (
   <Header
     leftComponent={
       <TouchableOpacity
@@ -148,7 +194,13 @@ const ScaleScreenHeader = ({ navigation, weight, date }) => (
   />
 );
 
-const ScaleScreen = ({ navigation, weight }) => {
+const ScaleScreen = ({
+  navigation,
+  weight
+}: {
+  navigation: NavigationScreenProp<NavigationState>;
+  weight: number;
+}) => {
   const type = navigation.getParam("type");
   const defaultDate =
     type === "create" ? new Date() : navigation.getParam("date");
@@ -188,11 +240,11 @@ const ScaleScreen = ({ navigation, weight }) => {
       </KeyboardAvoidingView>
       <DatePicker
         visible={showDatePicker}
-        date={date}
+        defaultDate={date}
         onCancel={() => {
           onShowDatePicker(false);
         }}
-        onDone={newDate => {
+        onDone={(newDate: Date) => {
           onDateChange(newDate);
           onShowDatePicker(false);
         }}
@@ -201,32 +253,9 @@ const ScaleScreen = ({ navigation, weight }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: margin,
-    flex: 2,
-    justifyContent: "center"
-  },
-  button: {
-    height: 50,
-    width: 50,
-    borderRadius: 25,
-    marginHorizontal: 16,
-    backgroundColor: THEME_COLOR
-  },
-  headerLeft: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center"
-  }
-});
-
 export default connect(
-  state => ({
-    auth: state.auth,
-    ...state.health.data[0]
+  ({ auth, health }: { auth: AuthState; health: HealthState }) => ({
+    auth,
+    ...health.data[0]
   })
-  // {
-  //   updateWeight
-  // }
 )(ScaleScreen);

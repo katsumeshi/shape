@@ -1,6 +1,14 @@
-export interface HealthModel {
+import firebase, { RNFirebase } from "react-native-firebase";
+
+export class HealthModel {
   weight: number;
-  date: number;
+
+  date: RNFirebase.firestore.Timestamp;
+
+  constructor(data: HealthModel) {
+    this.date = data.date || firebase.firestore.Timestamp.fromMillis(0);
+    this.weight = data.weight;
+  }
 }
 
 export interface HealthState {

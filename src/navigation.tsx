@@ -3,7 +3,13 @@ import {
   createAppContainer,
   createStackNavigator,
   createSwitchNavigator,
-  createBottomTabNavigator
+  createBottomTabNavigator,
+  NavigationScreenProp,
+  NavigationState,
+  NavigationParams,
+  NavigationScreenConfig,
+  NavigationBottomTabScreenOptions,
+  NavigationRoute
 } from "react-navigation";
 import { Icon } from "react-native-elements";
 import AuthLoadingScreen from "./screens/authLoadingScreen";
@@ -46,11 +52,12 @@ const TabNavigator = createBottomTabNavigator(
     Settings: SettingScreen
   },
   {
-    tabBarOptions: {
-      activeTintColor: THEME_COLOR
-    },
-    defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+    navigationOptions: ({
+      navigation
+    }: {
+      navigation: NavigationScreenProp<NavigationRoute>;
+    }) => ({
+      tabBarIcon: ({ tintColor }: { tintColor: string }) => {
         const { routeName } = navigation.state;
         if (routeName === "Home") {
           return (

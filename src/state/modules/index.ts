@@ -10,9 +10,11 @@ import { healthReducer } from "./health/reducers";
 import authReducer from "./auth/reducers";
 import healthSaga from "./health/sagas";
 import authSaga from "./auth/sagas";
+import { HealthState } from "./health/types";
 // The top-level state object
 export interface ApplicationStateInterface {
-  post: Action;
+  auth: any;
+  health: HealthState;
 }
 // export interface IMetaAction extends MetaAction<TypeConstant, IMeta> {}
 // export interface IReducerAction<TPayload>
