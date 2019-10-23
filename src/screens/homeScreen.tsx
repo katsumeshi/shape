@@ -1,12 +1,6 @@
 import moment from "moment";
 import React, { useEffect } from "react";
-import {
-  TouchableOpacity,
-  View,
-  Dimensions,
-  StyleSheet,
-  ScrollView
-} from "react-native";
+import { TouchableOpacity, View, StyleSheet } from "react-native";
 import { Header, Icon, ListItem, Text } from "react-native-elements";
 import { SwipeListView } from "react-native-swipe-list-view";
 import DeviceInfo from "react-native-device-info";
@@ -22,8 +16,6 @@ import { fetchWeights } from "../state/modules/health/actions";
 import { HealthModel, HealthState } from "../state/modules/health/types";
 import { deleteWeight } from "../services/firebase";
 import { AuthState } from "../state/modules/auth/types";
-
-const { width } = Dimensions.get("window");
 
 const hasNotch = DeviceInfo.hasNotch();
 
@@ -77,8 +69,6 @@ const styles = StyleSheet.create({
   },
   leftEmptyContainer: { height: 50, backgroundColor: "white", flex: 1 }
 });
-
-let listRef: any;
 
 const STATUS_ICON = {
   UP: {
@@ -138,17 +128,7 @@ const Content = ({
 }) => (
   <>
     <View style={styles.contentContainer} />
-    <Chart
-      health={health}
-      scrollListToLocation={ratio =>
-        listRef.scrollToLocation({
-          animated: true,
-          sectionIndex: 0,
-          itemIndex: ratio,
-          viewPosition: 0
-        })
-      }
-    />
+    <Chart health={health} />
     <SwipeListView
       data={health}
       renderItem={({ item, index }: { item: HealthModel; index: number }) => {
@@ -243,7 +223,6 @@ const HomeScreen = ({
           </TouchableOpacity>
         }
       />
-
       <Container health={health} navigation={navigation} />
     </View>
   );

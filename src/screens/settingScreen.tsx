@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   headerDivider: { borderColor: "lightgrey", borderWidth: 1, height: 1 },
   headerTitle: { fontSize: 18, color: BLACK },
   headerContainer: { zIndex: 100, backgroundColor: "white" },
-  listItem: { height: 50, backgroundColor: "lightgrey" },
+  listItem: { height: 50, backgroundColor: "white" },
   listItemRightText: { color: "#666", fontSize: 18 }
 });
 
