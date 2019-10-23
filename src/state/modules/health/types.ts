@@ -1,11 +1,14 @@
 import firebase, { RNFirebase } from "react-native-firebase";
 
 export class HealthModel {
+  key: string;
+
   weight: number;
 
   date: RNFirebase.firestore.Timestamp;
 
-  constructor(data: HealthModel) {
+  constructor(key: string, data: any) {
+    this.key = key;
     this.date = data.date || firebase.firestore.Timestamp.fromMillis(0);
     this.weight = data.weight;
   }

@@ -6646,6 +6646,11 @@ react-native-svg@^9.5.3:
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-9.5.3.tgz#2389f3ffd700c6441166496a1aeade31ead89c59"
   integrity sha512-VUOe4TLz7RFdmm/XT9EH87VSwlRykx49qbwJMA+dh9eFM7KPY1qH3kEyN7uRCqJD2eE8toxt9NpjR6ByvtPNlA==
 
+react-native-swipe-list-view@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-swipe-list-view/-/react-native-swipe-list-view-2.0.3.tgz#ab93a56d9f1126a486fa77d99de61ab4d44ba735"
+  integrity sha512-EmMJii/5ioEbZ9pEDjMPxa21s09RbuKfB5BxWlY3Tt4rMH9FkAp9/vji9FmdXcAdbfYtYdEXag1feOCcWtoLOw==
+
 react-native-swipeout@^2.3.6:
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/react-native-swipeout/-/react-native-swipeout-2.3.6.tgz#47dac8a835825cf3f2eef9e495574a3d9ab6d3fa"

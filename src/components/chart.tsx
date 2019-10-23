@@ -22,7 +22,7 @@ const Chart = ({
   scrollListToLocation
 }: {
   health: HealthModel[];
-  graphRef: (ref: ScrollView | null) => void;
+  graphRef?: (ref: ScrollView | null) => void;
   scrollListToLocation: (ratio: number) => void;
 }) => {
   const len = health.length;
@@ -32,7 +32,7 @@ const Chart = ({
       <ScrollView
         ref={ref => {
           graph = ref;
-          graphRef(ref);
+          if (graphRef) graphRef(ref);
         }}
         onScroll={e => {
           let ratio =

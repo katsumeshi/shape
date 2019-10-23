@@ -80,9 +80,9 @@ export const updateWeight = (date: Date, weight: number) => {
     .set({ date, weight });
 };
 
-export const deleteWeight = (date: Date) => {
+export const deleteWeight = (key: string) => {
   healthRef()
-    .doc(moment(date).format("YYYY-MM-DD"))
+    .doc(key)
     .delete();
 };
 
@@ -90,12 +90,12 @@ export const healthChanged = (callback: (weights: HealthModel[]) => void) => {
   subscription = healthRef().onSnapshot(
     (snapshot: RNFirebase.firestore.QuerySnapshot) => {
       snapshot.docChanges.forEach(change => {
-        const data = change.doc.data() as HealthModel;
+        const data = change.doc.data();
         const key = change.doc.id;
         switch (change.type) {
           case "added":
           case "modified":
-            map[key] = new HealthModel(data);
+            map[key] = new HealthModel(key, data);
             break;
           case "removed":
             delete map[key];

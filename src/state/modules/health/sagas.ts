@@ -1,24 +1,8 @@
 import { all, fork, put, take, takeEvery } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
-// import firebase, { RNFirebase } from "react-native-firebase";
 import HelthActionTypes, { HealthModel } from "./types";
-import {
-  // updateWeight,
-  // deleteWeight,
-  healthChanged
-} from "../../../services/firebase";
-// import { updateWeightSuccess, deleteWeightSuccess } from "./actions";
+import { healthChanged } from "../../../services/firebase";
 
-// class HealthModel {
-//   date: RNFirebase.firestore.Timestamp;
-
-//   weight: number;
-
-//   constructor(data: object | void) {
-//     this.date = data.date || firebase.firestore.Timestamp.fromMillis(0);
-//     this.weight = data.weight;
-//   }
-// }
 function* handleFetch() {
   const channel = eventChannel(emit =>
     healthChanged((weights: HealthModel[]) => emit(weights))

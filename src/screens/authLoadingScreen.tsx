@@ -7,7 +7,7 @@ import {
   NavigationParams
 } from "react-navigation";
 import fetchAuthStatus from "../state/modules/auth/actions";
-import { AuthState, AuthModel } from "../state/modules/auth/types";
+import { AuthState } from "../state/modules/auth/types";
 
 const styles = StyleSheet.create({
   container: {
@@ -27,7 +27,7 @@ const AuthLoadingScreen = ({
   navigation
 }: {
   fetchAuth: () => void;
-  auth: AuthModel;
+  auth: AuthState;
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }) => {
   useEffect(() => {
@@ -35,8 +35,8 @@ const AuthLoadingScreen = ({
   }, []);
 
   useEffect(() => {
-    if (auth && auth.isLoggedIn !== undefined) {
-      navigation.navigate(auth.isLoggedIn ? "App" : "Auth");
+    if (!auth.loading) {
+      navigation.navigate(auth.data.isLoggedIn ? "App" : "Auth");
     }
   });
 
@@ -48,6 +48,6 @@ const AuthLoadingScreen = ({
 };
 
 export default connect(
-  ({ auth }: { auth: AuthState }) => ({ auth: auth.data }),
+  ({ auth }: { auth: AuthState }) => ({ auth }),
   { fetchAuth: fetchAuthStatus }
 )(AuthLoadingScreen);

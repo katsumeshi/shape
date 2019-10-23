@@ -1,7 +1,6 @@
 import moment from "moment";
 import React, { useEffect } from "react";
 import {
-  SectionList,
   TouchableOpacity,
   View,
   Dimensions,
@@ -9,7 +8,7 @@ import {
   ScrollView
 } from "react-native";
 import { Header, Icon, ListItem, Text } from "react-native-elements";
-import Swipeout from "react-native-swipeout";
+import { SwipeListView } from "react-native-swipe-list-view";
 import DeviceInfo from "react-native-device-info";
 import { connect } from "react-redux";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
@@ -59,19 +58,27 @@ const styles = StyleSheet.create({
   emptyIcon: {
     marginVertical: 40
   },
-  listItem: { height: 50, backgroundColor: "lightgrey" },
+  listItem: { height: 50, backgroundColor: "white" },
   contentContainer: { borderColor: "lightgrey", borderWidth: 1, height: 1 },
   sectionHeader: {
     backgroundColor: "lightgrey",
     height: 10
   },
-  rightTitleText: { color: "#666", fontSize: 18 }
+  rightTitleText: { color: "#666", fontSize: 18 },
+  deleteText: {
+    color: "white",
+    textAlign: "right",
+    marginRight: 16
+  },
+  deleteContainer: {
+    height: 50,
+    backgroundColor: "red",
+    justifyContent: "center"
+  },
+  leftEmptyContainer: { height: 50, backgroundColor: "white", flex: 1 }
 });
 
-let graphRef: ScrollView | null;
 let listRef: any;
-let sectionHeight: number;
-let isSectionList: boolean;
 
 const STATUS_ICON = {
   UP: {
@@ -109,6 +116,19 @@ const Empty = ({
     />
   </View>
 );
+
+const getChangeIcon = (health: HealthModel[], index: number) => {
+  let weightStatusIcon = STATUS_ICON.EVEN;
+  if (health.length > index + 1) {
+    const diff = health[index].weight - health[index + 1].weight;
+    if (diff > 0) {
+      weightStatusIcon = STATUS_ICON.UP;
+    } else if (diff < 0) {
+      weightStatusIcon = STATUS_ICON.DOWN;
+    }
+  }
+  return weightStatusIcon;
+};
 const Content = ({
   health,
   navigation
@@ -120,9 +140,6 @@ const Content = ({
     <View style={styles.contentContainer} />
     <Chart
       health={health}
-      graphRef={ref => {
-        graphRef = ref;
-      }}
       scrollListToLocation={ratio =>
         listRef.scrollToLocation({
           animated: true,
@@ -132,98 +149,51 @@ const Content = ({
         })
       }
     />
-    <SectionList
-      ref={ref => {
-        listRef = ref;
-      }}
-      style={styles.sectionList}
-      getItemLayout={(data, index) => ({
-        length: 50,
-        offset: 50 * index,
-        index
-      })}
-      onContentSizeChange={(w, h) => {
-        sectionHeight = h;
-      }}
-      onScroll={e => {
-        const len = health.length;
-        const chartWidth = Math.max(width, len * 50);
-        const scrollAmount =
-          sectionHeight - (e.nativeEvent.contentOffset.y + 343.5);
-        const ratio = chartWidth / sectionHeight;
-        if (isSectionList && graphRef) {
-          graphRef.scrollTo({ x: scrollAmount * ratio + 10 });
-        }
-      }}
-      onMomentumScrollBegin={() => {
-        isSectionList = true;
-      }}
-      onMomentumScrollEnd={() => {
-        isSectionList = false;
-      }}
-      sections={[
-        {
-          title: moment().format("MMMM"),
-          data: [...health]
-        }
-      ]}
-      renderItem={({ item, index }) => {
-        let weightStatusIcon = STATUS_ICON.EVEN;
-        if (health.length > index + 1) {
-          const diff = health[index].weight - health[index + 1].weight;
-          if (diff > 0) {
-            weightStatusIcon = STATUS_ICON.UP;
-          } else if (diff < 0) {
-            weightStatusIcon = STATUS_ICON.DOWN;
-          }
-        }
-
+    <SwipeListView
+      data={health}
+      renderItem={({ item, index }: { item: HealthModel; index: number }) => {
+        const { color, name } = getChangeIcon(health, index);
         return (
-          <Swipeout
-            autoClose
-            backgroundColor="red"
-            right={[
-              {
-                text: "Delete",
-                backgroundColor: "red",
-                color: "white",
-                underlayColor: "red",
-                onPress: () => {
-                  deleteWeight(item.date.toDate());
-                }
-              }
-            ]}
-          >
-            <ListItem
-              onPress={() =>
-                navigation.navigate("Scale", {
-                  type: "update",
-                  date: item.date.toDate(),
-                  weight: `${item.weight}`
-                })
-              }
-              containerStyle={styles.listItem}
-              title={moment(item.date.toDate()).format("YYYY/MM/DD")}
-              topDivider
-              rightTitle={
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={styles.rightTitleText}>
-                    {`${item.weight}kg`}
-                  </Text>
-                  <ShapeIcon
-                    style={styles.icon}
-                    size={20}
-                    color={weightStatusIcon.color}
-                    name={weightStatusIcon.name}
-                  />
-                </View>
-              }
-            />
-          </Swipeout>
+          <ListItem
+            onPress={() =>
+              navigation.navigate("Scale", {
+                type: "update",
+                date: item.date.toDate(),
+                weight: `${item.weight}`
+              })
+            }
+            containerStyle={styles.listItem}
+            title={moment(item.date.toDate()).format("YYYY/MM/DD")}
+            topDivider
+            rightTitle={
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.rightTitleText}>{`${item.weight}kg`}</Text>
+                <ShapeIcon
+                  style={styles.icon}
+                  size={20}
+                  color={color}
+                  name={name}
+                />
+              </View>
+            }
+          />
         );
       }}
-      renderSectionHeader={() => <View style={styles.sectionHeader} />}
-      keyExtractor={(item, index) => item + index}
+      renderHiddenItem={({ item }, rowMap) => (
+        <TouchableOpacity
+          onPress={() => {
+            deleteWeight(item.key);
+            rowMap[item.key].closeRow();
+          }}
+        >
+          <View style={styles.deleteContainer}>
+            <Text style={styles.deleteText}>Delete</Text>
+          </View>
+        </TouchableOpacity>
+      )}
+      disableRightSwipe
+      leftOpenValue={0}
+      rightOpenValue={-75}
     />
   </>
 );

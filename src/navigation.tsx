@@ -5,10 +5,6 @@ import {
   createSwitchNavigator,
   createBottomTabNavigator,
   NavigationScreenProp,
-  NavigationState,
-  NavigationParams,
-  NavigationScreenConfig,
-  NavigationBottomTabScreenOptions,
   NavigationRoute
 } from "react-navigation";
 import { Icon } from "react-native-elements";
@@ -52,20 +48,20 @@ const TabNavigator = createBottomTabNavigator(
     Settings: SettingScreen
   },
   {
-    navigationOptions: ({
+    tabBarOptions: {
+      activeTintColor: THEME_COLOR
+    },
+    defaultNavigationOptions: ({
       navigation
     }: {
       navigation: NavigationScreenProp<NavigationRoute>;
     }) => ({
-      tabBarIcon: ({ tintColor }: { tintColor: string }) => {
+      tabBarIcon: () => {
         const { routeName } = navigation.state;
-        if (routeName === "Home") {
-          return (
-            <Icon type="Foundation" size={32} color={tintColor} name="home" />
-          );
-        }
-        return (
-          <Icon type="font-awesome" size={28} color={tintColor} name="gear" />
+        return routeName === "Home" ? (
+          <Icon type="Foundation" size={32} color={THEME_COLOR} name="home" />
+        ) : (
+          <Icon type="font-awesome" size={28} color={THEME_COLOR} name="gear" />
         );
       }
     })

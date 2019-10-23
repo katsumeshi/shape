@@ -3,7 +3,7 @@ import AuthActionTypes, { AuthModel, AuthState } from "./types";
 
 const initialState = {
   data: { isLoggedIn: false },
-  loading: false
+  loading: true
 };
 
 // reducer
@@ -13,11 +13,11 @@ const authReducer = (
 ): AuthState => {
   switch (action.type) {
     case AuthActionTypes.AUTH_FETCH:
-      return { ...state };
+      return { ...state, loading: true };
     case AuthActionTypes.AUTH_FETCH_SUCCESS:
-      return { ...initialState, data: action.payload };
+      return { ...state, data: action.payload, loading: false };
     case AuthActionTypes.AUTH_FETCH_ERROR:
-      return { ...state };
+      return { ...state, loading: false };
     default:
       return state;
   }
