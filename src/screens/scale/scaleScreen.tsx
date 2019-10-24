@@ -9,16 +9,17 @@ import {
   TouchableWithoutFeedback,
   View,
   Platform,
-  StyleSheet
+  StyleSheet,
+  Alert
 } from "react-native";
 import { Button, Header, Icon, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
-import DatePicker from "../components/datePicker";
-import { BLACK, THEME_COLOR } from "../constants";
-import { updateWeight } from "../services/firebase";
-import { AuthState } from "../state/modules/auth/types";
-import { HealthState } from "../state/modules/health/types";
+import DatePicker from "./datePicker";
+import { BLACK, THEME_COLOR } from "../../constants";
+import { updateWeight } from "../../services/firebase";
+import { AuthState } from "../../state/modules/auth/types";
+import { HealthState } from "../../state/modules/health/types";
 
 const margin = 8;
 
@@ -39,10 +40,56 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center"
+  },
+  dateRowButton: {
+    marginHorizontal: 16,
+    marginBottom: 20,
+    backgroundColor: "white"
+  },
+  weightInput: {
+    textAlign: "center",
+    fontSize: 18
+  },
+  weightContainer: {
+    borderBottomWidth: 2,
+    borderWidth: 0,
+    borderRadius: 0
   }
 });
 
-const limitWeight = (text: string) => {
+const invalidWeight = () => {
+  Alert.alert(
+    "確認",
+    "体重の入力値が不正です。",
+    [
+      {
+        text: "キャンセル",
+        style: "cancel"
+      }
+    ],
+    { cancelable: true }
+  );
+};
+
+const isValid = (weight: number) => {
+  if (weight > 499) {
+    return false;
+  }
+  if (weight < 0) {
+    return false;
+  }
+  return true;
+};
+
+const parseWeight = (weight: string) => {
+  const newWeight = parseFloat(weight);
+  if (Number.isNaN(newWeight)) {
+    return 0;
+  }
+  return newWeight;
+};
+
+const formatWeight = (text: string) => {
   const arr = text.split(".");
   let weight = arr[0];
   if (arr.length > 1) {
@@ -51,44 +98,36 @@ const limitWeight = (text: string) => {
   return weight;
 };
 
-const addWeight = (weight: number, add: number) => {
-  const result = (weight * 10 + add * 10) / 10;
-  return `${result > 0 ? result : 0}`;
+const calcWeight = (weight: string, add: number) => {
+  return `${(parseWeight(weight) * 10 + add * 10) / 10}`;
 };
 
 const ScaleRow = ({
   weight,
   onWeightChange
 }: {
-  weight: number;
+  weight: string;
   onWeightChange: (weight: string) => void;
 }) => (
   <View style={{ flexDirection: "row" }}>
     <Button
       buttonStyle={styles.button}
       onPress={() => {
-        onWeightChange(addWeight(weight, -0.1));
+        onWeightChange(calcWeight(weight, -0.1));
       }}
       icon={{ type: "feather", color: "white", name: "minus" }}
     />
     <Input
       containerStyle={{ flex: 1, marginRight: 16 }}
-      inputStyle={{
-        textAlign: "center",
-        fontSize: 18
-      }}
-      inputContainerStyle={{
-        borderBottomWidth: 2,
-        borderWidth: 0,
-        borderRadius: 0
-      }}
+      inputStyle={styles.weightInput}
+      inputContainerStyle={styles.weightContainer}
       keyboardType="numeric"
       placeholder="00.00"
       onSubmitEditing={() => {
         onWeightChange(`${weight}`);
       }}
       onChangeText={text => {
-        onWeightChange(limitWeight(text));
+        onWeightChange(formatWeight(text));
       }}
       maxLength={5}
       value={`${weight}`}
@@ -99,7 +138,7 @@ const ScaleRow = ({
     <Button
       buttonStyle={styles.button}
       onPress={() => {
-        onWeightChange(addWeight(weight, 0.1));
+        onWeightChange(calcWeight(weight, 0.1));
       }}
       icon={{ type: "feather", color: "white", name: "plus" }}
     />
@@ -116,11 +155,7 @@ const DateRow = ({
   onDateChange: (date: Date) => void;
 }) => (
   <Button
-    buttonStyle={{
-      marginHorizontal: 16,
-      marginBottom: 20,
-      backgroundColor: "white"
-    }}
+    buttonStyle={styles.dateRowButton}
     type="outline"
     title={`${moment(date).format("YYYY/MM/DD")}`}
     onPress={async () => {
@@ -179,8 +214,12 @@ const ScaleScreenHeader = ({
     rightComponent={
       <TouchableOpacity
         onPress={() => {
-          updateWeight(date, weight);
-          navigation.goBack();
+          if (isValid(weight)) {
+            updateWeight(date, weight);
+            navigation.goBack();
+          } else {
+            invalidWeight();
+          }
         }}
       >
         <Text style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}>
@@ -205,10 +244,10 @@ const ScaleScreen = ({
   const defaultDate =
     type === "create" ? new Date() : navigation.getParam("date");
   const [date, onDateChange] = useState(defaultDate);
-  const defaultWeight =
-    type === "create" ? `${weight}` : navigation.getParam("weight");
+  const defaultWeight: string =
+    type === "create" ? `${weight}` : `${navigation.getParam("weight")}`;
 
-  const [_weight, onWeightChange] = useState(defaultWeight);
+  const [newWeight, onWeightChange] = useState(defaultWeight);
 
   const [showDatePicker, onShowDatePicker] = useState(false);
 
@@ -217,14 +256,14 @@ const ScaleScreen = ({
       <ScaleScreenHeader
         navigation={navigation}
         date={date}
-        weight={parseFloat(_weight)}
+        weight={parseWeight(newWeight)}
       />
       <View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <TouchableWithoutFeedback
           onPress={() => {
             Keyboard.dismiss();
-            onWeightChange(`${_weight}`);
+            onWeightChange(`${newWeight}`);
           }}
           accessible={false}
         >
@@ -234,7 +273,7 @@ const ScaleScreen = ({
               onDateChange={onDateChange}
               onShowDatePicker={onShowDatePicker}
             />
-            <ScaleRow weight={_weight} onWeightChange={onWeightChange} />
+            <ScaleRow weight={newWeight} onWeightChange={onWeightChange} />
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -248,6 +287,7 @@ const ScaleScreen = ({
           onDateChange(newDate);
           onShowDatePicker(false);
         }}
+        maximumDate={moment().toDate()}
       />
     </>
   );

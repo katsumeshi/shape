@@ -25,53 +25,39 @@ const styles = StyleSheet.create({
   headerLeft: {}
 });
 
-const DatePickerPanel = ({
-  date,
-  onCancel,
-  onDone,
-  onDateChange
-}: {
-  date: Date;
-  onCancel: () => void;
-  onDone: () => void;
-  onDateChange: (newDate: Date) => void;
-}) => (
-  <View style={{ backgroundColor: "white" }}>
-    <View style={{ backgroundColor: "rgba(0, 0, 0, 0.03)" }}>
-      <View style={styles.header}>
-        <Button title="Cancel" type="clear" onPress={onCancel} />
-        <Button title="Done" type="clear" onPress={onDone} />
-      </View>
-    </View>
-    <DatePickerIOS date={date} mode="date" onDateChange={onDateChange} />
-  </View>
-);
-
 const DatePicker = ({
   defaultDate,
   onCancel,
   onDone,
-  visible
+  visible,
+  maximumDate
 }: {
   defaultDate: Date;
   onCancel: () => void;
   onDone: (newDate: Date) => void;
   visible: boolean;
+  maximumDate?: Date;
 }) => {
   const [date, onDate] = useState(defaultDate);
   return (
     <Modal animationType="fade" transparent visible={visible}>
       <View style={styles.container}>
-        <DatePickerPanel
-          date={date}
-          onDateChange={(newDate: Date) => {
-            onDate(newDate);
-          }}
-          onCancel={() => onCancel()}
-          onDone={() => {
-            onDone(date);
-          }}
-        />
+        <View style={{ backgroundColor: "white" }}>
+          <View style={{ backgroundColor: "rgba(0, 0, 0, 0.03)" }}>
+            <View style={styles.header}>
+              <Button title="Cancel" type="clear" onPress={onCancel} />
+              <Button title="Done" type="clear" onPress={() => onDone(date)} />
+            </View>
+          </View>
+          <DatePickerIOS
+            date={date}
+            mode="date"
+            onDateChange={(newDate: Date) => {
+              onDate(newDate);
+            }}
+            maximumDate={maximumDate}
+          />
+        </View>
       </View>
     </Modal>
   );

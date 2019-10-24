@@ -2,6 +2,26 @@ import React from "react";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { THEME_COLOR } from "../constants";
 
+const styles = StyleSheet.create({
+  title: {
+    fontFamily: "futura",
+    fontWeight: "bold",
+    color: THEME_COLOR,
+    fontSize: 60,
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  buttonContainer: {},
+  button: {
+    height: 44,
+    borderRadius: 5,
+    justifyContent: "center",
+    borderWidth: 1
+  },
+  text: { textAlign: "center", fontSize: 16 }
+});
+
 export const AppTitle = () => <Text style={styles.title}>Shape.</Text>;
 
 interface Props {
@@ -39,23 +59,3 @@ export const Button = (props: Props) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  title: {
-    fontFamily: "futura",
-    fontWeight: "bold",
-    color: THEME_COLOR,
-    fontSize: 60,
-    textAlign: "center",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  buttonContainer: {},
-  button: {
-    height: 44,
-    borderRadius: 5,
-    justifyContent: "center",
-    borderWidth: 1
-  },
-  text: { textAlign: "center", fontSize: 16 }
-});

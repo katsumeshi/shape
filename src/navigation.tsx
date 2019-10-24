@@ -11,7 +11,7 @@ import { Icon } from "react-native-elements";
 import AuthLoadingScreen from "./screens/authLoadingScreen";
 import HomeScreen from "./screens/homeScreen";
 import LoginScreen from "./screens/loginScreen";
-import ScaleScreen from "./screens/scaleScreen";
+import ScaleScreen from "./screens/scale/scaleScreen";
 import StartScreen from "./screens/startScreen";
 import SettingScreen from "./screens/settingScreen";
 import { THEME_COLOR } from "./constants";
