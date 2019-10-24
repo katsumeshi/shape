@@ -6,7 +6,8 @@ import {
   Text,
   View,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  KeyboardAvoidingView
 } from "react-native";
 import { Header, Icon, Input } from "react-native-elements";
 import { AccessToken, LoginManager } from "react-native-fbsdk";
@@ -242,14 +243,17 @@ const LoginScreen = ({
   return (
     <View style={{ flex: 1 }}>
       <LoginScreenHeader navigation={navigation} />
-      <View style={{ flex: 1, marginHorizontal: 16 }}>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={{ flex: 1, marginHorizontal: 16 }}
+      >
         <View style={{ flex: 1 }} />
         <EmailField />
         <Separator />
         <GoogleLoginButton />
         <FacebookLoginButton />
         <View style={{ flex: 1 }} />
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };

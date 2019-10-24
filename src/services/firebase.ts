@@ -31,6 +31,7 @@ export const authChanged = (callback: (isLoggedIn: boolean) => void) => {
       map = {};
     }
     callback(isLoggedIn);
+    unsubscribeDynamicLink();
   });
   return unsubscribeAuth;
 };

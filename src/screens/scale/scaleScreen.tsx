@@ -63,7 +63,7 @@ const invalidWeight = () => {
     "体重の入力値が不正です。",
     [
       {
-        text: "キャンセル",
+        text: "OK",
         style: "cancel"
       }
     ],
@@ -235,7 +235,7 @@ const ScaleScreenHeader = ({
 
 const ScaleScreen = ({
   navigation,
-  weight
+  weight = 0
 }: {
   navigation: NavigationScreenProp<NavigationState>;
   weight: number;
