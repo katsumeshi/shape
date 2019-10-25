@@ -201,32 +201,35 @@ const LoginScreenHeader = ({
 }: {
   navigation: NavigationScreenProp<NavigationState>;
 }) => (
-  <Header
-    leftComponent={
-      <TouchableOpacity
-        style={styles.headerLeft}
-        onPress={() => {
-          navigation.goBack();
-        }}
-      >
-        <View style={styles.headerLeftIcon}>
-          <Icon
-            type="font-awesome"
-            size={40}
-            color={THEME_COLOR}
-            name="angle-left"
-          />
-        </View>
-        <Text style={styles.headerLeftText}>戻る</Text>
-      </TouchableOpacity>
-    }
-    centerComponent={
-      <Text style={styles.headerTitle}>新規作成 or ログイン</Text>
-    }
-    containerStyle={{
-      backgroundColor: "white"
-    }}
-  />
+  <>
+    <Header
+      leftComponent={
+        <TouchableOpacity
+          style={styles.headerLeft}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <View style={styles.headerLeftIcon}>
+            <Icon
+              type="font-awesome"
+              size={40}
+              color={THEME_COLOR}
+              name="angle-left"
+            />
+          </View>
+          <Text style={styles.headerLeftText}>戻る</Text>
+        </TouchableOpacity>
+      }
+      centerComponent={
+        <Text style={styles.headerTitle}>新規作成 or ログイン</Text>
+      }
+      containerStyle={{
+        backgroundColor: "white"
+      }}
+    />
+    <View style={{ height: 2, backgroundColor: "lightgrey" }} />
+  </>
 );
 
 const LoginScreen = ({
