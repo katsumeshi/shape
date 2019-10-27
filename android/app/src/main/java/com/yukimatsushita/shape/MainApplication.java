@@ -1,12 +1,20 @@
 package com.yukimatsushita.shape;
 
 
-import com.facebook.react.PackageList;
+import com.chirag.RNMail.RNMail;
 import com.facebook.react.ReactApplication;
+import com.facebook.react.shell.MainReactPackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
+import com.horcrux.svg.SvgPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 
 import androidx.multidex.MultiDexApplication;
+
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
+import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.fabric.crashlytics.RNFirebaseCrashlyticsPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
@@ -16,9 +24,10 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.facebook.FacebookSdk;
-import com.yukimatsushita.shape.BuildConfig;
-import com.yukimatsushita.shape.config.ConfigtPackage;
+import com.wix.reactnativenotifications.RNNotificationsPackage;
+import com.yukimatsushita.shape.config.ConfigPackage;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends MultiDexApplication implements ReactApplication {
@@ -32,14 +41,24 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     @Override
     protected List<ReactPackage> getPackages() {
       @SuppressWarnings("UnnecessaryLocalVariable")
-      List<ReactPackage> packages = new PackageList(this).getPackages();
-
-      packages.add(new RNFirebaseFirestorePackage());
-      packages.add(new RNFirebaseCrashlyticsPackage());
-      packages.add(new RNFirebaseAuthPackage());
-      packages.add(new RNFirebaseLinksPackage());
-      packages.add(new ConfigtPackage());
-
+      List<ReactPackage> packages =  Arrays.<ReactPackage>asList(
+              new RNFirebasePackage(),
+              new RNFirebaseFirestorePackage(),
+              new RNFirebaseCrashlyticsPackage(),
+              new RNFirebaseAuthPackage(),
+              new RNFirebaseLinksPackage(),
+              new RNDeviceInfo(),
+              new ConfigPackage(),
+              new AsyncStoragePackage(),
+              new FBSDKPackage(),
+              new RNGestureHandlerPackage(),
+              new RNGoogleSigninPackage(),
+              new RNMail(),
+              new SvgPackage(),
+              new VectorIconsPackage(),
+              new MainReactPackage(),
+              new RNNotificationsPackage(MainApplication.this)
+      );
       return packages;
     }
 

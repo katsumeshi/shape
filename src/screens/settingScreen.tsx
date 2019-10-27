@@ -102,9 +102,10 @@ const SettingList = () => {
             title={item.left}
             bottomDivider
             rightElement={
-              <View>
-                <Text style={styles.listItemRightText}>{item.right}</Text>
-              </View>
+              <View />
+              // <View>
+              //   <Text style={styles.listItemRightText}>{item.right}</Text>
+              // </View>
             }
           />
           {item.isDatePicker && showPicker && (

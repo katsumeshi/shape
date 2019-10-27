@@ -14,7 +14,7 @@ import com.google.android.gms.common.util.CollectionUtils.listOf
 import java.util.ArrayList
 import java.util.Collections
 
-class ConfigtPackage : ReactPackage {
+class ConfigPackage : ReactPackage {
 
     override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
         return listOf()
