@@ -35,15 +35,23 @@ const styles = StyleSheet.create({
   listItemRightText: { color: "#666", fontSize: 18 }
 });
 
+const defaultAlert = moment()
+  .hours(7)
+  .minutes(0);
+
 const SettingList = () => {
   const [showPicker, onShowPicker] = useState(false);
-  const [date, onDateChange] = useState();
+  const [date, onDateChange] = useState(defaultAlert.toDate());
   const [notification, onChangeNotification] = useState(true);
 
   useEffect(() => {
     async function didMount() {
-      const notifUnixTime =
-        (await AsyncStorage.getItem("notifUnixTime")) || `${moment().unix()}`;
+      let notifUnixTime = await AsyncStorage.getItem("notifUnixTime");
+      if (!notifUnixTime) {
+        notifUnixTime = `${defaultAlert.unix()}`;
+        console.warn(notifUnixTime);
+        await AsyncStorage.setItem("notifUnixTime", notifUnixTime);
+      }
       const notifDate = moment.unix(parseInt(notifUnixTime, 10)).toDate();
       onDateChange(notifDate);
     }
@@ -53,8 +61,8 @@ const SettingList = () => {
   useEffect(() => {
     async function dateChanged() {
       const m = moment()
-        .hour(moment(date).hour())
-        .minute(moment(date).minute());
+        .hour(date.getHours())
+        .minute(date.getMinutes());
       await AsyncStorage.setItem("notifUnixTime", `${m.unix()}`);
       notificationSet();
     }
@@ -170,7 +178,6 @@ const LogoutButton = () => (
           {
             text: "ログアウト",
             onPress: () => {
-              AsyncStorage.clear();
               firebase.auth().signOut();
             }
           }

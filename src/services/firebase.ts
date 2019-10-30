@@ -1,7 +1,9 @@
 import moment from "moment";
 import firebase, { RNFirebase } from "react-native-firebase";
+import AsyncStorage from "@react-native-community/async-storage";
 import Config from "../../config";
 import { HealthModel } from "../state/modules/health/types";
+import { removeNotifications } from "../utils/notificationUtils";
 
 let unsubscribe = () => {};
 
@@ -23,12 +25,19 @@ export const subscribeDynamicLink = (email: string) => {
 let subscription = () => {};
 
 let map: { [id: string]: HealthModel } = {};
+
+const signOut = () => {
+  subscription();
+  map = {};
+  AsyncStorage.clear();
+  removeNotifications();
+};
+
 export const authChanged = (callback: (isLoggedIn: boolean) => void) => {
   const unsubscribeAuth = firebase.auth().onAuthStateChanged(user => {
     const isLoggedIn = !!user;
     if (!isLoggedIn && subscription) {
-      subscription();
-      map = {};
+      signOut();
     }
     callback(isLoggedIn);
     unsubscribeDynamicLink();

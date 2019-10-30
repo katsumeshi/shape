@@ -3,6 +3,9 @@ import PushNotification from "react-native-push-notification";
 import AsyncStorage from "@react-native-community/async-storage";
 import moment from "moment";
 
+export const removeNotifications = () => {
+  PushNotification.cancelLocalNotifications({ id: "1" });
+};
 const notificationSet = async () => {
   PushNotification.configure({
     onRegister(token) {
@@ -21,29 +24,27 @@ const notificationSet = async () => {
     popInitialNotification: true,
     requestPermissions: true
   });
-  PushNotification.cancelLocalNotifications({ id: "1" });
+  removeNotifications();
   let notifStr = await AsyncStorage.getItem("notif");
   if (!notifStr) {
     notifStr = "true";
     AsyncStorage.setItem("notif", notifStr);
   }
-  let notifUnixTimeStr = await AsyncStorage.getItem("notifUnixTime");
+  const notifUnixTimeStr = await AsyncStorage.getItem("notifUnixTime");
   const notif = notifStr === "true";
   if (notifUnixTimeStr && notif) {
     const unixTime = parseInt(notifUnixTimeStr, 10);
-    console.warn(moment.unix(unixTime).toDate());
+    const targetMoment = moment.unix(unixTime);
+    if (targetMoment.isBefore(moment())) {
+      targetMoment.add(1, "d");
+    }
     PushNotification.localNotificationSchedule({
       id: "1",
+      userInfo: { id: "1" },
       message: "本日の体重測定お済みですか？",
-      date: moment.unix(unixTime).toDate(),
+      date: targetMoment.toDate(),
       repeatType: "day"
     });
-  } else {
-    notifUnixTimeStr = `${moment()
-      .startOf("d")
-      .add(7, "h")
-      .unix()}`;
-    AsyncStorage.setItem("notifUnixTime", notifUnixTimeStr);
   }
 };
 
