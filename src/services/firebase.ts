@@ -82,7 +82,7 @@ const usersRef = () => {
     .doc(userId);
 };
 
-export const healthRef = () => usersRef().collection("health");
+const healthRef = () => usersRef().collection("health");
 
 export const updateWeight = (date: Date, weight: number) => {
   healthRef()
