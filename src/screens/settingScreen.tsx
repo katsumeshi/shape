@@ -7,7 +7,9 @@ import {
   View,
   DatePickerIOS,
   Switch,
-  StyleSheet
+  StyleSheet,
+  Platform,
+  TimePickerAndroid
 } from "react-native";
 import { Header, ListItem } from "react-native-elements";
 import firebase from "react-native-firebase";
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
 
 const SettingList = () => {
   const [showPicker, onShowPicker] = useState(false);
-  const [date, onDateChange] = useState(new Date());
+  const [date, onDateChange] = useState();
   const [notification, onChangeNotification] = useState(true);
 
   useEffect(() => {
@@ -70,7 +72,9 @@ const SettingList = () => {
   const sectionData = [
     {
       left: "バージョン",
-      right: DeviceInfo.getVersion(),
+      right: (
+        <Text style={styles.listItemRightText}>{DeviceInfo.getVersion()}</Text>
+      ),
       isDatePicker: false,
       onPress: () => {}
     },
@@ -84,12 +88,40 @@ const SettingList = () => {
     }
   ];
 
+  // console.warn(date);
+
   if (notification) {
     sectionData.push({
       left: "",
-      right: `${moment(date).format("LT")}`,
+      right: (
+        <Text style={styles.listItemRightText}>
+          {moment(date).format("LT")}
+        </Text>
+      ),
       isDatePicker: true,
-      onPress: () => onShowPicker(!showPicker)
+      onPress: async () => {
+        if (Platform.OS === "ios") {
+          onShowPicker(!showPicker);
+        } else {
+          try {
+            const result = await TimePickerAndroid.open({
+              hour: date.getHours(),
+              minute: date.getMinutes()
+            });
+            if (result.action !== TimePickerAndroid.dismissedAction) {
+              const { hour, minute } = result;
+              const updateDate = new Date();
+              updateDate.setHours(hour);
+              updateDate.setMinutes(minute);
+              onDateChange(updateDate);
+            } else {
+              onDateChange(date);
+            }
+          } catch ({ code, message }) {
+            console.warn("Cannot open date picker", message);
+          }
+        }
+      }
     });
   }
   return (
@@ -101,14 +133,9 @@ const SettingList = () => {
             containerStyle={styles.listItem}
             title={item.left}
             bottomDivider
-            rightElement={
-              <View />
-              // <View>
-              //   <Text style={styles.listItemRightText}>{item.right}</Text>
-              // </View>
-            }
+            rightElement={item.right}
           />
-          {item.isDatePicker && showPicker && (
+          {item.isDatePicker && showPicker && Platform.OS === "ios" && (
             <DatePickerIOS
               date={date}
               mode="time"
@@ -127,7 +154,6 @@ const SettingList = () => {
     />
   );
 };
-
 const LogoutButton = () => (
   <Button
     title="ログアウト"
