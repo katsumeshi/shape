@@ -8,6 +8,7 @@ import {
   NavigationRoute
 } from "react-navigation";
 import { Icon } from "react-native-elements";
+import i18next from "i18next";
 import AuthLoadingScreen from "./screens/authLoadingScreen";
 import HomeScreen from "./screens/homeScreen";
 import LoginScreen from "./screens/loginScreen";
@@ -63,7 +64,11 @@ const TabNavigator = createBottomTabNavigator(
         ) : (
           <Icon type="font-awesome" size={28} color={THEME_COLOR} name="gear" />
         );
-      }
+      },
+      tabBarLabel: (() => {
+        const { routeName } = navigation.state;
+        return routeName === "Home" ? i18next.t("Home") : i18next.t("settings");
+      })()
     })
   }
 );

@@ -17,6 +17,7 @@ import DeviceInfo from "react-native-device-info";
 import AsyncStorage from "@react-native-community/async-storage";
 import { connect } from "react-redux";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
+import { useTranslation } from "react-i18next";
 import notificationSet from "../utils/notificationUtils";
 
 import { Button } from "../components/common";
@@ -46,7 +47,7 @@ const SettingList = () => {
   const [notification, onChangeNotification] = useState(true);
 
   useEffect(() => {
-    async function didMount() {
+    const didMount = async () => {
       let notifUnixTime = await AsyncStorage.getItem("notifUnixTime");
       if (!notifUnixTime) {
         notifUnixTime = `${defaultAlert.unix()}`;
@@ -55,32 +56,33 @@ const SettingList = () => {
       }
       const notifDate = moment.unix(parseInt(notifUnixTime, 10)).toDate();
       onDateChange(notifDate);
-    }
+    };
     didMount();
   }, []);
 
   useEffect(() => {
-    async function dateChanged() {
+    const dateChanged = async () => {
       const m = moment()
         .hour(date.getHours())
         .minute(date.getMinutes());
       await AsyncStorage.setItem("notifUnixTime", `${m.unix()}`);
       notificationSet();
-    }
+    };
     dateChanged();
   }, [date]);
 
   useEffect(() => {
-    async function notifChanged() {
+    const notifChanged = async () => {
       await AsyncStorage.setItem("notif", `${notification}`);
       notificationSet();
-    }
+    };
     notifChanged();
   }, [notification]);
 
+  const { t } = useTranslation();
   const sectionData = [
     {
-      left: "バージョン",
+      left: t("version"),
       right: (
         <Text style={styles.listItemRightText}>{DeviceInfo.getVersion()}</Text>
       ),
@@ -88,7 +90,7 @@ const SettingList = () => {
       onPress: () => {}
     },
     {
-      left: "プッシュ通知",
+      left: t("notifications"),
       right: (
         <Switch value={notification} onValueChange={onChangeNotification} />
       ),
@@ -155,7 +157,7 @@ const SettingList = () => {
       )}
       sections={[
         {
-          title: "設定",
+          title: t("settings"),
           data: sectionData
         }
       ]}
@@ -163,41 +165,49 @@ const SettingList = () => {
     />
   );
 };
-const LogoutButton = () => (
-  <Button
-    title="ログアウト"
-    style={styles.button}
-    onPress={() => {
-      Alert.alert(
-        "確認",
-        "本当にログアウトしますか？",
-        [
-          {
-            text: "キャンセル",
-            style: "cancel"
-          },
-          {
-            text: "ログアウト",
-            onPress: () => {
-              firebase.auth().signOut();
+const LogoutButton = () => {
+  const { t } = useTranslation();
+  return (
+    <Button
+      title={t("logout")}
+      style={styles.button}
+      onPress={() => {
+        Alert.alert(
+          t("confirmation"),
+          t("logoutConfirmation"),
+          [
+            {
+              text: t("cancel"),
+              style: "cancel"
+            },
+            {
+              text: t("logout"),
+              onPress: () => {
+                firebase.auth().signOut();
+              }
             }
-          }
-        ],
-        { cancelable: true }
-      );
-    }}
-  />
-);
-
-const ScaleScreenHeader = () => (
-  <>
-    <ShapeHeader
-      containerStyle={styles.headerContainer}
-      centerComponent={<Text style={styles.headerTitle}>設定</Text>}
+          ],
+          { cancelable: true }
+        );
+      }}
     />
-    <View style={styles.headerDivider} />
-  </>
-);
+  );
+};
+
+const ScaleScreenHeader = () => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <ShapeHeader
+        containerStyle={styles.headerContainer}
+        centerComponent={
+          <Text style={styles.headerTitle}>{t("settings")}</Text>
+        }
+      />
+      <View style={styles.headerDivider} />
+    </>
+  );
+};
 
 const ScaleScreen = ({
   auth,

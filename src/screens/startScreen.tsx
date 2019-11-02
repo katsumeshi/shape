@@ -2,6 +2,7 @@ import React from "react";
 import { ImageBackground, PixelRatio, View, StyleSheet } from "react-native";
 import DeviceInfo from "react-native-device-info";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
+import { useTranslation } from "react-i18next";
 import { AppTitle, Button } from "../components/common";
 
 const styles = StyleSheet.create({
@@ -41,15 +42,18 @@ const StartButton = ({
   navigation
 }: {
   navigation: NavigationScreenProp<NavigationState>;
-}) => (
-  <View style={{ flexDirection: "row" }}>
-    <Button
-      title="アプリを始める"
-      style={styles.button}
-      onPress={() => goToLogin(navigation)}
-    />
-  </View>
-);
+}) => {
+  const { t } = useTranslation();
+  return (
+    <View style={{ flexDirection: "row" }}>
+      <Button
+        title={t("getStarted")}
+        style={styles.button}
+        onPress={() => goToLogin(navigation)}
+      />
+    </View>
+  );
+};
 
 const Space = () => (hasNotch ? <View style={styles.space} /> : null);
 

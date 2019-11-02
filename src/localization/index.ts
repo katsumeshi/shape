@@ -41,7 +41,14 @@ const i18nSetup = () => {
               "An authentication email has been sent. Please check your email inbox.",
             authError:
               "You are registered with another authentication method. Please log in with another authentication method.",
-            or: "OR"
+            or: "OR",
+            getStarted: "Let's get started !",
+            settings: "Settings",
+            logout: "Log out",
+            logoutConfirmation: "Are you sure to log out ?",
+            notifications: "Notifications",
+            version: "Version",
+            home: "Home"
           }
         },
         jp: {
@@ -67,7 +74,14 @@ const i18nSetup = () => {
             sentAuthEmail: "認証メールを送信しました。メールをご確認下さい。",
             authError:
               "別の認証方法で登録されています。他の認証方法でログインして下さい。",
-            or: "または"
+            or: "または",
+            getStarted: "アプリを始める",
+            settings: "設定",
+            logout: "ログアウト",
+            logoutConfirmation: "本当にログアウトしますか？",
+            notifications: "通知",
+            version: "バージョン",
+            home: "ホーム"
           }
         }
       }
