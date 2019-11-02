@@ -21,14 +21,16 @@ const i18nSetup = () => {
           translation: {
             confirmation: "Confirmation",
             weightProgress: "Weight progress",
-            add: "Add"
+            add: "Add",
+            addWeightToday: "Let's add your first weight today!"
           }
         },
         jp: {
           translation: {
             confirmation: "確認",
             weightProgress: "体重記録",
-            add: "追加"
+            add: "追加",
+            addWeightToday: "今日の体重を記録しよう！"
           }
         }
       }

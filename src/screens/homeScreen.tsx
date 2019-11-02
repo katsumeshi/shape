@@ -91,23 +91,26 @@ const Empty = ({
   navigation
 }: {
   navigation: NavigationScreenProp<NavigationState>;
-}) => (
-  <View style={styles.emptyContainer}>
-    <Text style={styles.title}>今日の体重を記録しよう！</Text>
-    <Icon
-      type="material-community"
-      size={60}
-      color="black"
-      name="scale-bathroom"
-      containerStyle={styles.emptyIcon}
-    />
-    <Button
-      title="計測"
-      style={styles.button}
-      onPress={() => navigation.navigate("Scale", { type: "create" })}
-    />
-  </View>
-);
+}) => {
+  const { t } = useTranslation();
+  return (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.title}>{t("addWeightToday")}</Text>
+      <Icon
+        type="material-community"
+        size={60}
+        color="black"
+        name="scale-bathroom"
+        containerStyle={styles.emptyIcon}
+      />
+      <Button
+        title={t("measure")}
+        style={styles.button}
+        onPress={() => navigation.navigate("Scale", { type: "create" })}
+      />
+    </View>
+  );
+};
 
 const getChangeIcon = (health: HealthModel[], index: number) => {
   let weightStatusIcon = STATUS_ICON.EVEN;
