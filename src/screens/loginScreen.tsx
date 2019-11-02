@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import * as Yup from "yup";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
 import { Button } from "../components/common";
-import Config from "../../config";
+import Config from "../config";
 import { THEME_COLOR } from "../constants";
 
 import { signInWithEmailAndPassword } from "../services/firebase";
@@ -184,7 +184,9 @@ const GoogleLoginButton = () => (
     borderColor="#E0E0E0"
     onPress={googleSignIn}
     style={styles.button}
-    iconComp={<Image source={require("../../images/logoGoogle.png")} />}
+    iconComp={
+      <Image source={require("../../resources/images/logoGoogle.png")} />
+    }
   />
 );
 

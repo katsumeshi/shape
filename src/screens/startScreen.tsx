@@ -1,8 +1,8 @@
 import React from "react";
 import { ImageBackground, PixelRatio, View, StyleSheet } from "react-native";
 import DeviceInfo from "react-native-device-info";
+import { NavigationScreenProp, NavigationState } from "react-navigation";
 import { AppTitle, Button } from "../components/common";
-import { Navigation } from "../types";
 
 const styles = StyleSheet.create({
   title: {
@@ -23,12 +23,13 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  navigation: Navigation;
+  navigation: NavigationScreenProp<NavigationState>;
 }
 
 const hasNotch = DeviceInfo.hasNotch();
 
-const goToLogin = (navigation: Navigation) => navigation.navigate("Login");
+const goToLogin = (navigation: NavigationScreenProp<NavigationState>) =>
+  navigation.navigate("Login");
 
 const Title = () => (
   <View style={styles.title}>
@@ -36,7 +37,11 @@ const Title = () => (
   </View>
 );
 
-const StartButton = ({ navigation }: { navigation: Navigation }) => (
+const StartButton = ({
+  navigation
+}: {
+  navigation: NavigationScreenProp<NavigationState>;
+}) => (
   <View style={{ flexDirection: "row" }}>
     <Button
       title="アプリを始める"
@@ -48,11 +53,15 @@ const StartButton = ({ navigation }: { navigation: Navigation }) => (
 
 const Space = () => (hasNotch ? <View style={styles.space} /> : null);
 
-const StartScreen = ({ navigation }: { navigation: Navigation }) => (
+const StartScreen = ({
+  navigation
+}: {
+  navigation: NavigationScreenProp<NavigationState>;
+}) => (
   <ImageBackground
     style={{ flex: 1 }}
     resizeMode="cover"
-    source={require("../../images/introBackground.png")}
+    source={require("../../resources/images/introBackground.png")}
   >
     <Title />
     <StartButton navigation={navigation} />

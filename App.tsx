@@ -5,7 +5,9 @@ import { Provider } from "react-redux";
 import { THEME_COLOR } from "./src/constants";
 import AppNavigator from "./src/navigation";
 import store from "./src/state/store";
+import i18nSetup from "./src/localization";
 
+i18nSetup();
 firebase.crashlytics().enableCrashlyticsCollection();
 
 const theme = {

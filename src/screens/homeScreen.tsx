@@ -1,16 +1,17 @@
 import moment from "moment";
 import React, { useEffect } from "react";
 import { TouchableOpacity, View, StyleSheet } from "react-native";
-import { Header, Icon, ListItem, Text } from "react-native-elements";
+import { Icon, ListItem, Text } from "react-native-elements";
 import { SwipeListView } from "react-native-swipe-list-view";
 import DeviceInfo from "react-native-device-info";
 import { connect } from "react-redux";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
+import { useTranslation } from "react-i18next";
 import { Button } from "../components/common";
 import Chart from "../components/chart";
 import { BLACK, THEME_COLOR } from "../constants";
 
-import ShapeIcon from "../../fonts/icon";
+import ShapeIcon from "../../resources/fonts/icon";
 
 import { fetchWeights } from "../state/modules/health/actions";
 import { HealthModel, HealthState } from "../state/modules/health/types";
@@ -208,19 +209,22 @@ const HomeScreen = ({
   useEffect(() => {
     handleFetchWeights();
   }, []);
+  const { t } = useTranslation();
 
   return (
     <View style={{ flex: 1 }}>
       <ShapeHeader
         containerStyle={styles.headerContainer}
-        centerComponent={<Text style={styles.headerTitle}>体重記録</Text>}
+        centerComponent={
+          <Text style={styles.headerTitle}>{t("weightProgress")}</Text>
+        }
         rightComponent={
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("Scale", { type: "create" });
             }}
           >
-            <Text style={styles.headerButtonText}>追加</Text>
+            <Text style={styles.headerButtonText}>{t("add")}</Text>
           </TouchableOpacity>
         }
       />
