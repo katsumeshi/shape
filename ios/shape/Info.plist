@@ -126,5 +126,7 @@
 	<false/>
 	<key>firebase_crashlytics_collection_enabled</key>
 	<string>true</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-6824393090470417~9773497171</string>
 </dict>
 </plist>

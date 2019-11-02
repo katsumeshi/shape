@@ -41,6 +41,7 @@ target 'shape' do
   pod 'Firebase/Analytics'
   pod 'Firebase/DynamicLinks'
   pod 'Firebase/Firestore'
+  pod 'Firebase/AdMob'
   
   pod 'FBSDKCoreKit', '~> 5.0.0'
   pod 'FBSDKLoginKit', '~> 5.0.0'

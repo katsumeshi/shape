@@ -16,20 +16,12 @@
 #import <Crashlytics/Crashlytics.h>
 #import <RNCPushNotificationIOS.h>
 
+@import Firebase;
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [FIROptions defaultOptions].deepLinkURLScheme = [[NSBundle mainBundle] bundleIdentifier];
-  
-  #if DEBUG
-      NSString* filePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-dev" ofType:@"plist"];
-      FIROptions* options = [[FIROptions new] initWithContentsOfFile:filePath];
-      [FIRApp configureWithOptions:options];
-  #else
-     [FIRApp configure];
-  #endif
-  
+  [self setupFirebase];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"shape"
@@ -51,6 +43,18 @@
   [self.window makeKeyAndVisible];
   
   return YES;
+}
+
+- (void)setupFirebase {
+  #if DEBUG
+      NSString* filePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-dev" ofType:@"plist"];
+      FIROptions* options = [[FIROptions new] initWithContentsOfFile:filePath];
+      [FIRApp configureWithOptions:options];
+  #else
+     [FIRApp configure];
+  #endif
+  [FIROptions defaultOptions].deepLinkURLScheme = [[NSBundle mainBundle] bundleIdentifier];
+  [[GADMobileAds sharedInstance] startWithCompletionHandler:nil];
 }
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings

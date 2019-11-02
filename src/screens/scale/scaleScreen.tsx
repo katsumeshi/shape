@@ -12,7 +12,7 @@ import {
   StyleSheet,
   Alert
 } from "react-native";
-import { Button, Header, Icon, Input } from "react-native-elements";
+import { Button, Icon, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
 import DatePicker from "./datePicker";
@@ -20,6 +20,7 @@ import { BLACK, THEME_COLOR } from "../../constants";
 import { updateWeight } from "../../services/firebase";
 import { AuthState } from "../../state/modules/auth/types";
 import { HealthState } from "../../state/modules/health/types";
+import ShapeHeader from "../../components/header";
 
 const margin = 8;
 
@@ -189,7 +190,7 @@ const ScaleScreenHeader = ({
   weight: number;
   date: Date;
 }) => (
-  <Header
+  <ShapeHeader
     leftComponent={
       <TouchableOpacity
         style={styles.headerLeft}

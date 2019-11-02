@@ -16,6 +16,7 @@ import { fetchWeights } from "../state/modules/health/actions";
 import { HealthModel, HealthState } from "../state/modules/health/types";
 import { deleteWeight } from "../services/firebase";
 import { AuthState } from "../state/modules/auth/types";
+import ShapeHeader from "../components/header";
 
 const hasNotch = DeviceInfo.hasNotch();
 
@@ -210,7 +211,7 @@ const HomeScreen = ({
 
   return (
     <View style={{ flex: 1 }}>
-      <Header
+      <ShapeHeader
         containerStyle={styles.headerContainer}
         centerComponent={<Text style={styles.headerTitle}>体重記録</Text>}
         rightComponent={

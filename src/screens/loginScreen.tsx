@@ -9,7 +9,7 @@ import {
   StyleSheet,
   KeyboardAvoidingView
 } from "react-native";
-import { Header, Icon, Input } from "react-native-elements";
+import { Icon, Input } from "react-native-elements";
 import { AccessToken, LoginManager } from "react-native-fbsdk";
 import firebase from "react-native-firebase";
 import { GoogleSignin } from "react-native-google-signin";
@@ -22,6 +22,7 @@ import { THEME_COLOR } from "../constants";
 
 import { signInWithEmailAndPassword } from "../services/firebase";
 import { AuthState, AuthModel } from "../state/modules/auth/types";
+import ShapeHeader from "../components/header";
 
 const styles = StyleSheet.create({
   button: {
@@ -202,7 +203,7 @@ const LoginScreenHeader = ({
   navigation: NavigationScreenProp<NavigationState>;
 }) => (
   <>
-    <Header
+    <ShapeHeader
       leftComponent={
         <TouchableOpacity
           style={styles.headerLeft}
@@ -228,7 +229,6 @@ const LoginScreenHeader = ({
         backgroundColor: "white"
       }}
     />
-    <View style={{ height: 2, backgroundColor: "lightgrey" }} />
   </>
 );
 

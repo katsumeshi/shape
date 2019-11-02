@@ -11,7 +11,7 @@ import {
   Platform,
   TimePickerAndroid
 } from "react-native";
-import { Header, ListItem } from "react-native-elements";
+import { ListItem } from "react-native-elements";
 import firebase from "react-native-firebase";
 import DeviceInfo from "react-native-device-info";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -22,6 +22,7 @@ import notificationSet from "../utils/notificationUtils";
 import { Button } from "../components/common";
 import { BLACK } from "../constants";
 import { AuthModel, AuthState } from "../state/modules/auth/types";
+import ShapeHeader from "../components/header";
 
 const styles = StyleSheet.create({
   button: {
@@ -190,7 +191,7 @@ const LogoutButton = () => (
 
 const ScaleScreenHeader = () => (
   <>
-    <Header
+    <ShapeHeader
       containerStyle={styles.headerContainer}
       centerComponent={<Text style={styles.headerTitle}>設定</Text>}
     />

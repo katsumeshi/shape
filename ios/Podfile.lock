@@ -28,6 +28,9 @@ PODS:
     - FBSDKCoreKit (~> 5.0)
   - FBSDKShareKit (5.0.2):
     - FBSDKCoreKit (~> 5.0)
+  - Firebase/AdMob (6.4.0):
+    - Firebase/CoreOnly
+    - Google-Mobile-Ads-SDK (~> 7.46)
   - Firebase/Analytics (6.4.0):
     - Firebase/Core
   - Firebase/Auth (6.4.0):
@@ -96,6 +99,8 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - Google-Mobile-Ads-SDK (7.51.0):
+    - GoogleAppMeasurement (~> 6.0)
   - GoogleAppMeasurement (6.0.3):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
@@ -405,6 +410,7 @@ DEPENDENCIES:
   - FBSDKCoreKit (~> 5.0.0)
   - FBSDKLoginKit (~> 5.0.0)
   - FBSDKShareKit (~> 5.0.0)
+  - Firebase/AdMob
   - Firebase/Analytics
   - Firebase/Auth
   - Firebase/Core
@@ -475,6 +481,8 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - Protobuf
+  trunk:
+    - Google-Mobile-Ads-SDK
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -570,6 +578,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: 9782fcfb89e4d7da76cc28eac4b8543dc7be4a4b
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  Google-Mobile-Ads-SDK: 5c625884f0788d22b48e3bb641e1d65c673dc7a5
   GoogleAppMeasurement: 1e45fa601e6280c180880d57010390f6679cd971
   GoogleSignIn: 7ff245e1a7b26d379099d3243a562f5747e23d39
   GoogleToolboxForMac: b3553629623a3b1bff17f555e736cd5a6d95ad55
@@ -611,6 +620,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f
 
-PODFILE CHECKSUM: c6057dc12a7665d948b44e3fbcdc84e8de58078c
+PODFILE CHECKSUM: 3135b6fee52825cef57c806f072e694396c8f222
 
-COCOAPODS: 1.8.0
+COCOAPODS: 1.8.4
