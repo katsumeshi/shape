@@ -16,6 +16,8 @@ import { GoogleSignin } from "react-native-google-signin";
 import { connect } from "react-redux";
 import * as Yup from "yup";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
+import { useTranslation } from "react-i18next";
+import { TFunction } from "i18next";
 import { Button } from "../components/common";
 import Config from "../config";
 import { THEME_COLOR } from "../constants";
@@ -65,64 +67,76 @@ GoogleSignin.configure({
 interface FormValues {
   email: string;
 }
-const SignupSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("正しいEメールを入力してください。")
-    .required("Eメールを入力してください。")
-});
+const SignupSchema = () => {
+  const { t } = useTranslation();
+  return Yup.object().shape({
+    email: Yup.string()
+      .email(t("enterValidEmail"))
+      .required(t("enterEmail"))
+  });
+};
 
-const renderForm = ({
-  values,
-  handleSubmit,
-  setFieldValue,
-  touched,
-  errors,
-  setFieldTouched,
-  isSubmitting,
-  setSubmitting
-}: FormikProps<FormValues>) => (
-  <>
-    <Input
-      placeholder="email"
-      keyboardType="email-address"
-      autoCapitalize="none"
-      autoCorrect={false}
-      value={values.email}
-      containerStyle={styles.input}
-      onChangeText={value => setFieldValue("email", value)}
-      onBlur={() => setFieldTouched("email")}
-      editable={!isSubmitting}
-      errorMessage={touched.email && errors.email ? errors.email : undefined}
-    />
+const renderForm = (
+  {
+    values,
+    handleSubmit,
+    setFieldValue,
+    touched,
+    errors,
+    setFieldTouched,
+    isSubmitting,
+    setSubmitting
+  }: FormikProps<FormValues>,
+  t: TFunction
+) => {
+  return (
+    <>
+      <Input
+        placeholder="email"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
+        value={values.email}
+        containerStyle={styles.input}
+        onChangeText={value => setFieldValue("email", value)}
+        onBlur={() => setFieldTouched("email")}
+        editable={!isSubmitting}
+        errorMessage={touched.email && errors.email ? errors.email : undefined}
+      />
 
-    <Button
-      title="新規作成 or ログイン"
-      disabled={isSubmitting}
-      onPress={() => {
-        handleSubmit();
-        setSubmitting(false);
+      <Button
+        title={t("signupOrLogin")}
+        disabled={isSubmitting}
+        onPress={() => {
+          handleSubmit();
+          setSubmitting(false);
+        }}
+      />
+    </>
+  );
+};
+
+const EmailField = () => {
+  const { t } = useTranslation();
+  return (
+    <Formik
+      initialValues={{ email: "" }}
+      onSubmit={async props => {
+        await signInWithEmailAndPassword(props);
+        Alert.alert(t("confirmation"), t("sentAuthEmail"), [
+          {
+            text: t("ok")
+          }
+        ]);
       }}
+      validationSchema={SignupSchema}
+      render={(formikBag: FormikProps<FormValues>) => renderForm(formikBag, t)}
     />
-  </>
-);
-
-const EmailField = () => (
-  <Formik
-    initialValues={{ email: "" }}
-    onSubmit={async props => {
-      await signInWithEmailAndPassword(props);
-      Alert.alert("確認", "認証メールを送信しました。メールをご確認下さい。", [
-        {
-          text: "OK"
-        }
-      ]);
-    }}
-    validationSchema={SignupSchema}
-    render={(formikBag: FormikProps<FormValues>) => renderForm(formikBag)}
-  />
-);
+  );
+};
 
 const facebookLogin = async () => {
+  const { t } = useTranslation();
   try {
     const result = await LoginManager.logInWithPermissions([
       "public_profile",
@@ -144,15 +158,11 @@ const facebookLogin = async () => {
     await firebase.auth().signInWithCredential(credential);
   } catch (e) {
     if (e.code === "auth/account-exists-with-different-credential") {
-      Alert.alert(
-        "確認",
-        "別の認証方法で登録されています。他の認証方法でログインして下さい。",
-        [
-          {
-            text: "OK"
-          }
-        ]
-      );
+      Alert.alert(t("confirmation"), t("authError"), [
+        {
+          text: t("ok")
+        }
+      ]);
     }
   }
 };
@@ -168,71 +178,83 @@ const googleSignIn = async () => {
   }
 };
 
-const Separator = () => (
-  <View style={styles.separatorContainer}>
-    <View style={styles.separatorLine} />
-    <Text style={styles.separatorText}>OR</Text>
-    <View style={styles.separatorLine} />
-  </View>
-);
+const Separator = () => {
+  const { t } = useTranslation();
+  return (
+    <View style={styles.separatorContainer}>
+      <View style={styles.separatorLine} />
+      <Text style={styles.separatorText}>{t("or")}</Text>
+      <View style={styles.separatorLine} />
+    </View>
+  );
+};
 
-const GoogleLoginButton = () => (
-  <Button
-    title="Googleで続ける"
-    backgroundColor="white"
-    color="#757575"
-    borderColor="#E0E0E0"
-    onPress={googleSignIn}
-    style={styles.button}
-    iconComp={
-      <Image source={require("../../resources/images/logoGoogle.png")} />
-    }
-  />
-);
+const GoogleLoginButton = () => {
+  const { t } = useTranslation();
+  return (
+    <Button
+      title={t("continueWithGoogle")}
+      backgroundColor="white"
+      color="#757575"
+      borderColor="#E0E0E0"
+      onPress={googleSignIn}
+      style={styles.button}
+      iconComp={
+        <Image source={require("../../resources/images/logoGoogle.png")} />
+      }
+    />
+  );
+};
 
-const FacebookLoginButton = () => (
-  <Button
-    title="Facebookで続ける"
-    backgroundColor="#3B5998"
-    onPress={facebookLogin}
-    iconComp={<Icon type="font-awesome" color="white" name="facebook" />}
-  />
-);
+const FacebookLoginButton = () => {
+  const { t } = useTranslation();
+  return (
+    <Button
+      title={t("continueWithFB")}
+      backgroundColor="#3B5998"
+      onPress={facebookLogin}
+      iconComp={<Icon type="font-awesome" color="white" name="facebook" />}
+    />
+  );
+};
 
 const LoginScreenHeader = ({
   navigation
 }: {
   navigation: NavigationScreenProp<NavigationState>;
-}) => (
-  <>
-    <ShapeHeader
-      leftComponent={
-        <TouchableOpacity
-          style={styles.headerLeft}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <View style={styles.headerLeftIcon}>
-            <Icon
-              type="font-awesome"
-              size={40}
-              color={THEME_COLOR}
-              name="angle-left"
-            />
-          </View>
-          <Text style={styles.headerLeftText}>戻る</Text>
-        </TouchableOpacity>
-      }
-      centerComponent={
-        <Text style={styles.headerTitle}>新規作成 or ログイン</Text>
-      }
-      containerStyle={{
-        backgroundColor: "white"
-      }}
-    />
-  </>
-);
+}) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <ShapeHeader
+        leftComponent={
+          <TouchableOpacity
+            style={styles.headerLeft}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <View style={styles.headerLeftIcon}>
+              <Icon
+                type="font-awesome"
+                size={40}
+                color={THEME_COLOR}
+                name="angle-left"
+              />
+            </View>
+            <Text style={styles.headerLeftText}>{t("back")}</Text>
+          </TouchableOpacity>
+        }
+        centerComponent={
+          <Text style={styles.headerTitle}>{t("signupOrLogin")}</Text>
+        }
+        containerStyle={{
+          backgroundColor: "white"
+        }}
+      />
+    </>
+  );
+};
 
 const LoginScreen = ({
   navigation,

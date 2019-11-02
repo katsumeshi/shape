@@ -15,6 +15,7 @@ import {
 import { Button, Icon, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
+import { useTranslation } from "react-i18next";
 import DatePicker from "./datePicker";
 import { BLACK, THEME_COLOR } from "../../constants";
 import { updateWeight } from "../../services/firebase";
@@ -59,12 +60,13 @@ const styles = StyleSheet.create({
 });
 
 const invalidWeight = () => {
+  const { t } = useTranslation();
   Alert.alert(
-    "確認",
-    "体重の入力値が不正です。",
+    t("confirmation"),
+    t("weightInvalid"),
     [
       {
-        text: "OK",
+        text: t("ok"),
         style: "cancel"
       }
     ],
@@ -189,50 +191,59 @@ const ScaleScreenHeader = ({
   navigation: NavigationScreenProp<NavigationState>;
   weight: number;
   date: Date;
-}) => (
-  <ShapeHeader
-    leftComponent={
-      <TouchableOpacity
-        style={styles.headerLeft}
-        onPress={() => {
-          navigation.goBack();
-        }}
-      >
-        <View style={{ top: -3 }}>
-          <Icon
-            type="font-awesome"
-            size={40}
-            color={THEME_COLOR}
-            name="angle-left"
-          />
-        </View>
-        <Text style={{ left: 4, fontSize: 18, color: THEME_COLOR }}>戻る</Text>
-      </TouchableOpacity>
-    }
-    centerComponent={
-      <Text style={{ fontSize: 18, color: BLACK }}>体重記録</Text>
-    }
-    rightComponent={
-      <TouchableOpacity
-        onPress={() => {
-          if (isValid(weight)) {
-            updateWeight(date, weight);
+}) => {
+  const { t } = useTranslation();
+  return (
+    <ShapeHeader
+      leftComponent={
+        <TouchableOpacity
+          style={styles.headerLeft}
+          onPress={() => {
             navigation.goBack();
-          } else {
-            invalidWeight();
-          }
-        }}
-      >
-        <Text style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}>
-          保存
+          }}
+        >
+          <View style={{ top: -3 }}>
+            <Icon
+              type="font-awesome"
+              size={40}
+              color={THEME_COLOR}
+              name="angle-left"
+            />
+          </View>
+          <Text style={{ left: 4, fontSize: 18, color: THEME_COLOR }}>
+            {t("back")}
+          </Text>
+        </TouchableOpacity>
+      }
+      centerComponent={
+        <Text style={{ fontSize: 18, color: BLACK }}>
+          {t("weightProgress")}
         </Text>
-      </TouchableOpacity>
-    }
-    containerStyle={{
-      backgroundColor: "white"
-    }}
-  />
-);
+      }
+      rightComponent={
+        <TouchableOpacity
+          onPress={() => {
+            if (isValid(weight)) {
+              updateWeight(date, weight);
+              navigation.goBack();
+            } else {
+              invalidWeight();
+            }
+          }}
+        >
+          <Text
+            style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}
+          >
+            {t("save")}
+          </Text>
+        </TouchableOpacity>
+      }
+      containerStyle={{
+        backgroundColor: "white"
+      }}
+    />
+  );
+};
 
 const ScaleScreen = ({
   navigation,

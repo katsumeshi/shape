@@ -2,6 +2,7 @@ import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import PushNotification from "react-native-push-notification";
 import AsyncStorage from "@react-native-community/async-storage";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 export const removeNotifications = () => {
   PushNotification.cancelLocalNotifications({ id: "1" });
@@ -38,10 +39,11 @@ const notificationSet = async () => {
     if (targetMoment.isBefore(moment())) {
       targetMoment.add(1, "d");
     }
+    const { t } = useTranslation();
     PushNotification.localNotificationSchedule({
       id: "1",
       userInfo: { id: "1" },
-      message: "本日の体重測定お済みですか？",
+      message: t("weightRemindNotification"),
       date: targetMoment.toDate(),
       repeatType: "day"
     });

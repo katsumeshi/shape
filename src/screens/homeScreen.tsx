@@ -130,58 +130,63 @@ const Content = ({
 }: {
   health: HealthModel[];
   navigation: NavigationScreenProp<NavigationState>;
-}) => (
-  <>
-    <View style={styles.contentContainer} />
-    <Chart health={health} />
-    <SwipeListView
-      data={health}
-      renderItem={({ item, index }: { item: HealthModel; index: number }) => {
-        const { color, name } = getChangeIcon(health, index);
-        return (
-          <ListItem
-            onPress={() =>
-              navigation.navigate("Scale", {
-                type: "update",
-                date: item.date.toDate(),
-                weight: `${item.weight}`
-              })
-            }
-            containerStyle={styles.listItem}
-            title={moment(item.date.toDate()).format("YYYY/MM/DD")}
-            topDivider
-            rightTitle={
-              <View style={{ flexDirection: "row" }}>
-                <Text style={styles.rightTitleText}>{`${item.weight}kg`}</Text>
-                <ShapeIcon
-                  style={styles.icon}
-                  size={20}
-                  color={color}
-                  name={name}
-                />
-              </View>
-            }
-          />
-        );
-      }}
-      renderHiddenItem={({ item }, rowMap) => (
-        <TouchableOpacity
-          onPress={() => {
-            deleteWeight(item.key);
-            rowMap[item.key].closeRow();
-          }}
-        >
-          <View style={styles.deleteContainer}>
-            <Text style={styles.deleteText}>Delete</Text>
-          </View>
-        </TouchableOpacity>
-      )}
-      disableRightSwipe
-      leftOpenValue={0}
-      rightOpenValue={-75}
-    />
-  </>
-);
+}) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <View style={styles.contentContainer} />
+      <Chart health={health} />
+      <SwipeListView
+        data={health}
+        renderItem={({ item, index }: { item: HealthModel; index: number }) => {
+          const { color, name } = getChangeIcon(health, index);
+          return (
+            <ListItem
+              onPress={() =>
+                navigation.navigate("Scale", {
+                  type: "update",
+                  date: item.date.toDate(),
+                  weight: `${item.weight}`
+                })
+              }
+              containerStyle={styles.listItem}
+              title={moment(item.date.toDate()).format("YYYY/MM/DD")}
+              topDivider
+              rightTitle={
+                <View style={{ flexDirection: "row" }}>
+                  <Text
+                    style={styles.rightTitleText}
+                  >{`${item.weight}kg`}</Text>
+                  <ShapeIcon
+                    style={styles.icon}
+                    size={20}
+                    color={color}
+                    name={name}
+                  />
+                </View>
+              }
+            />
+          );
+        }}
+        renderHiddenItem={({ item }, rowMap) => (
+          <TouchableOpacity
+            onPress={() => {
+              deleteWeight(item.key);
+              rowMap[item.key].closeRow();
+            }}
+          >
+            <View style={styles.deleteContainer}>
+              <Text style={styles.deleteText}>{t("delete")}</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+        disableRightSwipe
+        leftOpenValue={0}
+        rightOpenValue={-75}
+      />
+    </>
+  );
+};
 
 const Container = ({
   health,

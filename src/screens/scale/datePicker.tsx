@@ -7,6 +7,7 @@ import {
   Modal
 } from "react-native";
 import { Button } from "react-native-elements";
+import { useTranslation } from "react-i18next";
 
 const { height, width } = Dimensions.get("window");
 
@@ -39,14 +40,19 @@ const DatePicker = ({
   maximumDate?: Date;
 }) => {
   const [date, onDate] = useState(defaultDate);
+  const { t } = useTranslation();
   return (
     <Modal animationType="fade" transparent visible={visible}>
       <View style={styles.container}>
         <View style={{ backgroundColor: "white" }}>
           <View style={{ backgroundColor: "rgba(0, 0, 0, 0.03)" }}>
             <View style={styles.header}>
-              <Button title="Cancel" type="clear" onPress={onCancel} />
-              <Button title="Done" type="clear" onPress={() => onDone(date)} />
+              <Button title={t("cancel")} type="clear" onPress={onCancel} />
+              <Button
+                title={t("done")}
+                type="clear"
+                onPress={() => onDone(date)}
+              />
             </View>
           </View>
           <DatePickerIOS
