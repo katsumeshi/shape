@@ -156,8 +156,8 @@ android {
         applicationId "com.yukimatsushita.shape"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 23
-        versionName "0.0.3"
+        versionCode 24
+        versionName "0.0.7"
         multiDexEnabled true
     }
     splits {

@@ -69,6 +69,8 @@
 	<string>2091403117645612</string>
 	<key>FacebookDisplayName</key>
 	<string>Shape.</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-6824393090470417~9773497171</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fb-messenger-share-api</string>
@@ -126,7 +128,5 @@
 	<false/>
 	<key>firebase_crashlytics_collection_enabled</key>
 	<string>true</string>
-	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-6824393090470417~9773497171</string>
 </dict>
 </plist>
