@@ -1,14 +1,17 @@
 import React from "react";
 import { Header, HeaderProps } from "react-native-elements";
 import firebase from "react-native-firebase";
-import { View } from "react-native";
+import { View, Platform } from "react-native";
 
 const { Banner } = firebase.admob;
 const { AdRequest } = firebase.admob;
 const request = new AdRequest();
 request.addKeyword("foobar");
 
-const unitId = "ca-app-pub-6824393090470417/3208088823";
+const unitId =
+  Platform.OS === "ios"
+    ? "ca-app-pub-6824393090470417/3208088823"
+    : "ca-app-pub-6824393090470417/3822811275";
 
 interface ShapeHeaderProps {
   displayHeader?: boolean;
