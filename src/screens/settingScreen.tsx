@@ -66,7 +66,7 @@ const SettingList = () => {
         .hour(date.getHours())
         .minute(date.getMinutes());
       await AsyncStorage.setItem("notifUnixTime", `${m.unix()}`);
-      notificationSet();
+      await notificationSet();
     };
     dateChanged();
   }, [date]);
@@ -74,7 +74,7 @@ const SettingList = () => {
   useEffect(() => {
     const notifChanged = async () => {
       await AsyncStorage.setItem("notif", `${notification}`);
-      notificationSet();
+      await notificationSet();
     };
     notifChanged();
   }, [notification]);
