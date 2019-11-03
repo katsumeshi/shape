@@ -1,11 +1,12 @@
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
+import DeviceInfo from "react-native-device-info";
 
 const i18nSetup = () => {
   const languageDetector: any = {
     type: "languageDetector",
     async: true,
-    detect: (cb: any) => cb("en"),
+    detect: (cb: any) => cb(DeviceInfo.getDeviceLocale().slice(0, 2)),
     init: () => {},
     cacheUserLanguage: () => {}
   };
@@ -51,7 +52,7 @@ const i18nSetup = () => {
             home: "Home"
           }
         },
-        jp: {
+        ja: {
           translation: {
             confirmation: "確認",
             weightProgress: "体重記録",
