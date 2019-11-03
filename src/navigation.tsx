@@ -67,7 +67,7 @@ const TabNavigator = createBottomTabNavigator(
       },
       tabBarLabel: (() => {
         const { routeName } = navigation.state;
-        return routeName === "Home" ? i18next.t("Home") : i18next.t("settings");
+        return routeName === "Home" ? i18next.t("home") : i18next.t("settings");
       })()
     })
   }
