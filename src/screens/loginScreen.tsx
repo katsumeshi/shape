@@ -17,7 +17,7 @@ import { connect } from "react-redux";
 import * as Yup from "yup";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
 import { useTranslation } from "react-i18next";
-import { TFunction } from "i18next";
+import i18next, { TFunction } from "i18next";
 import { Button } from "../components/common";
 import Config from "../config";
 import { THEME_COLOR } from "../constants";
@@ -67,8 +67,7 @@ GoogleSignin.configure({
 interface FormValues {
   email: string;
 }
-const SignupSchema = () => {
-  const { t } = useTranslation();
+const SignupSchema = (t: TFunction) => {
   return Yup.object().shape({
     email: Yup.string()
       .email(t("enterValidEmail"))
@@ -129,14 +128,13 @@ const EmailField = () => {
           }
         ]);
       }}
-      validationSchema={SignupSchema}
+      validationSchema={() => SignupSchema(t)}
       render={(formikBag: FormikProps<FormValues>) => renderForm(formikBag, t)}
     />
   );
 };
 
-const facebookLogin = async () => {
-  const { t } = useTranslation();
+const facebookLogin = async (t: TFunction) => {
   try {
     const result = await LoginManager.logInWithPermissions([
       "public_profile",
@@ -212,7 +210,7 @@ const FacebookLoginButton = () => {
     <Button
       title={t("continueWithFB")}
       backgroundColor="#3B5998"
-      onPress={facebookLogin}
+      onPress={() => facebookLogin(t)}
       iconComp={<Icon type="font-awesome" color="white" name="facebook" />}
     />
   );

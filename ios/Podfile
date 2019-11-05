@@ -43,9 +43,9 @@ target 'shape' do
   pod 'Firebase/Firestore'
   pod 'Firebase/AdMob'
   
-  pod 'FBSDKCoreKit', '~> 5.0.0'
-  pod 'FBSDKLoginKit', '~> 5.0.0'
-  pod 'FBSDKShareKit', '~> 5.0.0'
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKLoginKit'
+  pod 'FBSDKShareKit'
   
   pod 'GoogleSignIn', '~> 4.4.0'
   
