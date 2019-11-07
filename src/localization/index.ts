@@ -67,7 +67,7 @@ const i18nSetup = () => {
             done: "完了",
             weightRemindNotification: "本日の体重測定お済みですか？",
             delete: "削除",
-            signupOrLogin: "新規作成かログイン",
+            signupOrLogin: "新規作成 か ログイン",
             continueWithFB: "Facebookで続ける",
             continueWithGoogle: "Googleで続ける",
             enterValidEmail: "正しいEメールを入力してください",

@@ -7,7 +7,8 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import { Icon, Input } from "react-native-elements";
 import { AccessToken, LoginManager } from "react-native-fbsdk";
@@ -269,7 +270,7 @@ const LoginScreen = ({
     <View style={{ flex: 1 }}>
       <LoginScreenHeader navigation={navigation} />
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flex: 1, marginHorizontal: 16 }}
       >
         <View style={{ flex: 1 }} />
