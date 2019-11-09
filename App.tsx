@@ -6,6 +6,8 @@ import { THEME_COLOR } from "./src/constants";
 import AppNavigator from "./src/navigation";
 import store from "./src/state/store";
 import i18nSetup from "./src/localization";
+import { fetchAuthStatus } from "./src/state/modules/auth/actions";
+import NavigationService from "./NavigationService";
 
 i18nSetup();
 firebase.crashlytics().enableCrashlyticsCollection();
@@ -40,9 +42,15 @@ const theme = {
 const App = () => (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
-      <AppNavigator />
+      <AppNavigator
+        ref={navigatorRef => {
+          NavigationService.setTopLevelNavigator(navigatorRef);
+        }}
+      />
     </ThemeProvider>
   </Provider>
 );
+
+store.dispatch(fetchAuthStatus());
 
 export default App;

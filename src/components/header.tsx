@@ -2,6 +2,7 @@ import React from "react";
 import { Header, HeaderProps } from "react-native-elements";
 import firebase from "react-native-firebase";
 import { View, Platform } from "react-native";
+import Config from "../config";
 
 const { Banner } = firebase.admob;
 const { AdRequest } = firebase.admob;
@@ -40,14 +41,16 @@ const ShapeHeader = (props: Props) => {
           <View style={{ height: 2, backgroundColor: "lightgrey" }} />
         </>
       )}
-      <Banner
-        unitId={unitId}
-        size="SMART_BANNER"
-        request={request.build()}
-        onAdLoaded={() => {
-          console.log("Advert loaded");
-        }}
-      />
+      {!Config.DEBUG && (
+        <Banner
+          unitId={unitId}
+          size="SMART_BANNER"
+          request={request.build()}
+          onAdLoaded={() => {
+            console.log("Advert loaded");
+          }}
+        />
+      )}
     </>
   );
 };

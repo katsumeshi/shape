@@ -1,28 +1,42 @@
-import { all, fork, put, take, takeEvery } from "redux-saga/effects";
+import { all, fork, takeEvery, take, call, delay } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
+import firebase from "react-native-firebase";
 import AuthActionTypes from "./types";
-import { authChanged } from "../../../services/firebase";
+import authChanged from "./firebase";
+import NavigationService from "../../../../NavigationService";
 
-function* handleAuthFetch() {
-  const channel = eventChannel(emit =>
-    authChanged((isLoggedIn: boolean) => emit(isLoggedIn))
-  );
-  try {
-    while (true) {
-      const isLoggedIn = yield take(channel);
-      yield put({
-        type: AuthActionTypes.AUTH_FETCH_SUCCESS,
-        payload: { isLoggedIn }
-      });
-    }
-  } catch (err) {
-    console.warn(err);
+export function subscribe() {
+  return eventChannel(emit => authChanged(emit));
+}
+
+export function* subscribeToAuthChanges() {
+  const channel = yield call(subscribe);
+  while (true) {
+    const action = yield take(channel);
+    NavigationService.navigate(action.payload.user ? "App" : "Auth", {});
   }
 }
+
 export function* watchAuthFetch() {
-  yield takeEvery(AuthActionTypes.AUTH_FETCH, handleAuthFetch);
+  while (true) {
+    const { payload } = yield take(AuthActionTypes.AUTH_FETCH);
+    yield fork(subscribeToAuthChanges);
+  }
+}
+
+function signOut() {
+  firebase.auth().signOut();
+}
+
+export function* logout() {
+  yield delay(1);
+  yield call(signOut);
+}
+
+export function* watchAuthLogout() {
+  yield takeEvery(AuthActionTypes.AUTH_LOG_OUT, logout);
 }
 
 export default function* authSaga() {
-  yield all([fork(watchAuthFetch)]);
+  yield all([fork(watchAuthFetch), fork(watchAuthLogout)]);
 }

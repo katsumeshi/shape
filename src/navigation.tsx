@@ -73,10 +73,11 @@ const TabNavigator = createBottomTabNavigator(
   }
 );
 
-const AuthStack = createStackNavigator(
+export const AuthStack = createStackNavigator(
   { Start: StartScreen, Login: LoginScreen },
   {
-    headerMode: "none"
+    headerMode: "none",
+    initialRouteName: "Start"
   }
 );
 

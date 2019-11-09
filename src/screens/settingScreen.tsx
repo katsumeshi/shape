@@ -24,6 +24,7 @@ import { Button } from "../components/common";
 import { BLACK } from "../constants";
 import { AuthModel, AuthState } from "../state/modules/auth/types";
 import ShapeHeader from "../components/header";
+import { authLogoutAction } from "../state/modules/auth/actions";
 
 const styles = StyleSheet.create({
   button: {
@@ -165,7 +166,7 @@ const SettingList = () => {
     />
   );
 };
-const LogoutButton = () => {
+const LogoutButton = ({ logoutAction }: { logoutAction: () => void }) => {
   const { t } = useTranslation();
   return (
     <Button
@@ -183,7 +184,8 @@ const LogoutButton = () => {
             {
               text: t("logout"),
               onPress: () => {
-                firebase.auth().signOut();
+                logoutAction();
+                // firebase.auth().signOut();
               }
             }
           ],
@@ -211,26 +213,25 @@ const ScaleScreenHeader = () => {
 
 const ScaleScreen = ({
   auth,
-  navigation
+  navigation,
+  logoutAction
 }: {
   auth: AuthModel;
   navigation: NavigationScreenProp<NavigationState>;
+  logoutAction: any;
 }) => {
-  useEffect(() => {
-    if (auth.isLoggedIn !== undefined) {
-      navigation.navigate(auth.isLoggedIn ? "App" : "Auth");
-    }
-  });
-
   return (
     <>
       <ScaleScreenHeader />
       <SettingList />
-      <LogoutButton />
+      <LogoutButton logoutAction={logoutAction} />
     </>
   );
 };
 
-export default connect(({ auth }: { auth: AuthState }) => ({
-  auth: auth.data
-}))(ScaleScreen);
+export default connect(
+  ({ auth }: { auth: AuthState }) => ({
+    auth: auth.data
+  }),
+  { logoutAction: authLogoutAction }
+)(ScaleScreen);

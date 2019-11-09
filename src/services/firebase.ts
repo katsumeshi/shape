@@ -33,18 +33,6 @@ const signOut = () => {
   removeNotifications();
 };
 
-export const authChanged = (callback: (isLoggedIn: boolean) => void) => {
-  const unsubscribeAuth = firebase.auth().onAuthStateChanged(user => {
-    const isLoggedIn = !!user;
-    if (!isLoggedIn && subscription) {
-      signOut();
-    }
-    callback(isLoggedIn);
-    unsubscribeDynamicLink();
-  });
-  return unsubscribeAuth;
-};
-
 export const signInWithEmailAndPassword = async ({
   email
 }: {
@@ -99,26 +87,33 @@ export const deleteWeight = (key: string) => {
 export const healthChanged = (callback: (weights: HealthModel[]) => void) => {
   subscription = healthRef().onSnapshot(
     (snapshot: RNFirebase.firestore.QuerySnapshot) => {
-      snapshot.docChanges.forEach(change => {
-        const data = change.doc.data();
-        const key = change.doc.id;
-        switch (change.type) {
-          case "added":
-          case "modified":
-            map[key] = new HealthModel(key, data);
-            break;
-          case "removed":
-            delete map[key];
-            break;
-          default:
-            console.log("No such day exists!");
-            break;
-        }
-      });
-      const weights = Object.keys(map)
-        .sort((a, b) => b.localeCompare(a))
-        .map(key => map[key]);
-      callback(weights);
+      const g = snapshot.docChanges
+        .map(change => {
+          const data = change.doc.data();
+          const key = change.doc.id;
+          console.warn(change.type);
+          switch (change.type) {
+            case "added":
+            case "modified":
+              return new HealthModel(key, data);
+            default:
+              return null;
+          }
+        })
+        .reduce(
+          (a, b) => {
+            if (b) {
+              return a.concat(b);
+            }
+            return a;
+          },
+          [] as HealthModel[]
+        )
+        .sort((a, b) => b.date.toMillis() - a.date.toMillis());
+
+      if (snapshot.docChanges.length !== 0) {
+        callback(g);
+      }
     }
   );
   return subscription;

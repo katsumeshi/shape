@@ -262,10 +262,6 @@ const LoginScreen = ({
   navigation: NavigationScreenProp<NavigationState>;
   auth: AuthModel;
 }) => {
-  useEffect(() => {}, []);
-  useEffect(() => {
-    navigation.navigate(auth.isLoggedIn ? "App" : "Auth");
-  });
   return (
     <View style={{ flex: 1 }}>
       <LoginScreenHeader navigation={navigation} />
