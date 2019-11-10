@@ -12,17 +12,15 @@ import {
   TimePickerAndroid
 } from "react-native";
 import { ListItem } from "react-native-elements";
-import firebase from "react-native-firebase";
 import DeviceInfo from "react-native-device-info";
 import AsyncStorage from "@react-native-community/async-storage";
 import { connect } from "react-redux";
-import { NavigationScreenProp, NavigationState } from "react-navigation";
 import { useTranslation } from "react-i18next";
 import notificationSet from "../utils/notificationUtils";
 
 import { Button } from "../components/common";
 import { BLACK } from "../constants";
-import { AuthModel, AuthState } from "../state/modules/auth/types";
+import { AuthState } from "../state/modules/auth/types";
 import ShapeHeader from "../components/header";
 import { authLogoutAction } from "../state/modules/auth/actions";
 
@@ -84,17 +82,13 @@ const SettingList = () => {
   const sectionData = [
     {
       left: t("version"),
-      right: (
-        <Text style={styles.listItemRightText}>{DeviceInfo.getVersion()}</Text>
-      ),
+      right: <Text style={styles.listItemRightText}>{DeviceInfo.getVersion()}</Text>,
       isDatePicker: false,
       onPress: () => {}
     },
     {
       left: t("notifications"),
-      right: (
-        <Switch value={notification} onValueChange={onChangeNotification} />
-      ),
+      right: <Switch value={notification} onValueChange={onChangeNotification} />,
       isDatePicker: false,
       onPress: () => {}
     }
@@ -105,11 +99,7 @@ const SettingList = () => {
   if (notification) {
     sectionData.push({
       left: "",
-      right: (
-        <Text style={styles.listItemRightText}>
-          {moment(date).format("LT")}
-        </Text>
-      ),
+      right: <Text style={styles.listItemRightText}>{moment(date).format("LT")}</Text>,
       isDatePicker: true,
       onPress: async () => {
         if (Platform.OS === "ios") {
@@ -148,11 +138,7 @@ const SettingList = () => {
             rightElement={item.right}
           />
           {item.isDatePicker && showPicker && Platform.OS === "ios" && (
-            <DatePickerIOS
-              date={date}
-              mode="time"
-              onDateChange={onDateChange}
-            />
+            <DatePickerIOS date={date} mode="time" onDateChange={onDateChange} />
           )}
         </>
       )}
@@ -185,7 +171,6 @@ const LogoutButton = ({ logoutAction }: { logoutAction: () => void }) => {
               text: t("logout"),
               onPress: () => {
                 logoutAction();
-                // firebase.auth().signOut();
               }
             }
           ],
@@ -202,24 +187,14 @@ const ScaleScreenHeader = () => {
     <>
       <ShapeHeader
         containerStyle={styles.headerContainer}
-        centerComponent={
-          <Text style={styles.headerTitle}>{t("settings")}</Text>
-        }
+        centerComponent={<Text style={styles.headerTitle}>{t("settings")}</Text>}
       />
       <View style={styles.headerDivider} />
     </>
   );
 };
 
-const ScaleScreen = ({
-  auth,
-  navigation,
-  logoutAction
-}: {
-  auth: AuthModel;
-  navigation: NavigationScreenProp<NavigationState>;
-  logoutAction: any;
-}) => {
+const ScaleScreen = ({ logoutAction }: { logoutAction: any }) => {
   return (
     <>
       <ScaleScreenHeader />

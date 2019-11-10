@@ -1,25 +1,41 @@
-import { all, fork, takeEvery, take, call, delay } from "redux-saga/effects";
+import { all, fork, takeEvery, take, call, delay, put } from "redux-saga/effects";
 import { eventChannel } from "redux-saga";
 import firebase from "react-native-firebase";
 import AuthActionTypes from "./types";
 import authChanged from "./firebase";
 import NavigationService from "../../../../NavigationService";
+import { fetchWeights } from "../health/actions";
 
 export function subscribe() {
   return eventChannel(emit => authChanged(emit));
 }
 
+const isSignedIn = (user: any) => !!user;
+
+export function* processSignedIn() {
+  yield put(fetchWeights());
+}
+
+const processSignedOut = () => {
+  NavigationService.navigate("Auth", {});
+};
+
 export function* subscribeToAuthChanges() {
   const channel = yield call(subscribe);
   while (true) {
     const action = yield take(channel);
-    NavigationService.navigate(action.payload.user ? "App" : "Auth", {});
+    if (isSignedIn(action.payload.user)) {
+      NavigationService.navigate("App", {});
+      yield fork(processSignedIn);
+    } else {
+      processSignedOut();
+    }
   }
 }
 
 export function* watchAuthFetch() {
   while (true) {
-    const { payload } = yield take(AuthActionTypes.AUTH_FETCH);
+    yield take(AuthActionTypes.AUTH_FETCH);
     yield fork(subscribeToAuthChanges);
   }
 }

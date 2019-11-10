@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useEffect } from "react";
+import React from "react";
 import { TouchableOpacity, View, StyleSheet } from "react-native";
 import { Icon, ListItem, Text } from "react-native-elements";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -13,10 +13,9 @@ import { BLACK, THEME_COLOR } from "../constants";
 
 import ShapeIcon from "../../resources/fonts/icon";
 
-import { fetchWeights } from "../state/modules/health/actions";
-import { HealthModel, HealthState } from "../state/modules/health/types";
+import { sortedHealthSelector } from "../state/modules/health/selector";
+import { HealthModel } from "../state/modules/health/types";
 import { deleteWeight } from "../services/firebase";
-import { AuthState } from "../state/modules/auth/types";
 import ShapeHeader from "../components/header";
 
 const hasNotch = DeviceInfo.hasNotch();
@@ -87,11 +86,7 @@ const STATUS_ICON = {
   }
 };
 
-const Empty = ({
-  navigation
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => {
+const Empty = ({ navigation }: { navigation: NavigationScreenProp<NavigationState> }) => {
   const { t } = useTranslation();
   return (
     <View style={styles.emptyContainer}>
@@ -144,27 +139,20 @@ const Content = ({
             <ListItem
               onPress={() =>
                 navigation.navigate("Scale", {
-                  type: "update",
-                  date: item.date.toDate(),
-                  weight: `${item.weight}`
-                })
-              }
+                  key: item.key
+                  // type: "update",
+                  // date: item.date.toDate(),
+                  // weight: `${item.weight}`
+                })}
               containerStyle={styles.listItem}
-              title={moment(item.date.toDate()).format("YYYY/MM/DD")}
+              title={moment(item.date).format("YYYY/MM/DD")}
               topDivider
-              rightTitle={
+              rightTitle={(
                 <View style={{ flexDirection: "row" }}>
-                  <Text
-                    style={styles.rightTitleText}
-                  >{`${item.weight}kg`}</Text>
-                  <ShapeIcon
-                    style={styles.icon}
-                    size={20}
-                    color={color}
-                    name={name}
-                  />
+                  <Text style={styles.rightTitleText}>{`${item.weight}kg`}</Text>
+                  <ShapeIcon style={styles.icon} size={20} color={color} name={name} />
                 </View>
-              }
+              )}
             />
           );
         }}
@@ -192,59 +180,46 @@ const Container = ({
   health,
   navigation
 }: {
-  health: HealthState;
+  health: HealthModel[];
   navigation: NavigationScreenProp<NavigationState>;
-}) => {
-  if (health.loading) {
-    return <></>;
-  }
-  return health.data.length ? (
-    <Content health={health.data} navigation={navigation} />
+}) =>
+  health.length ? (
+    <Content health={health} navigation={navigation} />
   ) : (
     <Empty navigation={navigation} />
   );
-};
 
 const HomeScreen = ({
   health,
-  navigation,
-  handleFetchWeights
-}: {
-  health: HealthState;
+  navigation
+}: // handleFetchWeights
+{
+  health: HealthModel[];
   navigation: NavigationScreenProp<NavigationState>;
-  handleFetchWeights: () => void;
+  // handleFetchWeights: () => void;
 }) => {
-  useEffect(() => {
-    handleFetchWeights();
-  }, []);
   const { t } = useTranslation();
 
   return (
     <View style={{ flex: 1 }}>
       <ShapeHeader
         containerStyle={styles.headerContainer}
-        centerComponent={
-          <Text style={styles.headerTitle}>{t("weightProgress")}</Text>
-        }
-        rightComponent={
+        centerComponent={<Text style={styles.headerTitle}>{t("weightProgress")}</Text>}
+        rightComponent={(
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Scale", { type: "create" });
+              navigation.navigate("Scale");
             }}
           >
             <Text style={styles.headerButtonText}>{t("add")}</Text>
           </TouchableOpacity>
-        }
+        )}
       />
       <Container health={health} navigation={navigation} />
     </View>
   );
 };
 
-export default connect(
-  ({ auth, health }: { auth: AuthState; health: HealthState }) => ({
-    auth,
-    health
-  }),
-  { handleFetchWeights: fetchWeights }
-)(HomeScreen);
+export default connect(state => ({
+  health: sortedHealthSelector(state)
+}))(HomeScreen);

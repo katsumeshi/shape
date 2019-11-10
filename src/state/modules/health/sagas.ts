@@ -1,66 +1,31 @@
-import { all, fork, put, take, takeEvery, cancelled } from "redux-saga/effects";
-import { eventChannel } from "redux-saga";
-import HelthActionTypes, { HealthModel } from "./types";
-import { healthChanged } from "../../../services/firebase";
-import AuthActionTypes from "../auth/types";
+import {
+  all, fork, put, take, takeEvery,
+} from 'redux-saga/effects';
+import { eventChannel, EventChannel } from 'redux-saga';
+import HelthActionTypes, { HealthMap } from './types';
+import { healthChanged } from '../../../services/firebase';
+import AuthActionTypes from '../auth/types';
+import { fetchWeightsSuccess } from './actions';
 
-function* handleFetch() {
-  const channel = eventChannel(emit =>
-    healthChanged((weights: HealthModel[]) => emit(weights))
-  );
+function* close(channel: EventChannel<any>) {
+  const { type } = yield take(AuthActionTypes.AUTH_LOG_OUT);
+  if (type === AuthActionTypes.AUTH_LOG_OUT) {
+    channel.close();
+  }
+}
+
+function* observeHealth() {
+  const channel = eventChannel((emit) => healthChanged((weights: HealthMap) => emit(weights)));
   while (true) {
-    const data = yield take(channel);
-    yield put({
-      type: HelthActionTypes.HEALTH_FETCH_SUCCESS,
-      payload: data
-    });
-
-    const action = yield take(AuthActionTypes.AUTH_LOG_OUT);
-    if (action.type === AuthActionTypes.AUTH_LOG_OUT) {
-      channel.close();
-    }
+    const results = yield take(channel);
+    yield put(fetchWeightsSuccess(results));
+    yield fork(close, channel);
   }
 }
 export function* watchFetchRequest() {
-  yield takeEvery(HelthActionTypes.HEALTH_FETCH, handleFetch);
+  yield takeEvery(HelthActionTypes.HEALTH_FETCH, observeHealth);
 }
 
-// function* handleUpdateWeight({ payload: { date, weight } }) {
-//   try {
-//     updateWeight(date, weight);
-//     updateWeightSuccess();
-//   } catch (error) {
-//     yield put({
-//       type: HelthActionTypes.HEALTH_UPDATE_ERROR,
-//       error
-//     });
-//   }
-// }
-
-// export function* watchUpdateWeight() {
-//   yield takeEvery(HelthActionTypes.HEALTH_UPDATE, handleUpdateWeight);
-// }
-
-// function* handleDeleteWeight({ payload: { date } }) {
-//   try {
-//     deleteWeight(date);
-//     deleteWeightSuccess();
-//   } catch (error) {
-//     yield put({
-//       type: HelthActionTypes.HEALTH_DELETE_ERROR,
-//       error
-//     });
-//   }
-// }
-
-// export function* watchDeleteWeight() {
-//   yield takeEvery(HelthActionTypes.HEALTH_DELETE, handleDeleteWeight);
-// }
-
 export default function* healthSaga() {
-  yield all([
-    fork(watchFetchRequest)
-    // fork(watchUpdateWeight),
-    // fork(watchDeleteWeight)
-  ]);
+  yield all([fork(watchFetchRequest)]);
 }

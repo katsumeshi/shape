@@ -7,10 +7,7 @@ const initialState = {
 };
 
 // reducer
-const authReducer = (
-  state: AuthState = initialState,
-  action: Action<TypeConstant> & PayloadAction<TypeConstant, AuthModel>
-): AuthState => {
+const authReducer = (state: AuthState = initialState, action: Action<TypeConstant> & PayloadAction<TypeConstant, AuthModel>): AuthState => {
   switch (action.type) {
     case AuthActionTypes.AUTH_FETCH:
       return { ...state, loading: true };

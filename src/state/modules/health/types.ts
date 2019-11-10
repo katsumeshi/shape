@@ -1,23 +1,30 @@
-import firebase, { RNFirebase } from "react-native-firebase";
+import firebase from "react-native-firebase";
 
+const toDate = (date: any) => {
+  if (date instanceof firebase.firestore.Timestamp) {
+    return date.toDate();
+  }
+  return date;
+};
 export class HealthModel {
   key: string;
 
   weight: number;
 
-  date: RNFirebase.firestore.Timestamp;
+  date: Date;
 
   constructor(key: string, data: any) {
     this.key = key;
-    this.date = data.date || firebase.firestore.Timestamp.fromMillis(0);
+
+    this.date = toDate(data.date) || new Date(0);
     this.weight = data.weight;
   }
 }
 
+export type HealthMap = Record<string, HealthModel>;
+
 export interface HealthState {
   readonly data: HealthModel[];
-  readonly loading: boolean;
-  readonly errors: [];
 }
 
 const HelthActionTypes = {

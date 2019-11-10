@@ -14,14 +14,14 @@ import {
 } from "react-native";
 import { Button, Icon, Input } from "react-native-elements";
 import { connect } from "react-redux";
-import { NavigationScreenProp, NavigationState } from "react-navigation";
 import { useTranslation } from "react-i18next";
+import { NavigationScreenProp, NavigationState } from "react-navigation";
 import DatePicker from "./datePicker";
 import { BLACK, THEME_COLOR } from "../../constants";
 import { updateWeight } from "../../services/firebase";
-import { AuthState } from "../../state/modules/auth/types";
-import { HealthState } from "../../state/modules/health/types";
 import ShapeHeader from "../../components/header";
+import { defaultHealthSelector } from "../../state/modules/health/selector";
+import { HealthModel } from "../../state/modules/health/types";
 
 const margin = 8;
 
@@ -101,9 +101,7 @@ const formatWeight = (text: string) => {
   return weight;
 };
 
-const calcWeight = (weight: string, add: number) => {
-  return `${(parseWeight(weight) * 10 + add * 10) / 10}`;
-};
+const calcWeight = (weight: string, add: number) => `${(parseWeight(weight) * 10 + add * 10) / 10}`;
 
 const ScaleRow = ({
   weight,
@@ -195,7 +193,7 @@ const ScaleScreenHeader = ({
   const { t } = useTranslation();
   return (
     <ShapeHeader
-      leftComponent={
+      leftComponent={(
         <TouchableOpacity
           style={styles.headerLeft}
           onPress={() => {
@@ -203,24 +201,13 @@ const ScaleScreenHeader = ({
           }}
         >
           <View style={{ top: -3 }}>
-            <Icon
-              type="font-awesome"
-              size={40}
-              color={THEME_COLOR}
-              name="angle-left"
-            />
+            <Icon type="font-awesome" size={40} color={THEME_COLOR} name="angle-left" />
           </View>
-          <Text style={{ left: 4, fontSize: 18, color: THEME_COLOR }}>
-            {t("back")}
-          </Text>
+          <Text style={{ left: 4, fontSize: 18, color: THEME_COLOR }}>{t("back")}</Text>
         </TouchableOpacity>
-      }
-      centerComponent={
-        <Text style={{ fontSize: 18, color: BLACK }}>
-          {t("weightProgress")}
-        </Text>
-      }
-      rightComponent={
+      )}
+      centerComponent={<Text style={{ fontSize: 18, color: BLACK }}>{t("weightProgress")}</Text>}
+      rightComponent={(
         <TouchableOpacity
           onPress={() => {
             if (isValid(weight)) {
@@ -231,13 +218,9 @@ const ScaleScreenHeader = ({
             }
           }}
         >
-          <Text
-            style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}
-          >
-            {t("save")}
-          </Text>
+          <Text style={{ fontSize: 18, fontWeight: "bold", color: THEME_COLOR }}>{t("save")}</Text>
         </TouchableOpacity>
-      }
+      )}
       containerStyle={{
         backgroundColor: "white"
       }}
@@ -245,31 +228,19 @@ const ScaleScreenHeader = ({
   );
 };
 
-const ScaleScreen = ({
-  navigation,
-  weight = 0
-}: {
+interface ScaleScreenProp {
   navigation: NavigationScreenProp<NavigationState>;
-  weight: number;
-}) => {
-  const type = navigation.getParam("type");
-  const defaultDate =
-    type === "create" ? new Date() : navigation.getParam("date");
-  const [date, onDateChange] = useState(defaultDate);
-  const defaultWeight: string =
-    type === "create" ? `${weight}` : `${navigation.getParam("weight")}`;
+  healthModel: HealthModel;
+}
 
-  const [newWeight, onWeightChange] = useState(defaultWeight);
-
+const ScaleScreen = ({ navigation, healthModel }: ScaleScreenProp) => {
+  const [date, onDateChange] = useState(healthModel.date);
+  const [newWeight, onWeightChange] = useState(`${healthModel.weight}`);
   const [showDatePicker, onShowDatePicker] = useState(false);
 
   return (
     <>
-      <ScaleScreenHeader
-        navigation={navigation}
-        date={date}
-        weight={parseWeight(newWeight)}
-      />
+      <ScaleScreenHeader navigation={navigation} date={date} weight={parseWeight(newWeight)} />
       <View style={{ borderColor: "lightgrey", borderWidth: 1, height: 1 }} />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <TouchableWithoutFeedback
@@ -280,11 +251,7 @@ const ScaleScreen = ({
           accessible={false}
         >
           <View style={styles.container}>
-            <DateRow
-              date={date}
-              onDateChange={onDateChange}
-              onShowDatePicker={onShowDatePicker}
-            />
+            <DateRow date={date} onDateChange={onDateChange} onShowDatePicker={onShowDatePicker} />
             <ScaleRow weight={newWeight} onWeightChange={onWeightChange} />
           </View>
         </TouchableWithoutFeedback>
@@ -305,9 +272,6 @@ const ScaleScreen = ({
   );
 };
 
-export default connect(
-  ({ auth, health }: { auth: AuthState; health: HealthState }) => ({
-    auth,
-    ...health.data[0]
-  })
-)(ScaleScreen);
+export default connect((state, props: ScaleScreenProp) => ({
+  healthModel: defaultHealthSelector(state, props.navigation.getParam("key"))
+}))(ScaleScreen);

@@ -1,9 +1,8 @@
 import moment from "moment";
-import firebase, { RNFirebase } from "react-native-firebase";
-import AsyncStorage from "@react-native-community/async-storage";
+import firebase from "react-native-firebase";
+import { QuerySnapshot } from "react-native-firebase/firestore";
 import Config from "../config";
-import { HealthModel } from "../state/modules/health/types";
-import { removeNotifications } from "../utils/notificationUtils";
+import { HealthModel, HealthMap } from "../state/modules/health/types";
 
 let unsubscribe = () => {};
 
@@ -24,20 +23,7 @@ export const subscribeDynamicLink = (email: string) => {
 
 let subscription = () => {};
 
-let map: { [id: string]: HealthModel } = {};
-
-const signOut = () => {
-  subscription();
-  map = {};
-  AsyncStorage.clear();
-  removeNotifications();
-};
-
-export const signInWithEmailAndPassword = async ({
-  email
-}: {
-  email: string;
-}) => {
+export const signInWithEmailAndPassword = async ({ email }: { email: string }) => {
   const actionCodeSettings = {
     url: Config.FIREBASE_URL,
     handleCodeInApp: true, // must always be true for sendSignInLinkToEmail
@@ -84,37 +70,24 @@ export const deleteWeight = (key: string) => {
     .delete();
 };
 
-export const healthChanged = (callback: (weights: HealthModel[]) => void) => {
-  subscription = healthRef().onSnapshot(
-    (snapshot: RNFirebase.firestore.QuerySnapshot) => {
-      const g = snapshot.docChanges
-        .map(change => {
-          const data = change.doc.data();
-          const key = change.doc.id;
-          console.warn(change.type);
-          switch (change.type) {
-            case "added":
-            case "modified":
-              return new HealthModel(key, data);
-            default:
-              return null;
+export const healthChanged = (callback: (weights: HealthMap) => void) => {
+  const map: HealthMap = {};
+  subscription = healthRef().onSnapshot((snapshot: QuerySnapshot) => {
+    if (!snapshot.metadata.hasPendingWrites) {
+      snapshot.docChanges.forEach(change => {
+        switch (change.type) {
+          case "added":
+          case "modified": {
+            const health = new HealthModel(change.doc.id, change.doc.data());
+            map[health.key] = health;
+            break;
           }
-        })
-        .reduce(
-          (a, b) => {
-            if (b) {
-              return a.concat(b);
-            }
-            return a;
-          },
-          [] as HealthModel[]
-        )
-        .sort((a, b) => b.date.toMillis() - a.date.toMillis());
-
-      if (snapshot.docChanges.length !== 0) {
-        callback(g);
-      }
+          default:
+            delete map[change.doc.id];
+        }
+      });
+      callback(map);
     }
-  );
+  });
   return subscription;
 };
