@@ -47,8 +47,7 @@ target 'shape' do
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
   
-  pod 'GoogleSignIn', '~> 4.4.0'
-  
+  pod 'GoogleSignIn'  
   pod 'Fabric', '~> 1.10.1'
   pod 'Crashlytics', '~> 3.13.1'
 

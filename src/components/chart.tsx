@@ -1,13 +1,11 @@
-import {
-  VictoryAxis, VictoryChart, VictoryLine, VictoryTheme,
-} from 'victory-native';
-import moment from 'moment';
-import { View, Dimensions } from 'react-native';
-import React from 'react';
-import { THEME_COLOR } from '../constants';
-import { HealthModel } from '../state/modules/health/types';
+import { VictoryAxis, VictoryChart, VictoryLine, VictoryTheme } from "victory-native";
+import moment from "moment";
+import { View, Dimensions } from "react-native";
+import React from "react";
+import { THEME_COLOR } from "../constants";
+import { HealthModel } from "../state/modules/health/types";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const Chart = ({ health }: { health: HealthModel[] }) => (
   <View style={{ width }}>
@@ -17,7 +15,7 @@ const Chart = ({ health }: { health: HealthModel[] }) => (
           top: 20,
           left: 50,
           bottom: 40,
-          right: 10,
+          right: 10
         }}
         theme={VictoryTheme.material}
         height={250}
@@ -27,11 +25,11 @@ const Chart = ({ health }: { health: HealthModel[] }) => (
           <VictoryLine
             style={{
               data: { stroke: THEME_COLOR },
-              parent: { border: '1px solid #ccc' },
+              parent: { border: "1px solid #ccc" }
             }}
-            data={[...health].reverse().map((r) => ({
+            data={[...health].reverse().map(r => ({
               x: `${moment(r.date).month() + 1}/${moment(r.date).date()}`,
-              y: r.weight,
+              y: r.weight
             }))}
           />
         )}
