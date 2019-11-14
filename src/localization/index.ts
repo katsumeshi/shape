@@ -38,8 +38,7 @@ const i18nSetup = () => {
             continueWithGoogle: "Continue with Google",
             enterValidEmail: "Please enter a valid email address",
             enterEmail: "Please enter an email address",
-            sentAuthEmail:
-              "An authentication email has been sent. Please check your email inbox.",
+            sentAuthEmail: "An authentication email has been sent. Please check your email inbox.",
             authError:
               "You are registered with another authentication method. Please log in with another authentication method.",
             or: "OR",
@@ -49,7 +48,11 @@ const i18nSetup = () => {
             logoutConfirmation: "Are you sure to log out ?",
             notifications: "Notifications",
             version: "Version",
-            home: "Home"
+            home: "Home",
+            goal: "Goal",
+            loseWeight: "Lose Weight",
+            maintainWeight: "Maintain Weight",
+            gainWeight: "Gain Weight"
           }
         },
         ja: {
@@ -73,8 +76,7 @@ const i18nSetup = () => {
             enterValidEmail: "正しいEメールを入力してください",
             enterEmail: "Eメールを入力してください",
             sentAuthEmail: "認証メールを送信しました。メールをご確認下さい。",
-            authError:
-              "別の認証方法で登録されています。他の認証方法でログインして下さい。",
+            authError: "別の認証方法で登録されています。他の認証方法でログインして下さい。",
             or: "または",
             getStarted: "アプリを始める",
             settings: "設定",
@@ -82,7 +84,11 @@ const i18nSetup = () => {
             logoutConfirmation: "本当にログアウトしますか？",
             notifications: "通知",
             version: "バージョン",
-            home: "ホーム"
+            home: "ホーム",
+            goal: "ゴール",
+            loseWeight: "増量",
+            maintainWeight: "維持",
+            gainWeight: "減量"
           }
         }
       }

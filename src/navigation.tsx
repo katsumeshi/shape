@@ -15,6 +15,7 @@ import LoginScreen from "./screens/loginScreen";
 import ScaleScreen from "./screens/scale/scaleScreen";
 import StartScreen from "./screens/startScreen";
 import SettingScreen from "./screens/settingScreen";
+import GoalScreen from "./screens/onboarding/goalScreen";
 import { THEME_COLOR } from "./constants";
 
 const MainStack = createStackNavigator(
@@ -76,8 +77,14 @@ const TabNavigator = createBottomTabNavigator(
 export const AuthStack = createStackNavigator(
   { Start: StartScreen, Login: LoginScreen },
   {
-    headerMode: "none",
-    initialRouteName: "Start"
+    headerMode: "none"
+  }
+);
+
+export const OnboardingStack = createStackNavigator(
+  { GoalScreen },
+  {
+    headerMode: "none"
   }
 );
 
@@ -86,7 +93,8 @@ const AppNavigator = createAppContainer(
     {
       AuthLoading: AuthLoadingScreen,
       App: TabNavigator,
-      Auth: AuthStack
+      Auth: AuthStack,
+      Onboarding: OnboardingStack
     },
     {
       initialRouteName: "AuthLoading"

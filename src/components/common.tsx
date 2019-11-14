@@ -59,3 +59,34 @@ export const Button = (props: Props) => {
     </View>
   );
 };
+
+interface ToggleButtonProps {
+  title: string;
+  color?: string;
+  backgroundColor?: string;
+  style?: object;
+  onPress?: () => void;
+  iconComp?: JSX.Element;
+  disabled?: boolean;
+  on: boolean;
+}
+
+export const ToggleButton = (props: ToggleButtonProps) => {
+  const { title, on, backgroundColor = THEME_COLOR, style, onPress, iconComp, disabled } = props;
+  return (
+    <View style={[styles.buttonContainer, style]}>
+      <TouchableOpacity
+        style={{
+          ...styles.button,
+          backgroundColor: on ? backgroundColor : "white",
+          borderColor: on ? "white" : backgroundColor
+        }}
+        onPress={onPress}
+        disabled={disabled}
+      >
+        <View style={{ position: "absolute", left: "16%" }}>{iconComp}</View>
+        <Text style={{ ...styles.text, color: on ? "white" : backgroundColor }}>{title}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};

@@ -47,7 +47,7 @@ export const signInWithEmailAndPassword = async ({ email }: { email: string }) =
   }
 };
 
-const usersRef = () => {
+export const usersRef = () => {
   const user = firebase.auth().currentUser;
   const userId = user ? user.uid : "";
   return firebase

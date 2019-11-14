@@ -5,6 +5,7 @@ import AuthActionTypes from "./types";
 import authChanged from "./firebase";
 import NavigationService from "../../../../NavigationService";
 import { fetchWeights } from "../health/actions";
+import { fetchGeneral } from "../general/actions";
 
 export function subscribe() {
   return eventChannel(emit => authChanged(emit));
@@ -14,6 +15,7 @@ const isSignedIn = (user: any) => !!user;
 
 export function* processSignedIn() {
   yield put(fetchWeights());
+  yield put(fetchGeneral());
 }
 
 const processSignedOut = () => {
