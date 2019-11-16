@@ -4,7 +4,7 @@ import { View, StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
 import { ToggleButton } from "../../components/common";
-import { DietType } from "../../state/modules/general/types";
+import { ActiveLevel } from "../../state/modules/general/types";
 import { ShapeHeader, HeaderBack } from "../../components/header";
 import { THEME_COLOR } from "../../constants";
 import { Navigation } from "../../state/type";
@@ -34,45 +34,58 @@ const GoalScreenHeader = ({
   navigation: NavigationScreenProp<NavigationState>;
 }) => {
   const { t } = useTranslation();
-  return <ShapeHeader leftComponent={<HeaderBack navigation={navigation} />} title={t("goal")} />;
+  return (
+    <ShapeHeader
+      leftComponent={<HeaderBack navigation={navigation} />}
+      title={t("Activity Level")}
+    />
+  );
 };
 
 interface Props {
   navigation: Navigation;
 }
 
-const GoalScreen = ({ navigation }: Props) => {
+const ActivityLevelScreen = ({ navigation }: Props) => {
   const { t } = useTranslation();
-  const [diet, setDiet] = useState(DietType.None);
-  const navigate = (type: DietType) => () => {
-    setDiet(type);
-    navigation.navigate("ActivityLevelScreen");
+  const [activeLevel, setActiveLevel] = useState(ActiveLevel.None);
+  const navigate = (a: ActiveLevel) => () => {
+    setActiveLevel(a);
+    navigation.navigate("ProfileScreen");
   };
   return (
     <>
       <GoalScreenHeader navigation={navigation} />
       <View style={[styles.container]}>
         <ToggleButton
-          title={t("loseWeight")}
+          title={t("Not Very Active")}
           style={styles.button}
-          on={diet === DietType.Lose}
-          onPress={navigate(DietType.Lose)}
+          on={activeLevel === ActiveLevel.NotVeryActive}
+          onPress={navigate(ActiveLevel.NotVeryActive)}
         />
         <ToggleButton
-          title={t("maintainWeight")}
+          title={t("Lightly Active")}
           style={styles.button}
-          on={diet === DietType.Maintain}
-          onPress={navigate(DietType.Maintain)}
+          on={activeLevel === ActiveLevel.LightlyActive}
+          onPress={navigate(ActiveLevel.LightlyActive)}
         />
         <ToggleButton
-          title={t("gainWeight")}
+          title={t("Active")}
           style={styles.button}
-          on={diet === DietType.Gain}
-          onPress={navigate(DietType.Gain)}
+          on={activeLevel === ActiveLevel.Active}
+          onPress={navigate(ActiveLevel.Active)}
+        />
+        <ToggleButton
+          title={t("Very Active")}
+          style={styles.button}
+          on={activeLevel === ActiveLevel.VeryActive}
+          onPress={navigate(ActiveLevel.VeryActive)}
         />
       </View>
     </>
   );
 };
 
-export default connect()(GoalScreen);
+export default connect()(ActivityLevelScreen);
+//   ({ auth }: { auth: AuthState }) => ({ auth })
+// { fetchAuth: fetchAuthStatus }

@@ -21,8 +21,8 @@ import notificationSet from "../utils/notificationUtils";
 import { Button } from "../components/common";
 import { BLACK } from "../constants";
 import { AuthState } from "../state/modules/auth/types";
-import ShapeHeader from "../components/header";
 import { authLogoutAction } from "../state/modules/auth/actions";
+import { ShapeHeader } from "../components/header";
 
 const styles = StyleSheet.create({
   button: {
@@ -185,10 +185,7 @@ const ScaleScreenHeader = () => {
   const { t } = useTranslation();
   return (
     <>
-      <ShapeHeader
-        containerStyle={styles.headerContainer}
-        centerComponent={<Text style={styles.headerTitle}>{t("settings")}</Text>}
-      />
+      <ShapeHeader containerStyle={styles.headerContainer} title={t("settings")} />
       <View style={styles.headerDivider} />
     </>
   );

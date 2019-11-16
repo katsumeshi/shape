@@ -1,10 +1,18 @@
 import isEmpty from "lodash/isEmpty";
 
 export enum DietType {
-  None = -1,
+  None,
   Lose,
   Maintain,
   Gain
+}
+
+export enum ActiveLevel {
+  None,
+  NotVeryActive,
+  LightlyActive,
+  Active,
+  VeryActive
 }
 
 export class General {

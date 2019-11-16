@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  DatePickerIOS,
-  Dimensions,
-  View,
-  StyleSheet,
-  Modal
-} from "react-native";
+import { DatePickerIOS, Dimensions, View, StyleSheet, Modal } from "react-native";
 import { Button } from "react-native-elements";
 import { useTranslation } from "react-i18next";
 
@@ -31,13 +25,15 @@ const DatePicker = ({
   onCancel,
   onDone,
   visible,
-  maximumDate
+  maximumDate,
+  minimumDate
 }: {
   defaultDate: Date;
   onCancel: () => void;
   onDone: (newDate: Date) => void;
   visible: boolean;
   maximumDate?: Date;
+  minimumDate?: Date;
 }) => {
   const [date, onDate] = useState(defaultDate);
   const { t } = useTranslation();
@@ -48,11 +44,7 @@ const DatePicker = ({
           <View style={{ backgroundColor: "rgba(0, 0, 0, 0.03)" }}>
             <View style={styles.header}>
               <Button title={t("cancel")} type="clear" onPress={onCancel} />
-              <Button
-                title={t("done")}
-                type="clear"
-                onPress={() => onDone(date)}
-              />
+              <Button title={t("done")} type="clear" onPress={() => onDone(date)} />
             </View>
           </View>
           <DatePickerIOS
@@ -61,6 +53,7 @@ const DatePicker = ({
             onDateChange={(newDate: Date) => {
               onDate(newDate);
             }}
+            minimumDate={minimumDate}
             maximumDate={maximumDate}
           />
         </View>

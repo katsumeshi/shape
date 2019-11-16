@@ -17,11 +17,11 @@ import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
 import DatePicker from "./datePicker";
-import { BLACK, THEME_COLOR } from "../../constants";
+import { THEME_COLOR } from "../../constants";
 import { updateWeight } from "../../services/firebase";
-import ShapeHeader from "../../components/header";
 import { defaultHealthSelector } from "../../state/modules/health/selector";
 import { HealthModel } from "../../state/modules/health/types";
+import { ShapeHeader } from "../../components/header";
 
 const margin = 8;
 
@@ -206,7 +206,7 @@ const ScaleScreenHeader = ({
           <Text style={{ left: 4, fontSize: 18, color: THEME_COLOR }}>{t("back")}</Text>
         </TouchableOpacity>
       )}
-      centerComponent={<Text style={{ fontSize: 18, color: BLACK }}>{t("weightProgress")}</Text>}
+      title={t("weightProgress")}
       rightComponent={(
         <TouchableOpacity
           onPress={() => {

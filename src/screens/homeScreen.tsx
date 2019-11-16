@@ -16,7 +16,7 @@ import ShapeIcon from "../../resources/fonts/icon";
 import { sortedHealthSelector } from "../state/modules/health/selector";
 import { HealthModel } from "../state/modules/health/types";
 import { deleteWeight } from "../services/firebase";
-import ShapeHeader from "../components/header";
+import { ShapeHeader } from "../components/header";
 
 const hasNotch = DeviceInfo.hasNotch();
 
@@ -204,7 +204,7 @@ const HomeScreen = ({
     <View style={{ flex: 1 }}>
       <ShapeHeader
         containerStyle={styles.headerContainer}
-        centerComponent={<Text style={styles.headerTitle}>{t("weightProgress")}</Text>}
+        title={t("weightProgress")}
         rightComponent={(
           <TouchableOpacity
             onPress={() => {

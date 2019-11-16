@@ -1,5 +1,5 @@
 import { Formik, FormikProps } from "formik";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Alert,
   Image,
@@ -18,14 +18,14 @@ import { connect } from "react-redux";
 import * as Yup from "yup";
 import { NavigationScreenProp, NavigationState } from "react-navigation";
 import { useTranslation } from "react-i18next";
-import i18next, { TFunction } from "i18next";
+import { TFunction } from "i18next";
 import { Button } from "../components/common";
 import Config from "../config";
 import { THEME_COLOR } from "../constants";
 
 import { signInWithEmailAndPassword } from "../services/firebase";
-import { AuthState, AuthModel } from "../state/modules/auth/types";
-import ShapeHeader from "../components/header";
+import { AuthState } from "../state/modules/auth/types";
+import { ShapeHeader } from "../components/header";
 
 const styles = StyleSheet.create({
   button: {
@@ -137,10 +137,7 @@ const EmailField = () => {
 
 const facebookLogin = async (t: TFunction) => {
   try {
-    const result = await LoginManager.logInWithPermissions([
-      "public_profile",
-      "email"
-    ]);
+    const result = await LoginManager.logInWithPermissions(["public_profile", "email"]);
 
     if (result.isCancelled) {
       throw new Error("User cancelled request");
@@ -151,9 +148,7 @@ const facebookLogin = async (t: TFunction) => {
     if (!data) {
       throw new Error("Something went wrong obtaining the users access token");
     }
-    const credential = firebase.auth.FacebookAuthProvider.credential(
-      data.accessToken
-    );
+    const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
     await firebase.auth().signInWithCredential(credential);
   } catch (e) {
     if (e.code === "auth/account-exists-with-different-credential") {
@@ -198,9 +193,7 @@ const GoogleLoginButton = () => {
       borderColor="#E0E0E0"
       onPress={googleSignIn}
       style={styles.button}
-      iconComp={
-        <Image source={require("../../resources/images/logoGoogle.png")} />
-      }
+      iconComp={<Image source={require("../../resources/images/logoGoogle.png")} />}
     />
   );
 };
@@ -226,7 +219,7 @@ const LoginScreenHeader = ({
   return (
     <>
       <ShapeHeader
-        leftComponent={
+        leftComponent={(
           <TouchableOpacity
             style={styles.headerLeft}
             onPress={() => {
@@ -234,19 +227,12 @@ const LoginScreenHeader = ({
             }}
           >
             <View style={styles.headerLeftIcon}>
-              <Icon
-                type="font-awesome"
-                size={40}
-                color={THEME_COLOR}
-                name="angle-left"
-              />
+              <Icon type="font-awesome" size={40} color={THEME_COLOR} name="angle-left" />
             </View>
             <Text style={styles.headerLeftText}>{t("back")}</Text>
           </TouchableOpacity>
-        }
-        centerComponent={
-          <Text style={styles.headerTitle}>{t("signupOrLogin")}</Text>
-        }
+        )}
+        title={t("signupOrLogin")}
         containerStyle={{
           backgroundColor: "white"
         }}
@@ -255,13 +241,7 @@ const LoginScreenHeader = ({
   );
 };
 
-const LoginScreen = ({
-  navigation,
-  auth
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-  auth: AuthModel;
-}) => {
+const LoginScreen = ({ navigation }: { navigation: NavigationScreenProp<NavigationState> }) => {
   return (
     <View style={{ flex: 1 }}>
       <LoginScreenHeader navigation={navigation} />

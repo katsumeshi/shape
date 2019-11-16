@@ -1,13 +1,34 @@
 import React from "react";
-import { Header, HeaderProps } from "react-native-elements";
+import { Header, HeaderProps, Icon } from "react-native-elements";
 import firebase from "react-native-firebase";
-import { View, Platform } from "react-native";
+import { View, Platform, TouchableOpacity, StyleSheet, Text } from "react-native";
+import { useTranslation } from "react-i18next";
 import Config from "../config";
+import { THEME_COLOR } from "../constants";
 
 const { Banner } = firebase.admob;
 const { AdRequest } = firebase.admob;
 const request = new AdRequest();
 request.addKeyword("foobar");
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 60
+  },
+  button: {
+    marginHorizontal: 16,
+    marginBottom: 8
+  },
+  checkbox: { height: 60 },
+  headerLeft: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  headerLeftIcon: { top: -3, marginRight: 8 },
+  headerLeftText: { fontSize: 18, color: THEME_COLOR },
+  headerTitle: { fontSize: 18, color: "black" }
+});
 
 const unitId =
   Platform.OS === "ios"
@@ -16,26 +37,23 @@ const unitId =
 
 interface ShapeHeaderProps {
   displayHeader?: boolean;
+  title: string;
 }
 
 type Props = HeaderProps & ShapeHeaderProps;
 
-const ShapeHeader = (props: Props) => {
-  const {
-    leftComponent,
-    centerComponent,
-    containerStyle,
-    rightComponent,
-    displayHeader = true
-  } = props;
+export const ShapeHeader = (props: Props) => {
+  const { leftComponent, title, rightComponent, displayHeader = true } = props;
   return (
     <>
       {displayHeader && (
         <>
           <Header
             leftComponent={leftComponent}
-            centerComponent={centerComponent}
-            containerStyle={containerStyle}
+            centerComponent={<Text style={styles.headerTitle}>{title}</Text>}
+            containerStyle={{
+              backgroundColor: "white"
+            }}
             rightComponent={rightComponent}
           />
           <View style={{ height: 2, backgroundColor: "lightgrey" }} />
@@ -55,4 +73,19 @@ const ShapeHeader = (props: Props) => {
   );
 };
 
-export default ShapeHeader;
+export const HeaderBack = ({ navigation }: any) => {
+  const { t } = useTranslation();
+  return (
+    <TouchableOpacity
+      style={styles.headerLeft}
+      onPress={() => {
+        navigation.goBack();
+      }}
+    >
+      <View style={styles.headerLeftIcon}>
+        <Icon type="font-awesome" size={40} color={THEME_COLOR} name="angle-left" />
+      </View>
+      <Text style={styles.headerLeftText}>{t("back")}</Text>
+    </TouchableOpacity>
+  );
+};

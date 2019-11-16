@@ -16,6 +16,9 @@ import ScaleScreen from "./screens/scale/scaleScreen";
 import StartScreen from "./screens/startScreen";
 import SettingScreen from "./screens/settingScreen";
 import GoalScreen from "./screens/onboarding/goalScreen";
+import ActivityLevelScreen from "./screens/onboarding/activityLevelScreen";
+import ProfileScreen from "./screens/onboarding/profileScreen";
+
 import { THEME_COLOR } from "./constants";
 
 const MainStack = createStackNavigator(
@@ -82,7 +85,7 @@ export const AuthStack = createStackNavigator(
 );
 
 export const OnboardingStack = createStackNavigator(
-  { GoalScreen },
+  { GoalScreen, ActivityLevelScreen, ProfileScreen },
   {
     headerMode: "none"
   }
