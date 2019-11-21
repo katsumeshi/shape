@@ -5,6 +5,7 @@ import { View, Platform, TouchableOpacity, StyleSheet, Text } from "react-native
 import { useTranslation } from "react-i18next";
 import Config from "../config";
 import { THEME_COLOR } from "../constants";
+import NavigationService from "../../NavigationService";
 
 const { Banner } = firebase.admob;
 const { AdRequest } = firebase.admob;
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   headerLeftIcon: { top: -3, marginRight: 8 },
+  headerRightIcon: { top: -3, marginLeft: 8 },
   headerLeftText: { fontSize: 18, color: THEME_COLOR },
   headerTitle: { fontSize: 18, color: "black" }
 });
@@ -73,19 +75,31 @@ export const ShapeHeader = (props: Props) => {
   );
 };
 
-export const HeaderBack = ({ navigation }: any) => {
+export const HeaderBack = () => {
   const { t } = useTranslation();
   return (
     <TouchableOpacity
       style={styles.headerLeft}
       onPress={() => {
-        navigation.goBack();
+        NavigationService.goBack();
       }}
     >
       <View style={styles.headerLeftIcon}>
         <Icon type="font-awesome" size={40} color={THEME_COLOR} name="angle-left" />
       </View>
       <Text style={styles.headerLeftText}>{t("back")}</Text>
+    </TouchableOpacity>
+  );
+};
+
+export const HeaderNext = ({ onNext }: { onNext: () => void }) => {
+  const { t } = useTranslation();
+  return (
+    <TouchableOpacity style={styles.headerLeft} onPress={onNext}>
+      <Text style={styles.headerLeftText}>{t("next")}</Text>
+      <View style={styles.headerRightIcon}>
+        <Icon type="font-awesome" size={40} color={THEME_COLOR} name="angle-right" />
+      </View>
     </TouchableOpacity>
   );
 };

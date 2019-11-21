@@ -1,76 +1,201 @@
-import React, { useState } from "react";
+import React, { useState, useRef, forwardRef, useImperativeHandle } from "react";
 import { connect } from "react-redux";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text, Picker, DatePickerIOS } from "react-native";
 import { useTranslation } from "react-i18next";
-import { NavigationScreenProp, NavigationState } from "react-navigation";
-import { ToggleButton, DateButton } from "../../components/common";
+import moment from "moment";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import range from "lodash/range";
+import get from "lodash/get";
+import { ToggleButton } from "../../components/common";
 import { ActiveLevel } from "../../state/modules/general/types";
-import { ShapeHeader, HeaderBack } from "../../components/header";
-import { THEME_COLOR } from "../../constants";
+import { ShapeHeader, HeaderBack, HeaderNext } from "../../components/header";
 import { Navigation } from "../../state/type";
+import NavigationService from "../../../NavigationService";
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 60
+    flex: 1,
+    justifyContent: "center"
   },
   button: {
     marginHorizontal: 16,
     marginBottom: 8
   },
-  checkbox: { height: 60 },
-  headerLeft: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  headerLeftIcon: { top: -3, marginRight: 8 },
-  headerLeftText: { fontSize: 18, color: THEME_COLOR },
-  headerTitle: { fontSize: 18, color: "black" }
+  title: {
+    textAlign: "center",
+    fontSize: 16,
+    marginVertical: 16
+  }
 });
-
-const GoalScreenHeader = ({
-  navigation
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => {
-  const { t } = useTranslation();
-  return (
-    <ShapeHeader leftComponent={<HeaderBack navigation={navigation} />} title={t("Profile")} />
-  );
-};
 
 interface Props {
   navigation: Navigation;
 }
 
-const ProfileScreen = ({ navigation }: Props) => {
-  const { t } = useTranslation();
-  const [activeLevel, setActiveLevel] = useState(ActiveLevel.None);
+const Field = ({
+  onShowPicker,
+  title,
+  value
+}: {
+  onShowPicker: () => void;
+  title: string;
+  value: string;
+}) => (
+  <View
+    style={{
+      marginHorizontal: 16,
+      marginVertical: 8
+    }}
+  >
+    <TouchableOpacity
+      style={{
+        flexDirection: "row",
+        borderBottomWidth: 1,
+        borderBottomColor: "lightgray",
+        justifyContent: "space-between"
+      }}
+      onPress={onShowPicker}
+    >
+      <Text style={{ fontWeight: "bold", color: "dimgray", marginBottom: 4 }}>
+        {title.toLocaleUpperCase()}
+      </Text>
+      <Text>{value}</Text>
+    </TouchableOpacity>
+  </View>
+);
+
+const BirthdayPicker = forwardRef(({ title }: { title: string }, ref) => {
   const [date, onDateChange] = useState(new Date(0));
-  const navigate = (lebel: ActiveLevel) => () => {
-    setActiveLevel(lebel);
-    navigation.navigate("Profile");
-  };
+  const [show, onShowPicker] = useState(false);
+  useImperativeHandle(ref, () => ({ value: date }));
   return (
     <>
-      <GoalScreenHeader navigation={navigation} />
+      <Field
+        onShowPicker={() => onShowPicker(!show)}
+        title={title}
+        value={moment(date).format("LL")}
+      />
+      {show && (
+        <DatePickerIOS
+          style={{
+            marginHorizontal: 16
+          }}
+          mode="date"
+          date={date}
+          onDateChange={onDateChange}
+          minimumDate={new Date(1900, 1, 1)}
+          maximumDate={new Date()}
+        />
+      )}
+    </>
+  );
+});
+
+const HeightPicker = forwardRef(({ title }: { title: string }, ref) => {
+  const [height, onChangeHeight] = useState(160);
+  const [show, onShowPicker] = useState(false);
+  useImperativeHandle(ref, () => ({ value: height }));
+  return (
+    <>
+      <Field onShowPicker={() => onShowPicker(!show)} title={title} value={`${height} cm`} />
+      {show && (
+        <View style={{ flexDirection: "row", marginHorizontal: 16 }}>
+          <Picker
+            selectedValue={height}
+            onValueChange={itemValue => {
+              onChangeHeight(itemValue);
+            }}
+            style={{ width: "100%" }}
+          >
+            {range(120, 221).map(v => (
+              <Picker.Item label={`${v}`} value={v} />
+            ))}
+          </Picker>
+        </View>
+      )}
+    </>
+  );
+});
+
+const WeightPicker = forwardRef(({ title }: { title: string }, ref) => {
+  const [int, onChangeInt] = useState(50);
+  const [float, onChangeFloat] = useState(0);
+  const [show, onShowPicker] = useState(false);
+  useImperativeHandle(ref, () => ({ value: parseFloat(`${int}.${float}`) }));
+  return (
+    <>
+      <Field onShowPicker={() => onShowPicker(!show)} title={title} value={`${int}.${float} kg`} />
+      {show && (
+        <View style={{ flexDirection: "row", marginHorizontal: 16 }}>
+          <Picker
+            style={{ width: "50%" }}
+            selectedValue={int}
+            onValueChange={itemValue => onChangeInt(itemValue)}
+          >
+            {range(30, 400).map(v => (
+              <Picker.Item label={`${v}`} value={v} />
+            ))}
+          </Picker>
+          <Picker
+            style={{ width: "50%" }}
+            selectedValue={float}
+            onValueChange={itemValue => onChangeFloat(itemValue)}
+          >
+            {range(0, 10).map(v => (
+              <Picker.Item label={`.${v}`} value={v} />
+            ))}
+          </Picker>
+        </View>
+      )}
+    </>
+  );
+});
+
+const ProfileScreen = ({ navigation }: Props) => {
+  const { t } = useTranslation();
+  const [gender, onChangeGender] = useState(1);
+  const heightRef = useRef(null);
+  const birthdayRef = useRef(null);
+  const weightRef = useRef(null);
+  const goalRef = useRef(null);
+  return (
+    <>
+      <ShapeHeader
+        leftComponent={<HeaderBack />}
+        title={t("Profile")}
+        rightComponent={(
+          <HeaderNext
+            onNext={() =>
+              NavigationService.navigate("CompleteScreen", {
+                ...navigation.state.params,
+                height: get(heightRef, "current.value", 0),
+                weight: get(weightRef, "current.value", 0),
+                goal: get(goalRef, "current.value", 0),
+                birthday: get(birthdayRef, "current.value", new Date())
+              })}
+          />
+        )}
+      />
       <View style={[styles.container]}>
-        <View style={[{ flexDirection: "row" }, styles.button]}>
+        <Text style={styles.title}>{t("gender")}</Text>
+        <View style={[{ flexDirection: "row", marginBottom: 40, marginHorizontal: 16 }]}>
           <ToggleButton
-            title={t("Male")}
-            style={{ flex: 1 }}
-            on={activeLevel === ActiveLevel.NotVeryActive}
-            onPress={navigate(ActiveLevel.NotVeryActive)}
+            title={t("male")}
+            style={{ flex: 1, marginRight: 4 }}
+            on={gender === ActiveLevel.NotVeryActive}
+            onPress={() => onChangeGender(ActiveLevel.NotVeryActive)}
           />
           <ToggleButton
-            title={t("Female")}
-            style={{ flex: 1 }}
-            on={activeLevel === ActiveLevel.LightlyActive}
-            onPress={navigate(ActiveLevel.LightlyActive)}
+            title={t("female")}
+            style={{ flex: 1, marginLeft: 4 }}
+            on={gender === ActiveLevel.LightlyActive}
+            onPress={() => onChangeGender(ActiveLevel.LightlyActive)}
           />
         </View>
-        <DateButton style={styles.button} date={date} onDateChange={onDateChange} />
-        {/* <Button title={t("111111")} style={styles.button} onPress={navigate(ActiveLevel.Active)} /> */}
+        <BirthdayPicker title={t("birthday")} ref={birthdayRef} />
+        <HeightPicker title={t("height")} ref={heightRef} />
+        <WeightPicker title={t("weight")} ref={weightRef} />
+        <WeightPicker title={t("goal")} ref={goalRef} />
       </View>
     </>
   );

@@ -41,28 +41,24 @@ interface Props {
   onPress?: () => void;
   iconComp?: JSX.Element;
   disabled?: boolean;
+  border?: boolean;
 }
 
 export const Button = (props: Props) => {
-  const {
-    title,
-    color = "white",
-    backgroundColor = THEME_COLOR,
-    borderColor = "transparent",
-    style,
-    onPress,
-    iconComp,
-    disabled
-  } = props;
+  const { title, color = THEME_COLOR, border, style, onPress, iconComp, disabled } = props;
   return (
     <View style={[style]}>
       <TouchableOpacity
-        style={{ ...styles.button, backgroundColor, borderColor }}
+        style={{
+          ...styles.button,
+          backgroundColor: border ? "transparent" : color,
+          borderColor: border ? color : "transparent"
+        }}
         onPress={onPress}
         disabled={disabled}
       >
         <View style={{ position: "absolute", left: "16%" }}>{iconComp}</View>
-        <Text style={{ ...styles.text, color }}>{title}</Text>
+        <Text style={{ ...styles.text, color: border ? color : "white" }}>{title}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -102,19 +98,19 @@ export const ToggleButton = (props: ToggleButtonProps) => {
 export const DateButton = ({
   date,
   style,
-  //   onShowDatePicker,
+  border,
   onDateChange
 }: {
   date: Date;
   style: any;
-  //   onShowDatePicker: (show: boolean) => void;
+  border?: any;
   onDateChange: (date: Date) => void;
 }) => {
   const [showDatePicker, onShowDatePicker] = useState(false);
   return (
     <View style={style}>
       <Button
-        // type="outline"
+        border={border}
         title={`${moment(date).format("YYYY/MM/DD")}`}
         onPress={async () => {
           if (Platform.OS === "ios") {

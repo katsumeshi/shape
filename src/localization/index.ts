@@ -52,7 +52,17 @@ const i18nSetup = () => {
             goal: "Goal",
             loseWeight: "Lose Weight",
             maintainWeight: "Maintain Weight",
-            gainWeight: "Gain Weight"
+            gainWeight: "Gain Weight",
+            next: "Next",
+            male: "Male",
+            female: "Female",
+            gender: "Gender",
+            birthday: "Birthday",
+            notVeryActive: "Not Very Active",
+            lightlyActive: "Lightly Active",
+            active: "Active",
+            veryActive: "Very Active",
+            activityLevel: "Activity Level"
           }
         },
         ja: {
@@ -88,7 +98,17 @@ const i18nSetup = () => {
             goal: "ゴール",
             loseWeight: "増量",
             maintainWeight: "維持",
-            gainWeight: "減量"
+            gainWeight: "減量",
+            next: "次へ",
+            male: "男性",
+            female: "女性",
+            gender: "性別",
+            birthday: "誕生日",
+            notVeryActive: "軽労作",
+            lightlyActive: "普通の労作",
+            active: "やや重い労作",
+            veryActive: "重労作",
+            activityLevel: "活動量"
           }
         }
       }

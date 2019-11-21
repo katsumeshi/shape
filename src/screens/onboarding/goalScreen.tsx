@@ -2,40 +2,21 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { View, StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
-import { NavigationScreenProp, NavigationState } from "react-navigation";
 import { ToggleButton } from "../../components/common";
 import { DietType } from "../../state/modules/general/types";
-import { ShapeHeader, HeaderBack } from "../../components/header";
-import { THEME_COLOR } from "../../constants";
+import { ShapeHeader } from "../../components/header";
 import { Navigation } from "../../state/type";
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 60
+    flex: 1,
+    justifyContent: "center"
   },
   button: {
     marginHorizontal: 16,
     marginBottom: 8
-  },
-  checkbox: { height: 60 },
-  headerLeft: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  headerLeftIcon: { top: -3, marginRight: 8 },
-  headerLeftText: { fontSize: 18, color: THEME_COLOR },
-  headerTitle: { fontSize: 18, color: "black" }
+  }
 });
-
-const GoalScreenHeader = ({
-  navigation
-}: {
-  navigation: NavigationScreenProp<NavigationState>;
-}) => {
-  const { t } = useTranslation();
-  return <ShapeHeader leftComponent={<HeaderBack navigation={navigation} />} title={t("goal")} />;
-};
 
 interface Props {
   navigation: Navigation;
@@ -46,11 +27,11 @@ const GoalScreen = ({ navigation }: Props) => {
   const [diet, setDiet] = useState(DietType.None);
   const navigate = (type: DietType) => () => {
     setDiet(type);
-    navigation.navigate("ActivityLevelScreen");
+    navigation.navigate("ActivityLevelScreen", { diet: type });
   };
   return (
     <>
-      <GoalScreenHeader navigation={navigation} />
+      <ShapeHeader title={t("goal")} />
       <View style={[styles.container]}>
         <ToggleButton
           title={t("loseWeight")}
