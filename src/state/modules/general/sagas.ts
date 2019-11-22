@@ -1,5 +1,6 @@
 import { all, fork, takeEvery, take, put } from "redux-saga/effects";
 import { EventChannel, eventChannel } from "redux-saga";
+import isEmpty from "lodash/isEmpty";
 import GeneralActionTypes, { General } from "./types";
 import AuthActionTypes from "../auth/types";
 import { fetchGeneralSuccess } from "./actions";
@@ -14,10 +15,10 @@ function* close(channel: EventChannel<any>) {
 }
 
 function* observeGeneral() {
-  const channel = eventChannel(emit => generalChanged((general: General) => emit(general)));
+  const channel = eventChannel(emit => generalChanged((general: General | null) => emit(general)));
   while (true) {
     const result: General = yield take(channel);
-    if (result.isEmpty()) {
+    if (isEmpty(result)) {
       NavigationService.navigate("Onboarding", {});
     } else {
       yield put(fetchGeneralSuccess(result));

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { View, StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
 import { ToggleButton } from "../../components/common";
-import { DietType } from "../../state/modules/general/types";
+import { DietType, General } from "../../state/modules/general/types";
 import { ShapeHeader } from "../../components/header";
 import { Navigation } from "../../state/type";
 
@@ -24,11 +24,14 @@ interface Props {
 
 const GoalScreen = ({ navigation }: Props) => {
   const { t } = useTranslation();
-  const [diet, setDiet] = useState(DietType.None);
+  const [general, updateGeneral] = useState(new General());
   const navigate = (type: DietType) => () => {
-    setDiet(type);
-    navigation.navigate("ActivityLevelScreen", { diet: type });
+    const g = general.clone();
+    g.diet = type;
+    updateGeneral(g);
+    navigation.navigate("ActivityLevelScreen", g);
   };
+  const { diet } = general;
   return (
     <>
       <ShapeHeader title={t("goal")} />

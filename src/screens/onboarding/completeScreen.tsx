@@ -33,7 +33,7 @@ interface Props {
   navigation: Navigation;
 }
 
-const CompleteScreen = () => {
+const CompleteScreen = ({ navigation }: Props) => {
   return (
     <>
       <CompleteScreenHeader />
@@ -41,7 +41,14 @@ const CompleteScreen = () => {
         <View style={{ justifyContent: "space-between", flex: 1, marginVertical: 60 }}>
           <Text style={{ textAlign: "center", fontSize: 20 }}>Congratulations!</Text>
           <Text style={{ textAlign: "center", fontSize: 25 }}>1970kcal</Text>
-          <Button style={styles.button} title="続ける" />
+          <Button
+            style={styles.button}
+            title="続ける"
+            onPress={() => {
+              // const { params } = navigation.state;
+              console.warn(navigation.state.params);
+            }}
+          />
         </View>
       </View>
     </>

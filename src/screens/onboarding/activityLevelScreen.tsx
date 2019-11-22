@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { View, StyleSheet } from "react-native";
 import { useTranslation } from "react-i18next";
 import { ToggleButton } from "../../components/common";
-import { ActiveLevel } from "../../state/modules/general/types";
+import { ActiveLevel, General } from "../../state/modules/general/types";
 import { ShapeHeader, HeaderBack } from "../../components/header";
 import { Navigation } from "../../state/type";
 
@@ -24,14 +24,14 @@ interface Props {
 
 const ActivityLevelScreen = ({ navigation }: Props) => {
   const { t } = useTranslation();
-  const [activeLevel, setActiveLevel] = useState(ActiveLevel.None);
+  const [general, updateGeneral] = useState(navigation.state.params as General);
   const navigate = (value: ActiveLevel) => () => {
-    setActiveLevel(value);
-    navigation.navigate("ProfileScreen", {
-      ...navigation.state.params,
-      activeLevel: value
-    });
+    const g = general.clone();
+    g.activeLevel = value;
+    updateGeneral(g);
+    navigation.navigate("ProfileScreen", g);
   };
+  const { activeLevel } = general;
   return (
     <>
       <ShapeHeader leftComponent={<HeaderBack />} title={t("activityLevel")} />

@@ -5,9 +5,8 @@ import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import range from "lodash/range";
-import get from "lodash/get";
 import { ToggleButton } from "../../components/common";
-import { ActiveLevel } from "../../state/modules/general/types";
+import { ActiveLevel, General } from "../../state/modules/general/types";
 import { ShapeHeader, HeaderBack, HeaderNext } from "../../components/header";
 import { Navigation } from "../../state/type";
 import NavigationService from "../../../NavigationService";
@@ -67,7 +66,7 @@ const Field = ({
 const BirthdayPicker = forwardRef(({ title }: { title: string }, ref) => {
   const [date, onDateChange] = useState(new Date(0));
   const [show, onShowPicker] = useState(false);
-  useImperativeHandle(ref, () => ({ value: date }));
+  useImperativeHandle(ref, () => date);
   return (
     <>
       <Field
@@ -94,7 +93,7 @@ const BirthdayPicker = forwardRef(({ title }: { title: string }, ref) => {
 const HeightPicker = forwardRef(({ title }: { title: string }, ref) => {
   const [height, onChangeHeight] = useState(160);
   const [show, onShowPicker] = useState(false);
-  useImperativeHandle(ref, () => ({ value: height }));
+  useImperativeHandle(ref, () => height);
   return (
     <>
       <Field onShowPicker={() => onShowPicker(!show)} title={title} value={`${height} cm`} />
@@ -121,7 +120,7 @@ const WeightPicker = forwardRef(({ title }: { title: string }, ref) => {
   const [int, onChangeInt] = useState(50);
   const [float, onChangeFloat] = useState(0);
   const [show, onShowPicker] = useState(false);
-  useImperativeHandle(ref, () => ({ value: parseFloat(`${int}.${float}`) }));
+  useImperativeHandle(ref, () => parseFloat(`${int}.${float}`));
   return (
     <>
       <Field onShowPicker={() => onShowPicker(!show)} title={title} value={`${int}.${float} kg`} />
@@ -154,27 +153,29 @@ const WeightPicker = forwardRef(({ title }: { title: string }, ref) => {
 const ProfileScreen = ({ navigation }: Props) => {
   const { t } = useTranslation();
   const [gender, onChangeGender] = useState(1);
-  const heightRef = useRef(null);
-  const birthdayRef = useRef(null);
-  const weightRef = useRef(null);
-  const goalRef = useRef(null);
+  const general = navigation.state.params as General;
+  const { height, birthday, weight, goal } = general;
+  const heightRef = useRef(height);
+  const birthdayRef = useRef(birthday);
+  const weightRef = useRef(weight);
+  const goalRef = useRef(goal);
   return (
     <>
       <ShapeHeader
         leftComponent={<HeaderBack />}
         title={t("Profile")}
-        rightComponent={(
+        rightComponent={
           <HeaderNext
-            onNext={() =>
-              NavigationService.navigate("CompleteScreen", {
-                ...navigation.state.params,
-                height: get(heightRef, "current.value", 0),
-                weight: get(weightRef, "current.value", 0),
-                goal: get(goalRef, "current.value", 0),
-                birthday: get(birthdayRef, "current.value", new Date())
-              })}
+            onNext={() => {
+              const g = general.clone();
+              g.height = heightRef.current;
+              g.weight = weightRef.current;
+              g.goal = goalRef.current;
+              g.birthday = birthdayRef.current;
+              NavigationService.navigate("CompleteScreen", g);
+            }}
           />
-        )}
+        }
       />
       <View style={[styles.container]}>
         <Text style={styles.title}>{t("gender")}</Text>

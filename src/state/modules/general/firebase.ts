@@ -11,8 +11,12 @@ import { usersRef } from "../../../services/firebase";
 
 const generalRef = () => usersRef().collection("general");
 
-const generalChanged = (callback: (general: General) => void) => {
-  let general = new General();
+export const update = () => {
+  // generalRef.doc(moment(date).format("YYYY-MM-DD")).set({ date, weight });
+};
+
+const generalChanged = (callback: (general: any) => void) => {
+  let general = {};
   const subscription = generalRef().onSnapshot((snapshot: QuerySnapshot) => {
     if (!snapshot.metadata.hasPendingWrites) {
       snapshot.docChanges.forEach(change => {

@@ -1,14 +1,13 @@
 import isEmpty from "lodash/isEmpty";
+import clone from "lodash/clone";
 
 export enum DietType {
-  None,
   Lose,
   Maintain,
   Gain
 }
 
 export enum ActiveLevel {
-  None,
   NotVeryActive,
   LightlyActive,
   Active,
@@ -16,10 +15,19 @@ export enum ActiveLevel {
 }
 
 export class General {
-  diet?: DietType;
+  diet: DietType = DietType.Lose;
+  activeLevel: ActiveLevel = ActiveLevel.NotVeryActive;
+  height: number = 0;
+  weight: number = 0;
+  goal: number = 0;
+  birthday: Date = new Date(0);
 
   isEmpty() {
     return isEmpty(this);
+  }
+
+  clone() {
+    return clone(this);
   }
 }
 

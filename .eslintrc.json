@@ -19,7 +19,9 @@
     "@typescript-eslint/indent": [2, 2],
     "@typescript-eslint/explicit-function-return-type": "off",
     "no-console": "off",
-    "global-require": "off"
+    "global-require": "off",
+    "lines-between-class-members": "off",
+    "react/jsx-wrap-multilines": "off"
   },
   "overrides": [
     {
