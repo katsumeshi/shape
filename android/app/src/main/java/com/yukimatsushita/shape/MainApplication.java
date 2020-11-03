@@ -3,8 +3,12 @@ package com.yukimatsushita.shape;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 
 import androidx.multidex.MultiDexApplication;
+
+import io.invertase.firebase.admob.RNFirebaseAdMobPackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.fabric.crashlytics.RNFirebaseCrashlyticsPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
@@ -36,6 +40,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
       packages.add(new RNFirebaseCrashlyticsPackage());
       packages.add(new RNFirebaseAuthPackage());
       packages.add(new RNFirebaseLinksPackage());
+      packages.add(new RNFirebaseAdMobPackage());
       packages.add(new ConfigtPackage());
 
       return packages;

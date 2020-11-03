@@ -1,41 +1,43 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { connect } from "react-redux";
 import {
-  ActivityIndicator,
-  AsyncStorage,
-  StatusBar,
-  StyleSheet,
-  View,
-} from "react-native";
-import firebase from "react-native-firebase";
+  NavigationState,
+  NavigationScreenProp,
+  NavigationParams
+} from "react-navigation";
+import { AuthState } from "../state/modules/auth/types";
+// import { fetchAuthStatus } from "../state/modules/auth/actions";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "center"
   },
   horizontal: {
     flexDirection: "row",
     justifyContent: "space-around",
-    padding: 10,
-  },
+    padding: 10
+  }
 });
 
-export default class AuthLoadingScreen extends React.Component {
-  public async componentDidMount() {
-    this.bootstrapAsync();
-  }
+const AuthLoadingScreen = ({
+  fetchAuth,
+  auth,
+  navigation
+}: {
+  fetchAuth: () => void;
+  auth: AuthState;
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+}) => {
+  return (
+    <View style={[styles.container, styles.horizontal]}>
+      <ActivityIndicator size="large" color="#0000ff" />
+    </View>
+  );
+};
 
-  public bootstrapAsync = () => {
-    firebase.auth().onAuthStateChanged((user) => {
-      this.props.navigation.navigate(user ? "App" : "Auth");
-    });
-  }
-
-  public render() {
-    return (
-      <View style={[styles.container, styles.horizontal]}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-}
+export default connect(
+  ({ auth }: { auth: AuthState }) => ({ auth })
+  // { fetchAuth: fetchAuthStatus }
+)(AuthLoadingScreen);

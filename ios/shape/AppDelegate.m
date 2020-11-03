@@ -14,25 +14,22 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "RNFirebaseLinks.h"
 #import <Crashlytics/Crashlytics.h>
+#import <RNCPushNotificationIOS.h>
 
+@import Firebase;
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [FIROptions defaultOptions].deepLinkURLScheme = [[NSBundle mainBundle] bundleIdentifier];
-  
-  #if DEBUG
-      NSString* filePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-dev" ofType:@"plist"];
-      FIROptions* options = [[FIROptions new] initWithContentsOfFile:filePath];
-      [FIRApp configureWithOptions:options];
-  #else
-     [FIRApp configure];
-  #endif
-  
+  [self setupFirebase];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"shape"
                                             initialProperties:nil];
+                                            
+  if (@available(iOS 13.0, *)) {
+    rootView.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+  }
   
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
   
@@ -44,7 +41,43 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
   return YES;
+}
+
+- (void)setupFirebase {
+  #if DEBUG
+      NSString* filePath = [[NSBundle mainBundle] pathForResource:@"GoogleService-Info-dev" ofType:@"plist"];
+      FIROptions* options = [[FIROptions new] initWithContentsOfFile:filePath];
+      [FIRApp configureWithOptions:options];
+  #else
+     [FIRApp configure];
+  #endif
+  [FIROptions defaultOptions].deepLinkURLScheme = [[NSBundle mainBundle] bundleIdentifier];
+  [[GADMobileAds sharedInstance] startWithCompletionHandler:nil];
+}
+
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
+{
+  [RNCPushNotificationIOS didRegisterUserNotificationSettings:notificationSettings];
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+  [RNCPushNotificationIOS didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+}
+
+-(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler {
+  [RNCPushNotificationIOS didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+  [RNCPushNotificationIOS didFailToRegisterForRemoteNotificationsWithError:error];
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+  [RNCPushNotificationIOS didReceiveLocalNotification:notification];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
@@ -63,7 +96,9 @@
                                                       sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
                                                              annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
                   ];
-  handled = [[RNFirebaseLinks instance] application:app openURL:url options:options];
+  if (!handled) {
+    handled = [[RNFirebaseLinks instance] application:app openURL:url options:options];
+  }
   
     return handled;
 }

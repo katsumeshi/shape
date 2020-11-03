@@ -1,58 +1,109 @@
+import React from "react";
 import {
   createAppContainer,
   createStackNavigator,
   createSwitchNavigator,
+  createBottomTabNavigator,
+  NavigationScreenProp,
+  NavigationRoute
 } from "react-navigation";
+import { Icon } from "react-native-elements";
+import i18next from "i18next";
 import AuthLoadingScreen from "./screens/authLoadingScreen";
 import HomeScreen from "./screens/homeScreen";
 import LoginScreen from "./screens/loginScreen";
-import ScaleScreen from "./screens/scaleScreen";
+import ScaleScreen from "./screens/scale/scaleScreen";
 import StartScreen from "./screens/startScreen";
+import SettingScreen from "./screens/settingScreen";
+import GoalScreen from "./screens/onboarding/goalScreen";
+import ActivityLevelScreen from "./screens/onboarding/activityLevelScreen";
+import ProfileScreen from "./screens/onboarding/profileScreen";
+import CompleteScreen from "./screens/onboarding/completeScreen";
+
+import { THEME_COLOR } from "./constants";
 
 const MainStack = createStackNavigator(
   {
     Home: {
-      screen: HomeScreen,
+      screen: HomeScreen
     },
     Scale: {
-      screen: ScaleScreen,
-    },
+      screen: ScaleScreen
+    }
   },
   {
-    headerMode: "none",
-  },
+    headerMode: "none"
+  }
 );
 
 const AppStack = createStackNavigator(
   {
     Main: {
-      screen: MainStack,
-    },
+      screen: MainStack
+    }
   },
   {
     mode: "modal",
-    headerMode: "none",
-  },
+    headerMode: "none"
+  }
 );
 
-const AuthStack = createStackNavigator(
+const TabNavigator = createBottomTabNavigator(
+  {
+    Home: AppStack,
+    Settings: SettingScreen
+  },
+  {
+    tabBarOptions: {
+      activeTintColor: THEME_COLOR
+    },
+    defaultNavigationOptions: ({
+      navigation
+    }: {
+      navigation: NavigationScreenProp<NavigationRoute>;
+    }) => ({
+      tabBarIcon: () => {
+        const { routeName } = navigation.state;
+        return routeName === "Home" ? (
+          <Icon type="Foundation" size={32} color={THEME_COLOR} name="home" />
+        ) : (
+          <Icon type="font-awesome" size={28} color={THEME_COLOR} name="gear" />
+        );
+      },
+      tabBarLabel: (() => {
+        const { routeName } = navigation.state;
+        return routeName === "Home" ? i18next.t("home") : i18next.t("settings");
+      })()
+    })
+  }
+);
+
+export const AuthStack = createStackNavigator(
   { Start: StartScreen, Login: LoginScreen },
   {
-    headerMode: "none",
-  },
+    headerMode: "none"
+  }
+);
+
+export const OnboardingStack = createStackNavigator(
+  { GoalScreen, ActivityLevelScreen, ProfileScreen, CompleteScreen },
+  {
+    headerMode: "none"
+  }
 );
 
 const AppNavigator = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
-      App: AppStack,
+      App: TabNavigator,
       Auth: AuthStack,
+      Onboarding: OnboardingStack
     },
     {
-      initialRouteName: "AuthLoading",
-    },
-  ),
+      initialRouteName: "AuthLoading"
+    }
+  )
 );
 
 export default AppNavigator;

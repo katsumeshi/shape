@@ -1,12 +1,14 @@
-import * as development from "./development.json.js.js";
-import * as production from "./production.json.js.js";
-
 import { NativeModules } from "react-native";
+import * as development from "./development.json";
+import * as production from "./production.json";
 
-const Config = NativeModules.Config;
-let config = production;
-if (Config.isDebug()) {
-  config = development;
-}
+const { Config } = NativeModules;
 
-export default config;
+const env = (() => {
+  if (Config.DEBUG) {
+    return development;
+  }
+  return production;
+})();
+
+export default env;

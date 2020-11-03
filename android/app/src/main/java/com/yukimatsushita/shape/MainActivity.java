@@ -1,6 +1,9 @@
 package com.yukimatsushita.shape;
 
+import android.os.Bundle;
+
 import com.facebook.react.ReactActivity;
+import com.google.android.gms.ads.MobileAds;
 
 public class MainActivity extends ReactActivity {
 
@@ -11,5 +14,11 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "shape";
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MobileAds.initialize(this);
     }
 }
